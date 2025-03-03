@@ -1101,6 +1101,10 @@ void Input::inputInitialConditions(std::string casTest, std::vector<GeometricalD
         domains.push_back(new GDCylinder(nameDomaine, statesPhases, stateMixture, statesTransport, element, physicalEntity, fileName.str()));
         if(physicalEntity==-1) { solidDomains.push_back(new GDCylinder(nameDomaine, statesPhases, stateMixture, statesTransport, element, physicalEntity, fileName.str())); }        
       }
+      else if (typeDomaine == "EXPDECAY"){
+        domains.push_back(new GDCylinder(nameDomaine, statesPhases, stateMixture, statesTransport, element, physicalEntity, fileName.str()));
+        if(physicalEntity==-1) { solidDomains.push_back(new GDCylinder(nameDomaine, statesPhases, stateMixture, statesTransport, element, physicalEntity, fileName.str())); }        
+      }
       else{ throw ErrorXMLDomaineUnknown(typeDomaine, fileName.str(), __FILE__, __LINE__); } //Cas ou le domain n a pas ete implemente
       //Domaine suivant
       element = element->NextSiblingElement("domain");

@@ -31,3 +31,4 @@ venv
 *.ods
 error_*
 *.msh
+ECOGEN.xml

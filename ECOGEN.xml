@@ -8,7 +8,7 @@
 
   <!-- Euler reference test cases -->
   <!-- -------------------------- -->
-  <!-- <testCase>libTests/referenceTestCases/euler/1D/transport/positiveVelocity/</testCase> -->
+  <testCase>libTests/referenceTestCases/euler/1D/transport/positiveVelocity/</testCase>
   <!-- <testCase>libTests/referenceTestCases/euler/1D/transport/negativeVelocity/</testCase> -->
   <!-- <testCase>libTests/referenceTestCases/euler/1D/shockTubes/HPLeft/</testCase> -->
   <!-- <testCase>libTests/referenceTestCases/euler/1D/shockTubes/HPRight/</testCase> -->
