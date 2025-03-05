@@ -46,7 +46,7 @@ bool GDEntireDomainWithParticularities::belong(Coord& /*posElement*/, const int&
 {
   //1. Laplace pressure initialization
   //----------------------------------
-  return true; //always belong to entire domain
+  //return true; //always belong to entire domain
 
   //2. Respecting special coordinates
   //---------------------------------
@@ -75,7 +75,7 @@ bool GDEntireDomainWithParticularities::belong(Coord& /*posElement*/, const int&
 
   //6. Blast-wave equation
   //----------------------
-  // return true; //always belong to entire domain
+  return true; //always belong to entire domain
 }
 
 //******************************************************************
@@ -243,6 +243,28 @@ void GDEntireDomainWithParticularities::fillIn(Cell* cell) const
     //     cell->getMixture()->setU(velocity);
     //   }
     // }
+
+    //7. Exponential decay for wave equation
+    //----------------------
+    //p(x,t) = f(x) * g(x + ct) + f(x) * g(x - ct)
+    //f(x) = 1 if cartesian; f(x) = 1 / x if spherical
+    //g(x +- ct) = ( x +- ct ) / 2 * p0 * exp( -pi * ( x +- ct ) ^ 2 ) -- expected analytic solution
+    //g(x) = x / 2 * p0 * exp( -pi * x ^ 2 ) -- implemented initial condition
+    // improve these comments, if this works out
+    if (cell->getElement() != 0) {
+      double pressure(0.), pk(0.) ;
+      double posX(cell->getPosition().getX()) ;
+      double p0(101325) ;
+
+      pressure = p0 * ( 1 + 1.0E-4 * exp( - M_PI * pow(posX, 2.) ) ) ;
+      
+      for (int k = 0; k < numberPhases; k++) {
+        pk = pressure;
+        cell->getPhase(k)->getEos()->verifyAndModifyPressure(pk);
+        cell->getPhase(k)->setPressure(pk);
+      }
+      cell->getMixture()->setPressure(pressure);
+    }
   }
 }
 
