@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <ecogen>
 
+<testCase>libTests/referenceTestCases/UEq/1D/sphericalCollapse/Pratio1427/</testCase>
+<!-- <testCase>libTests/referenceTestCases/PUEq/2D/sphericalCollapse/Pratio1427/</testCase> -->
+
   <!-- Logo ECOGEN -->
   <!-- ----------- -->
   <!-- <testCase>libTests/logoECOGEN/ECOGEN/</testCase> -->
@@ -8,7 +11,6 @@
 
   <!-- Euler reference test cases -->
   <!-- -------------------------- -->
-  <testCase>libTests/referenceTestCases/euler/1D/transport/positiveVelocity/</testCase>
   <!-- <testCase>libTests/referenceTestCases/euler/1D/transport/negativeVelocity/</testCase> -->
   <!-- <testCase>libTests/referenceTestCases/euler/1D/shockTubes/HPLeft/</testCase> -->
   <!-- <testCase>libTests/referenceTestCases/euler/1D/shockTubes/HPRight/</testCase> -->
