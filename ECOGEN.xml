@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <ecogen>
 
-<testCase>libTests/referenceTestCases/UEq/1D/sphericalCollapse/Pratio1427/</testCase>
+<!-- <testCase>libTests/referenceTestCases/PUEq/2D/sphericalCollapseMeshStretch/Pratio1427/</testCase> -->
+<testCase>libTests/referenceTestCases/PUEq/2D/CylinderCollapse/Pratio1/</testCase>
+<!-- <testCase>libTests/referenceTestCases/PUEq/2D/sphericalCollapseNoAMR/Pratio1427/</testCase> --> 
 <!-- <testCase>libTests/referenceTestCases/PUEq/2D/sphericalCollapse/Pratio1427/</testCase> -->
 
   <!-- Logo ECOGEN -->
