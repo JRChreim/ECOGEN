@@ -3,6 +3,6 @@
 	<type structure="cartesian"/>
 	<cartesianMesh>
 		<dimensions x="5.e-6" y="5.e-6" z="1."/>
-		<numberCells x="240" y ="240" z="1"/>
+		<numberCells x="2000" y ="2000" z="1"/>
 	</cartesianMesh>
 </mesh>

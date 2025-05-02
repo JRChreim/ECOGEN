@@ -3,8 +3,8 @@
 	<run>pressureVelocityEq2DCylindricalCollapse_Pratio101_200cellsPerD</run>
 	<outputMode format="XML" binary="false"/>
 	<timeControlMode iterations="false">
-		<iterations number="300" iterFreq="30"/>
-		<physicalTime totalTime="2.e-6" timeFreq="2.e-9"/>
+		<iterations number="100" iterFreq="1"/>
+		<physicalTime totalTime="2.e-6" timeFreq="2.e-8"/>
 	</timeControlMode>
 	<computationControl CFL="0.8"/>
 	<secondOrder>
@@ -12,4 +12,5 @@
 		<globalVolumeFractionLimiter>thinc</globalVolumeFractionLimiter>
     	<interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>
 	</secondOrder>
+	<restartSimulation restartFileNumber="0" AMRsaveFreq="0"/>
 </computationParam>
