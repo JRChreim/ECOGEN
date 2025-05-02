@@ -1,16 +1,16 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <computationParam>
-	<run>pressureVelocityEq2DCylindricalCollapse_Pratio101_200cellsPerD</run>
-	<outputMode format="XML" binary="false"/>
-	<timeControlMode iterations="false">
-		<iterations number="100" iterFreq="1"/>
-		<physicalTime totalTime="2.e-6" timeFreq="2.e-8"/>
-	</timeControlMode>
-	<computationControl CFL="0.8"/>
-	<secondOrder>
-		<globalLimiter>mc</globalLimiter>
-		<globalVolumeFractionLimiter>thinc</globalVolumeFractionLimiter>
-    	<interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>
-	</secondOrder>
-	<restartSimulation restartFileNumber="0" AMRsaveFreq="0"/>
+        <run>pressureVelocityEq2DCylindricalCollapse_Pratio101_200cellsPerD</run>
+        <outputMode format="XML" binary="false"/>
+        <timeControlMode iterations="true">
+                <iterations number="1000" iterFreq="100"/>
+                <!-- <physicalTime totalTime="2.e-6" timeFreq="2.e-9"/> -->
+        </timeControlMode>
+        <computationControl CFL="1.0"/>
+        <secondOrder>
+                <globalLimiter>mc</globalLimiter>
+                <globalVolumeFractionLimiter>thinc</globalVolumeFractionLimiter>
+        <interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>
+        </secondOrder>
+        <restartSimulation restartFileNumber="0" AMRsaveFreq="0"/>
 </computationParam>
