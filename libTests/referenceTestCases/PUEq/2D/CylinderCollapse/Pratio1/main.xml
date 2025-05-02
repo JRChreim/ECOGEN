@@ -3,7 +3,7 @@
         <run>pressureVelocityEq2DCylindricalCollapse_Pratio101_200cellsPerD</run>
         <outputMode format="XML" binary="false"/>
         <timeControlMode iterations="true">
-                <iterations number="1000" iterFreq="100"/>
+                <iterations number="1000000" iterFreq="5000"/>
                 <!-- <physicalTime totalTime="2.e-6" timeFreq="2.e-9"/> -->
         </timeControlMode>
         <computationControl CFL="1.0"/>
