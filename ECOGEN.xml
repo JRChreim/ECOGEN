@@ -2,7 +2,7 @@
 <ecogen>
 
 <!-- <testCase>libTests/referenceTestCases/PUEq/2D/sphericalCollapseMeshStretch/Pratio1427/</testCase> -->
-<testCase>libTests/referenceTestCases/PUEq/2D/CylinderCollapse/Pratio1/</testCase>
+<testCase>libTests/referenceTestCases/PUEq/2D/CylinderCollapse/Pratio1LowerCFL/</testCase>
 <!-- <testCase>libTests/referenceTestCases/PUEq/2D/sphericalCollapseNoAMR/Pratio1427/</testCase> --> 
 <!-- <testCase>libTests/referenceTestCases/PUEq/2D/sphericalCollapse/Pratio1427/</testCase> -->
 
