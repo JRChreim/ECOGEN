@@ -1,12 +1,12 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <computationParam>
-	<run>PUEq1DSCPoPb1427N015E2</run>
+	<run>PUEq_PRatio1427_N160E3</run>
 	<outputMode format="XML" binary="false"/>
 	<timeControlMode iterations="false">
-		<iterations number="300" iterFreq="30"/>
-		<physicalTime totalTime="2.e-6" timeFreq="2.e-9"/>
+		<iterations number="100" iterFreq="10"/>
+		<physicalTime totalTime="6.85e-5" timeFreq="6.85e-6"/>
 	</timeControlMode>
-	<computationControl CFL="0.4"/>
+	<computationControl CFL="0.8"/>
 	<secondOrder>
 		<globalLimiter>mc</globalLimiter>
 		<globalVolumeFractionLimiter>thinc</globalVolumeFractionLimiter>

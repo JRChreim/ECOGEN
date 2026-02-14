@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <computationParam>
-	<run>PUEq1DSCPoPb1427N015E2</run>
+	<run>PTUEq1DSCPoPb1427N015E2</run>
 	<outputMode format="XML" binary="false"/>
 	<timeControlMode iterations="false">
 		<iterations number="300" iterFreq="30"/>

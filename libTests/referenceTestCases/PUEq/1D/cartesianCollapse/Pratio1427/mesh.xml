@@ -1,0 +1,8 @@
+<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
+<mesh>
+	<type structure="cartesian"/>
+	<cartesianMesh>
+		<dimensions x="9.e-5" y="9.e-5" z="9.e-5"/>
+		<numberCells x="600" y ="1" z="1"/>
+	</cartesianMesh>
+</mesh>
