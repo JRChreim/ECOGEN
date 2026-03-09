@@ -1,7 +1,7 @@
 .. role:: xml(code)
   :language: xml
 
-Square water explosion 
+Square water explosion
 ======================
 
 This case is a 2D Cartesian test case.
@@ -39,7 +39,7 @@ The initial characteristics of the run are:
 | precision                    | Minmod              |
 +------------------------------+---------------------+
 
-Results are shown in :numref:`Fig:testCases:PUEq:squareWaterExplosionAnim`. There is a pressure gradient between the two regions. When the interface between the blue (air) and red (water) regions disapears, shock waves propagate in the air and the red region relaxes. This causes an increase in pressure inside the blue region.
+Results are shown in :numref:`Fig:testCases:PUEq:squareWaterExplosionAnim`. There is a pressure gradient between the two regions. When the interface between the blue (air) and red (water) regions disappears, shock waves propagate in the air and the red region relaxes. This causes an increase in pressure inside the blue region.
 
 With the help of the density evolution, shown in :numref:`Fig:testCases:PUEq:squareWaterExplosionAnim` through a Schlieren visualization, it is easy to observe that there is an explosion between the water and the air regions.
 The shock caused by the explosion propagates outward.

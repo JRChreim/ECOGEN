@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PhaseUEqTotEnergy.h"
@@ -39,7 +39,8 @@ PhaseUEqTotEnergy::PhaseUEqTotEnergy() : m_alpha(1.0), m_density(0.), m_pressure
 
 //***************************************************************************
 
-PhaseUEqTotEnergy::PhaseUEqTotEnergy(XMLElement* material, Eos* eos, std::string fileName) : m_alpha(1.0), m_density(0.), m_pressure(0.), m_eos(eos), m_totEnergy(0.), m_soundSpeed(0.)
+PhaseUEqTotEnergy::PhaseUEqTotEnergy(XMLElement* material, Eos* eos, std::string fileName) :
+  m_alpha(1.0), m_density(0.), m_pressure(0.), m_eos(eos), m_totEnergy(0.), m_soundSpeed(0.)
 {
   XMLElement* sousElement(material->FirstChildElement("dataFluid"));
   if (sousElement == NULL) throw ErrorXMLElement("dataFluid", fileName, __FILE__, __LINE__);
@@ -57,34 +58,33 @@ PhaseUEqTotEnergy::PhaseUEqTotEnergy(XMLElement* material, Eos* eos, std::string
   if (sousElement->QueryDoubleAttribute("temperature", &m_temperature) == XML_NO_ERROR) presenceTemperature = 1;
 
   //Attribute error gestion
-  if (presenceDensity + presencePressure + presenceTemperature != 2) throw ErrorXMLAttribut("only two of following is required : density, pressure, temperature", fileName, __FILE__, __LINE__);
+  if (presenceDensity + presencePressure + presenceTemperature != 2)
+    throw ErrorXMLAttribut("only two of following is required : density, pressure, temperature", fileName, __FILE__, __LINE__);
 
   //Thermodynamic reconstruction if needed
-  if (presencePressure&&presenceTemperature) m_density = m_eos->computeDensity(m_pressure, m_temperature);
-  if (presenceDensity&&presencePressure) m_temperature = m_eos->computeTemperature(m_density,m_pressure);
-  if (presenceDensity&&presenceTemperature) throw ErrorXMLAttribut("impossible to initialize UEq phase with density and temperature", fileName, __FILE__, __LINE__);
+  if (presencePressure && presenceTemperature) m_density = m_eos->computeDensity(m_pressure, m_temperature);
+  if (presenceDensity && presencePressure) m_temperature = m_eos->computeTemperature(m_density, m_pressure);
+  if (presenceDensity && presenceTemperature)
+    throw ErrorXMLAttribut("impossible to initialize UEq phase with density and temperature", fileName, __FILE__, __LINE__);
 }
 
 //***************************************************************************
 
-PhaseUEqTotEnergy::~PhaseUEqTotEnergy(){}
+PhaseUEqTotEnergy::~PhaseUEqTotEnergy() {}
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::allocateAndCopyPhase(Phase** vecPhase)
-{
-  *vecPhase = new PhaseUEqTotEnergy(*this);
-}
+void PhaseUEqTotEnergy::allocateAndCopyPhase(Phase** vecPhase) { *vecPhase = new PhaseUEqTotEnergy(*this); }
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::copyPhase(Phase &phase)
+void PhaseUEqTotEnergy::copyPhase(Phase& phase)
 {
-  m_alpha = phase.getAlpha();
-  m_density = phase.getDensity();
-  m_pressure = phase.getPressure();
-  m_eos = phase.getEos();
-  m_totEnergy = phase.getTotalEnergy();
+  m_alpha      = phase.getAlpha();
+  m_density    = phase.getDensity();
+  m_pressure   = phase.getPressure();
+  m_eos        = phase.getEos();
+  m_totEnergy  = phase.getTotalEnergy();
   m_soundSpeed = phase.getSoundSpeed();
 }
 
@@ -93,16 +93,13 @@ void PhaseUEqTotEnergy::copyPhase(Phase &phase)
 void PhaseUEqTotEnergy::extendedCalculusPhase(const Coord& vel)
 {
   m_temperature = m_eos->computeTemperature(m_density, m_pressure);
-  m_totEnergy = m_eos->computeEnergy(m_density, m_pressure) + 0.5 * vel.squaredNorm();
-  m_soundSpeed = m_eos->computeSoundSpeed(m_density, m_pressure);
+  m_totEnergy   = m_eos->computeEnergy(m_density, m_pressure) + 0.5 * vel.squaredNorm();
+  m_soundSpeed  = m_eos->computeSoundSpeed(m_density, m_pressure);
 }
 
 //****************************************************************************
 
-void PhaseUEqTotEnergy::computeMassFraction(const double& density)
-{
-  m_Y = m_alpha*m_density / std::max(density, epsilonAlphaNull);
-}
+void PhaseUEqTotEnergy::computeMassFraction(const double& density) { m_Y = m_alpha * m_density / std::max(density, epsilonAlphaNull); }
 
 //****************************************************************************
 //****************************** DATA PRINTING *******************************
@@ -110,29 +107,45 @@ void PhaseUEqTotEnergy::computeMassFraction(const double& density)
 
 double PhaseUEqTotEnergy::returnScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    if (m_alpha < 1.e-20) { return 0.; }
-    else { return m_alpha; }
+    if (m_alpha < 1.e-20) {
+      return 0.;
+    }
+    else {
+      return m_alpha;
+    }
     break;
   case 2:
-    if (m_density < 1.e-20) { return 1.e-20; }
-    else { return m_density; }
+    if (m_density < 1.e-20) {
+      return 1.e-20;
+    }
+    else {
+      return m_density;
+    }
     break;
   case 3:
-    if (m_temperature < 1.e-20) { return 1.e-20; }
-    else { return m_temperature; }
+    if (m_temperature < 1.e-20) {
+      return 1.e-20;
+    }
+    else {
+      return m_temperature;
+    }
     break;
   case 4:
-    if (m_Y < 1.e-20) { return 0.; }
-    else { return m_Y; }
+    if (m_Y < 1.e-20) {
+      return 0.;
+    }
+    else {
+      return m_Y;
+    }
     break;
   case 5:
     return m_pressure;
     break;
   default:
-    return 0.; break;
+    return 0.;
+    break;
   }
 }
 
@@ -140,20 +153,25 @@ double PhaseUEqTotEnergy::returnScalar(const int& numVar) const
 
 std::string PhaseUEqTotEnergy::returnNameScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Alpha"; break;
+    return "Alpha";
+    break;
   case 2:
-    return "Density"; break;
+    return "Density";
+    break;
   case 3:
-    return "Temperature"; break;
+    return "Temperature";
+    break;
   case 4:
-    return "Mass fraction"; break;
+    return "Mass fraction";
+    break;
   case 5:
-    return "Pressure"; break;
+    return "Pressure";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -163,20 +181,25 @@ std::string PhaseUEqTotEnergy::returnNameScalar(const int& numVar) const
 
 void PhaseUEqTotEnergy::setScalar(const int& numVar, const double& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_alpha = value; break;
+    m_alpha = value;
+    break;
   case 2:
-    m_density = value; break;
+    m_density = value;
+    break;
   case 3:
-    m_temperature = value; break;
+    m_temperature = value;
+    break;
   case 4:
-    m_Y = value; break;
+    m_Y = value;
+    break;
   case 5:
-    m_pressure = value; break;
+    m_pressure = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in PhaseUEqTotEnergy::setScalar"); break;
+    Errors::errorMessage("numVar not found in PhaseUEqTotEnergy::setScalar");
+    break;
   }
 }
 
@@ -214,30 +237,30 @@ void PhaseUEqTotEnergy::fillBuffer(std::vector<double>& dataToSend) const
 
 void PhaseUEqTotEnergy::getBuffer(double* buffer, int& counter, Eos** eos)
 {
-  m_alpha = buffer[++counter];
-  m_density = buffer[++counter];
+  m_alpha    = buffer[++counter];
+  m_density  = buffer[++counter];
   m_pressure = buffer[++counter];
-  m_eos = eos[static_cast<int>(buffer[++counter])];
+  m_eos      = eos[static_cast<int>(buffer[++counter])];
 }
 
 //***************************************************************************
 
 void PhaseUEqTotEnergy::getBuffer(std::vector<double>& dataToReceive, int& counter, Eos** eos)
 {
-  m_alpha = dataToReceive[counter++];
-  m_density = dataToReceive[counter++];
+  m_alpha    = dataToReceive[counter++];
+  m_density  = dataToReceive[counter++];
   m_pressure = dataToReceive[counter++];
-  m_eos = eos[static_cast<int>(std::round(dataToReceive[counter++]))];
+  m_eos      = eos[static_cast<int>(std::round(dataToReceive[counter++]))];
 }
 
 //****************************************************************************
 //******************************* ORDER 2 ************************************
 //****************************************************************************
 
-void PhaseUEqTotEnergy::computeSlopesPhase(const Phase &sLeft, const Phase &sRight, const double& distance)
+void PhaseUEqTotEnergy::computeSlopesPhase(const Phase& sLeft, const Phase& sRight, const double& distance)
 {
-  m_alpha = (sRight.getAlpha() - sLeft.getAlpha()) / distance;
-  m_density = (sRight.getDensity() - sLeft.getDensity()) / distance;
+  m_alpha    = (sRight.getAlpha() - sLeft.getAlpha()) / distance;
+  m_density  = (sRight.getDensity() - sLeft.getDensity()) / distance;
   m_pressure = (sRight.getPressure() - sLeft.getPressure()) / distance;
 }
 
@@ -245,24 +268,26 @@ void PhaseUEqTotEnergy::computeSlopesPhase(const Phase &sLeft, const Phase &sRig
 
 void PhaseUEqTotEnergy::setToZero()
 {
-  m_alpha = 0.; m_density = 0.; m_pressure = 0.;
+  m_alpha    = 0.;
+  m_density  = 0.;
+  m_pressure = 0.;
 }
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::extrapolate(const Phase &slope, const double& distance)
+void PhaseUEqTotEnergy::extrapolate(const Phase& slope, const double& distance)
 {
-  m_alpha += slope.getAlpha() * distance;
-  m_density += slope.getDensity() * distance;
+  m_alpha    += slope.getAlpha() * distance;
+  m_density  += slope.getDensity() * distance;
   m_pressure += slope.getPressure() * distance;
 }
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::limitSlopes(const Phase &slopeGauche, const Phase &slopeDroite, Limiter& globalLimiter, Limiter& volumeFractionLimiter)
+void PhaseUEqTotEnergy::limitSlopes(const Phase& slopeGauche, const Phase& slopeDroite, Limiter& globalLimiter, Limiter& volumeFractionLimiter)
 {
-  m_alpha = volumeFractionLimiter.limiteSlope(slopeGauche.getAlpha(), slopeDroite.getAlpha());
-  m_density = globalLimiter.limiteSlope(slopeGauche.getDensity(), slopeDroite.getDensity());
+  m_alpha    = volumeFractionLimiter.limiteSlope(slopeGauche.getAlpha(), slopeDroite.getAlpha());
+  m_density  = globalLimiter.limiteSlope(slopeGauche.getDensity(), slopeDroite.getDensity());
   m_pressure = globalLimiter.limiteSlope(slopeGauche.getPressure(), slopeDroite.getPressure());
 }
 
@@ -270,27 +295,24 @@ void PhaseUEqTotEnergy::limitSlopes(const Phase &slopeGauche, const Phase &slope
 //************************** ORDER 2 PARALLEL ********************************
 //****************************************************************************
 
-int PhaseUEqTotEnergy::numberOfTransmittedSlopes() const
-{
-	return 3;
-}
+int PhaseUEqTotEnergy::numberOfTransmittedSlopes() const { return 3; }
 
 //***************************************************************************
 
 void PhaseUEqTotEnergy::fillBufferSlopes(double* buffer, int& counter) const
 {
-	buffer[++counter] = m_alpha;
-	buffer[++counter] = m_density;
-	buffer[++counter] = m_pressure;
+  buffer[++counter] = m_alpha;
+  buffer[++counter] = m_density;
+  buffer[++counter] = m_pressure;
 }
 
 //***************************************************************************
 
 void PhaseUEqTotEnergy::getBufferSlopes(double* buffer, int& counter)
 {
-	m_alpha = buffer[++counter];
-	m_density = buffer[++counter];
-	m_pressure = buffer[++counter];
+  m_alpha    = buffer[++counter];
+  m_density  = buffer[++counter];
+  m_pressure = buffer[++counter];
 }
 
 //****************************************************************************
@@ -331,17 +353,11 @@ void PhaseUEqTotEnergy::verifyAndCorrectPhase()
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::verifyAndCorrectDensityMax(const double& mass)
-{
-  m_eos->verifyAndCorrectDensityMax(mass, m_alpha, m_density);
-}
+void PhaseUEqTotEnergy::verifyAndCorrectDensityMax(const double& mass) { m_eos->verifyAndCorrectDensityMax(mass, m_alpha, m_density); }
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::verifyAndCorrectDensityMax()
-{
-  m_eos->verifyAndCorrectDensityMax(m_density);
-}
+void PhaseUEqTotEnergy::verifyAndCorrectDensityMax() { m_eos->verifyAndCorrectDensityMax(m_density); }
 
 //****************************************************************************
 //**************************** DATA ACCESSORS ********************************
@@ -367,10 +383,7 @@ void PhaseUEqTotEnergy::setTotalEnergy(double totalEnergy) { m_totEnergy = total
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::setTotalEnergy(const double &energy, const Coord& vel)
-{ 
-  m_totEnergy = energy + 0.5 * vel.squaredNorm();
-}
+void PhaseUEqTotEnergy::setTotalEnergy(const double& energy, const Coord& vel) { m_totEnergy = energy + 0.5 * vel.squaredNorm(); }
 
 //***************************************************************************
 
@@ -382,25 +395,25 @@ void PhaseUEqTotEnergy::setSoundSpeed(double soundSpeed) { m_soundSpeed = soundS
 
 void PhaseUEqTotEnergy::changeSign()
 {
-  m_alpha = -m_alpha;
-  m_density = -m_density;
+  m_alpha    = -m_alpha;
+  m_density  = -m_density;
   m_pressure = -m_pressure;
 }
 
 //***************************************************************************
 
-void PhaseUEqTotEnergy::multiplyAndAdd(const Phase &slopesPhasesTemp, const double& coeff)
+void PhaseUEqTotEnergy::multiplyAndAdd(const Phase& slopesPhasesTemp, const double& coeff)
 {
-  m_alpha += slopesPhasesTemp.getAlpha()*coeff;
-  m_density += slopesPhasesTemp.getDensity()*coeff;
-  m_pressure += slopesPhasesTemp.getPressure()*coeff;
+  m_alpha    += slopesPhasesTemp.getAlpha() * coeff;
+  m_density  += slopesPhasesTemp.getDensity() * coeff;
+  m_pressure += slopesPhasesTemp.getPressure() * coeff;
 }
 
 //***************************************************************************
 
 void PhaseUEqTotEnergy::divide(const double& coeff)
 {
-  m_alpha /= coeff;
-  m_density /= coeff;
+  m_alpha    /= coeff;
+  m_density  /= coeff;
   m_pressure /= coeff;
 }

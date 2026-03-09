@@ -4,9 +4,11 @@
 # System
 *.DS_Store
 
-# Compilation 
-ECOGEN
+# Compilation
+/ECOGEN
 *.o
+*.gcda
+*.gcno
 
 # Non-reg & code analysis
 /results/
@@ -23,6 +25,8 @@ venv
 *.txt
 *.out
 *.bak
+# Explicitly track CMakeLists.txt
+!CMakeLists.txt
 
 # Others
 *.opensdf

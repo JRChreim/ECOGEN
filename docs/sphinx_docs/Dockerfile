@@ -22,17 +22,17 @@ RUN apt-get install -y texlive \
 
 WORKDIR /home
 ENTRYPOINT ["make"]
-CMD ["html"] 
+CMD ["html"]
 
 # -- User guide --
 
 # To build the container image using this Dockerfile
 # docker image build -t ecogen/sphinx-doc .
 
-# To run the container 
+# To run the container
 # For HTML output
 # docker container run --mount type=bind,source=${PWD},target=/home ecogen/sphinx-doc
-# Or 
+# Or
 # docker container run --mount type=bind,source=${PWD},target=/home ecogen/sphinx-doc html
 # For PDF output
 # docker container run --mount type=bind,source=${PWD},target=/home ecogen/sphinx-doc pdf

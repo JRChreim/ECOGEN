@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
 	<!-- LIST OF GEOMETRICAL DOMAINS  -->
-	<physicalDomains>	
+	<physicalDomains>
 		<domain name="HP" state="leftChamber" type="entireDomain"/>
 		<domain name="LP" state="rightChamber" type="halfSpace">
 			<dataHalfSpace axis="x" origin="0.2" direction="positive"/>
@@ -11,17 +11,17 @@
         <posInferiorVertex x="0.35" y="0.15" z="0.5"/>
       </dataRectangle>
     </domain>
-	</physicalDomains>	
+	</physicalDomains>
 
 	<!-- LIST OF BOUNDARY CONDITIONS -->
 	<boundaryConditions>
-		<boundCond name="CLXm" type="nonReflecting" number="1" />
-		<boundCond name="CLXp" type="nonReflecting" number="2" />
-		<boundCond name="CLYm"  type="nonReflecting" number="3" />
-		<boundCond name="CLYp" type="nonReflecting" number="4" />
+		<boundCond name="BC_Xmin" type="nonReflecting" number="1" />
+		<boundCond name="BC_Xmax" type="nonReflecting" number="2" />
+		<boundCond name="BC_Ymin"  type="nonReflecting" number="3" />
+		<boundCond name="BC_Ymax" type="nonReflecting" number="4" />
 	</boundaryConditions>
 
-	
+
 	<!--  LIST OF STATES  -->
 	<state name="leftChamber">
 		<material type="fluid" EOS="IG_air.xml">

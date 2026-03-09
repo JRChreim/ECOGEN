@@ -2,19 +2,20 @@
 
 //***********************************************************************
 
-CellInterfaceO2NS::CellInterfaceO2NS()
-{
-}
+CellInterfaceO2NS::CellInterfaceO2NS() {}
 
 //***********************************************************************
 
-CellInterfaceO2NS::~CellInterfaceO2NS()
-{
-}
+CellInterfaceO2NS::~CellInterfaceO2NS() {}
 
 //***********************************************************************
 
-void CellInterfaceO2NS::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, Limiter& /*interfaceLimiter*/, Limiter& /*globalVolumeFractionLimiter*/, Limiter& /*interfaceVolumeFractionLimiter*/, Prim type)
+void CellInterfaceO2NS::solveRiemann(double& dtMax,
+                                     Limiter& /*globalLimiter*/,
+                                     Limiter& /*interfaceLimiter*/,
+                                     Limiter& /*globalVolumeFractionLimiter*/,
+                                     Limiter& /*interfaceVolumeFractionLimiter*/,
+                                     Prim type)
 {
   // Initialize buffer cells used in Riemann problem
   bufferCellLeft->copyVec(m_cellLeft->getPhases(type), m_cellLeft->getMixture(type), m_cellLeft->getTransports(type));
@@ -24,7 +25,7 @@ void CellInterfaceO2NS::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, 
   // Coord rij and the gradient is already done during CellO2NS::computeLocalSlopes
   // and stored in slopesPhase/MixtureLocal1
   // Therefore, to stay compliant with cartesian 2nd order, distance is equal to 1 here
-  double distanceLeft = 1.0; 
+  double distanceLeft  = 1.0;
   double distanceRight = 1.0;
 
   // Left side of interface extrapolation
@@ -35,9 +36,9 @@ void CellInterfaceO2NS::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, 
     bufferCellLeft->getPhase(k)->verifyAndCorrectDensityMax();
   }
   bufferCellLeft->getMixture()->extrapolate(*slopesMixtureLocal1, distanceLeft);
-	for (int k = 0; k < numberTransports; k++) {
-		bufferCellLeft->getTransport(k).extrapolate(slopesTransportLocal1[k], distanceLeft);
-	}
+  for (int k = 0; k < numberTransports; k++) {
+    bufferCellLeft->getTransport(k).extrapolate(slopesTransportLocal1[k], distanceLeft);
+  }
 
   // Right side of interface extrapolation
   m_cellRight->computeLocalSlopes(*this);
@@ -47,9 +48,9 @@ void CellInterfaceO2NS::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, 
     bufferCellRight->getPhase(k)->verifyAndCorrectDensityMax();
   }
   bufferCellRight->getMixture()->extrapolate(*slopesMixtureLocal1, distanceRight);
-	for (int k = 0; k < numberTransports; k++) {
-		bufferCellRight->getTransport(k).extrapolate(slopesTransportLocal1[k], distanceRight);
-	}
+  for (int k = 0; k < numberTransports; k++) {
+    bufferCellRight->getTransport(k).extrapolate(slopesTransportLocal1[k], distanceRight);
+  }
 
   // Compute extended variables since projection change some of them (Phases, Mixture, AddPhys)
   bufferCellLeft->fulfillState();
@@ -64,7 +65,9 @@ void CellInterfaceO2NS::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, 
   double dxRight(m_cellRight->getElement()->getLCFL());
   model->solveRiemannIntern(*bufferCellLeft, *bufferCellRight, dxLeft, dxRight, dtMax);
   // Handling of transport functions (m_Sm known: need to be called after Riemann solver)
-  if (numberTransports > 0) { model->solveRiemannTransportIntern(*bufferCellLeft, *bufferCellRight); }
+  if (numberTransports > 0) {
+    model->solveRiemannTransportIntern(*bufferCellLeft, *bufferCellRight);
+  }
 
   // Flux projection into the global reference frame
   model->reverseProjection(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());

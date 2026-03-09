@@ -3,6 +3,6 @@
 	<type structure="unStructured"/>
 	<unstructuredMesh>
 		<file name="libMeshes/nozzles/smoothNozzle2D.msh"/>
-		<parallel GMSHPretraitement="true"/> 
+		<parallel GMSHPretraitement="true"/>
 	</unstructuredMesh>
 </mesh>

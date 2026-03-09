@@ -2,29 +2,19 @@
 
 //***************************************************************************
 
-CellO2GhostNS::CellO2GhostNS()
-{
-}
+CellO2GhostNS::CellO2GhostNS() {}
 
 //***************************************************************************
 
-CellO2GhostNS::~CellO2GhostNS()
-{
-}
+CellO2GhostNS::~CellO2GhostNS() {}
 
 //***************************************************************************
 
-int CellO2GhostNS::getRankOfNeighborCPU() const
-{
-  return m_rankOfNeighborCPU;
-}
+int CellO2GhostNS::getRankOfNeighborCPU() const { return m_rankOfNeighborCPU; }
 
 //***************************************************************************
 
-void CellO2GhostNS::setRankOfNeighborCPU(int rank)
-{
-  m_rankOfNeighborCPU = rank;
-}
+void CellO2GhostNS::setRankOfNeighborCPU(int rank) { m_rankOfNeighborCPU = rank; }
 
 //***************************************************************************
 

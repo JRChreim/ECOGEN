@@ -1,9 +1,9 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
 	<!-- LIST OF GEOMETRICAL DOMAINS  -->
-	<physicalDomains>	
+	<physicalDomains>
 		<domain name="base" state="init" type="entireDomain" physicalEntity="10"/>
-	</physicalDomains>	
+	</physicalDomains>
 
 	<!-- LIST OF BOUNDARY CONDITIONS -->
 	<boundaryConditions>
@@ -14,13 +14,13 @@
         <dataInletInj m0="200."/>
         <!-- Supersonic divergent -->
 		    <!-- <dataInletInj m0="300."/> -->
-        <dataFluid temperature="300."/> 
+        <dataFluid EOS="IG_air.xml" temperature="300."/>
 		</boundCond>
 		<boundCond name="outlet" type="outletPressure" number="4">
 			<dataOutletPressure p0="1.e5"/>
-		</boundCond>	
+		</boundCond>
 	</boundaryConditions>
-	
+
 	<!--  LIST OF STATES  -->
 	<state name="init">
 		<material type="fluid" EOS="IG_air.xml">

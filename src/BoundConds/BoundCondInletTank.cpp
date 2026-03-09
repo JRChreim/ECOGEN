@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "BoundCondInletTank.h"
@@ -34,13 +34,19 @@ using namespace tinyxml2;
 
 //****************************************************************************
 
-BoundCondInletTank::BoundCondInletTank(int numPhysique, XMLElement* element, const int& numbPhases, const int& numbTransports, std::vector<std::string> nameTransports, Eos** eos, std::string fileName) :
+BoundCondInletTank::BoundCondInletTank(int numPhysique,
+                                       XMLElement* element,
+                                       const int& numbPhases,
+                                       const int& numbTransports,
+                                       std::vector<std::string> nameTransports,
+                                       Eos** eos,
+                                       std::string fileName) :
   BoundCond(numPhysique)
 {
-  m_ak0 = new double[numbPhases];
-  m_Yk0 = new double[numbPhases];
-  m_rhok0 = new double[numbPhases]; 
-  
+  m_ak0   = new double[numbPhases];
+  m_Yk0   = new double[numbPhases];
+  m_rhok0 = new double[numbPhases];
+
   //Reading tank pressure and temperature conditions
   //------------------------------------------------
   XMLElement* sousElement(element->FirstChildElement("dataInletTank"));
@@ -54,8 +60,8 @@ BoundCondInletTank::BoundCondInletTank(int numPhysique, XMLElement* element, con
 
   if (numbPhases == 1) {
     m_rhok0[0] = eos[0]->computeDensity(m_p0, m_T0);
-    m_ak0[0] = 1.;
-    m_Yk0[0] = 1.;
+    m_ak0[0]   = 1.;
+    m_Yk0[0]   = 1.;
   }
   else {
     //Reading fluids proportion in tank
@@ -64,18 +70,26 @@ BoundCondInletTank::BoundCondInletTank(int numPhysique, XMLElement* element, con
     if (sousElement == NULL) throw ErrorXMLElement("fluidsProp", fileName, __FILE__, __LINE__);
     XMLElement* fluid(sousElement->FirstChildElement("dataFluid"));
 
-    int nbFluids(0); std::string nameEOS;
+    int nbFluids(0);
     int presenceAlpha(0), presenceMassFrac(0);
-    while (fluid != NULL)
-    {
+    while (fluid != NULL) {
       nbFluids++;
-      //EOS name searching
-      nameEOS = fluid->Attribute("EOS");
-      int e(0);
-      for (e = 0; e < numbPhases; e++) {
-        if (nameEOS == eos[e]->getName()) { break; }
+      // Check presence of EOS tag and ensure consistency with model data
+      const char* attrEOS{fluid->Attribute("EOS")};
+      if (attrEOS == NULL) {
+        throw ErrorXMLAttribut("EOS is required in dataFluid elements", fileName, __FILE__, __LINE__);
       }
-      if (e == numbPhases) { throw ErrorXMLEOSUnknown(nameEOS, fileName, __FILE__, __LINE__); }
+      std::string nameEOS{attrEOS};
+
+      int e;
+      for (e = 0; e < numbPhases; e++) {
+        if (nameEOS == eos[e]->getName()) {
+          break;
+        }
+      }
+      if (e == numbPhases) {
+        throw ErrorXMLEOSUnknown(nameEOS, fileName, __FILE__, __LINE__);
+      }
 
       //Reading fluid proportion
       if (fluid->QueryDoubleAttribute("alpha", &m_ak0[e]) == XML_NO_ERROR) {
@@ -95,25 +109,35 @@ BoundCondInletTank::BoundCondInletTank(int numPhysique, XMLElement* element, con
     double sum(0.);
     if (presenceAlpha) {
       for (int k = 0; k < numbPhases; k++) {
-        if (m_ak0[k]<0. || m_ak0[k]>1.) throw ErrorXMLAttribut("alpha should be in [0,1]", fileName, __FILE__, __LINE__);
+        if (m_ak0[k] < 0. || m_ak0[k] > 1.) throw ErrorXMLAttribut("alpha should be in [0,1]", fileName, __FILE__, __LINE__);
         sum += m_ak0[k];
       }
-      if (std::fabs(sum - 1.) > 1.e-6) { throw ErrorXMLAttribut("sum of alpha should be 1", fileName, __FILE__, __LINE__); }
+      if (std::fabs(sum - 1.) > 1.e-6) {
+        throw ErrorXMLAttribut("sum of alpha should be 1", fileName, __FILE__, __LINE__);
+      }
       else {
-        for (int k = 0; k < numbPhases; k++) { m_ak0[k] /= sum; }
+        for (int k = 0; k < numbPhases; k++) {
+          m_ak0[k] /= sum;
+        }
       }
     }
     else if (presenceMassFrac) {
       for (int k = 0; k < numbPhases; k++) {
-        if (m_Yk0[k]<0. || m_Yk0[k]>1.) throw ErrorXMLAttribut("massFrac should be in [0,1]", fileName, __FILE__, __LINE__);
+        if (m_Yk0[k] < 0. || m_Yk0[k] > 1.) throw ErrorXMLAttribut("massFrac should be in [0,1]", fileName, __FILE__, __LINE__);
         sum += m_Yk0[k];
       }
-      if (std::fabs(sum - 1.) > 1.e-6) { throw ErrorXMLAttribut("sum of massFrac should be 1", fileName, __FILE__, __LINE__); }
+      if (std::fabs(sum - 1.) > 1.e-6) {
+        throw ErrorXMLAttribut("sum of massFrac should be 1", fileName, __FILE__, __LINE__);
+      }
       else {
-        for (int k = 0; k < numbPhases; k++) { m_Yk0[k] /= sum; }
+        for (int k = 0; k < numbPhases; k++) {
+          m_Yk0[k] /= sum;
+        }
       }
     }
-    else { throw ErrorXMLAttribut("One of following is required : alpha, massFrac", fileName, __FILE__, __LINE__); }
+    else {
+      throw ErrorXMLAttribut("One of following is required : alpha, massFrac", fileName, __FILE__, __LINE__);
+    }
 
     //Fulfill tank state (rhok0, ak0 or Yk0)
     //--------------------------------------
@@ -121,14 +145,23 @@ BoundCondInletTank::BoundCondInletTank(int numPhysique, XMLElement* element, con
       m_rhok0[k] = eos[k]->computeDensity(m_p0, m_T0);
     }
     double rhoMel(0.);
+    //AF//TODO// Look for optim (loop inversion and use of non-normalized m_Yk0[k] for norm computation
     if (presenceAlpha) {
-      for (int k = 0; k < numbPhases; k++) { rhoMel += m_ak0[k] * m_rhok0[k]; }
-      for (int k = 0; k < numbPhases; k++) { m_Yk0[k] = m_ak0[k] * m_rhok0[k] / rhoMel; }
+      for (int k = 0; k < numbPhases; k++) {
+        rhoMel += m_ak0[k] * m_rhok0[k];
+      }
+      for (int k = 0; k < numbPhases; k++) {
+        m_Yk0[k] = m_ak0[k] * m_rhok0[k] / rhoMel;
+      }
     }
     else {
-      for (int k = 0; k < numbPhases; k++) { rhoMel += m_Yk0[k] / m_rhok0[k]; }
+      for (int k = 0; k < numbPhases; k++) {
+        rhoMel += m_Yk0[k] / m_rhok0[k];
+      }
       rhoMel = 1.0 / rhoMel;
-      for (int k = 0; k < numbPhases; k++) { m_ak0[k] = rhoMel * m_Yk0[k] / m_rhok0[k]; }
+      for (int k = 0; k < numbPhases; k++) {
+        m_ak0[k] = rhoMel * m_Yk0[k] / m_rhok0[k];
+      }
     }
 
   } //End proportion
@@ -144,13 +177,14 @@ BoundCondInletTank::BoundCondInletTank(int numPhysique, XMLElement* element, con
     int foundColors(0);
     XMLElement* elementTransport(sousElement->FirstChildElement("transport"));
     std::string nameTransport;
-    while (elementTransport != NULL)
-    {
+    while (elementTransport != NULL) {
       nameTransport = elementTransport->Attribute("name");
       if (nameTransport == "") throw ErrorXMLAttribut("name", fileName, __FILE__, __LINE__);
       int e(0);
       for (e = 0; e < numbTransports; e++) {
-        if (nameTransport == nameTransports[e]) { break; }
+        if (nameTransport == nameTransports[e]) {
+          break;
+        }
       }
       if (e != numbTransports) {
         error = elementTransport->QueryDoubleAttribute("value", &m_valueTransport[e]);
@@ -166,16 +200,15 @@ BoundCondInletTank::BoundCondInletTank(int numPhysique, XMLElement* element, con
 
 //****************************************************************************
 
-BoundCondInletTank::BoundCondInletTank(const BoundCondInletTank &Source, const int& lvl) : BoundCond(Source, lvl)
+BoundCondInletTank::BoundCondInletTank(const BoundCondInletTank& Source, const int& lvl) : BoundCond(Source, lvl)
 {
-  m_ak0 = new double[numberPhases];
-  m_Yk0 = new double[numberPhases];
+  m_ak0   = new double[numberPhases];
+  m_Yk0   = new double[numberPhases];
   m_rhok0 = new double[numberPhases];
 
-  for (int k = 0; k < numberPhases; k++)
-  {
-    m_ak0[k] = Source.m_ak0[k];
-    m_Yk0[k] = Source.m_Yk0[k];
+  for (int k = 0; k < numberPhases; k++) {
+    m_ak0[k]   = Source.m_ak0[k];
+    m_Yk0[k]   = Source.m_Yk0[k];
     m_rhok0[k] = Source.m_rhok0[k];
   }
   m_p0 = Source.m_p0;
@@ -213,10 +246,7 @@ void BoundCondInletTank::solveRiemannBoundary(Cell& cellLeft, const double& dxLe
 
 //****************************************************************************
 
-void BoundCondInletTank::solveRiemannTransportBoundary(Cell& cellLeft) const
-{
-	model->solveRiemannTransportInletTank(cellLeft, m_valueTransport);
-}
+void BoundCondInletTank::solveRiemannTransportBoundary(Cell& cellLeft) const { model->solveRiemannTransportInletTank(cellLeft, m_valueTransport); }
 
 //****************************************************************************
 
@@ -230,9 +260,6 @@ void BoundCondInletTank::printInfo()
 //******************************AMR Method************************************
 //****************************************************************************
 
-void BoundCondInletTank::creerCellInterfaceChild()
-{
-  m_cellInterfacesChildren.push_back(new BoundCondInletTank(*this, m_lvl + 1));
-}
+void BoundCondInletTank::creerCellInterfaceChild() { m_cellInterfacesChildren.push_back(new BoundCondInletTank(*this, m_lvl + 1)); }
 
 //****************************************************************************

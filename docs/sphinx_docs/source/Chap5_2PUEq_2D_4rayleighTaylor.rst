@@ -11,9 +11,9 @@ Rayleigh--Taylor instabilities occur when an irregular interface between differe
 
 but only one is presented here: same kinematic viscosity.
 
-This test case is a real two-phase test case because of the different dynamic viscosity. The proposed 2D test case is a rectangle domain with two gases of different densities. The denser of them is located at the top. 
+This test case is a real two-phase test case because of the different dynamic viscosity. The proposed 2D test case is a rectangle domain with two gases of different densities. The denser of them is located at the top.
 Initial conditions of this test are shown in :numref:`Fig:testCases:PUEq:rayleighTaylorIni`.
-Note that here a initial sinusoidal interface between the two fluids is used and is defined by: 
+Note that here a initial sinusoidal interface between the two fluids is used and is defined by:
 
 .. math::
   :nowrap:
@@ -49,7 +49,7 @@ In addition, one may use Atwood number *At* defining the density variation with 
 
 If the Atwood number tends to 1, it means there is a high-density gradient and that the phenomenon will be fast. Hence, the velocity of this instability depends on *At*.
 
-The initial characteristics of the run are: 
+The initial characteristics of the run are:
 
 +------------------------------+---------------------+
 | Characteristic               | Value               |
@@ -71,7 +71,7 @@ The initial characteristics of the run are:
 
 First of all, it is necessary to re-compile ECOGEN because it is necessary to modify a part of the *GDEntireDomainWithParticularities.cpp* code. Part 5 of the latter should be uncommented and "*RT same dynamic viscosity*" should be left commented.
 
-After these changes, it is now necessary to compile ECOGEN again with this command: 
+After these changes, it is now necessary to compile ECOGEN again with this command:
 
 .. highlight:: console
 
@@ -88,7 +88,7 @@ or to compile and run at the same time (with 4 CPUs for example):
   make && mpirun -np 4 ECOGEN
 
 .. warning::
-    Do not forget to re-comment part 5 of *GDEntireDomainWithParticularities.cpp* code when recomputing another test case. 
+    Do not forget to re-comment part 5 of *GDEntireDomainWithParticularities.cpp* code when recomputing another test case.
 
 
 Results are shown in :numref:`Fig:testCases:PUEq:rayleighTaylorAnim`.
@@ -101,9 +101,9 @@ One remarks that initially the interface between the two fluids is slightly curv
   :scale: 50%
   :align: center
 
-  RT instabilities ; mixture density (left) and density gradient (right) over time. Visualization using Paraview_ software. 
+  RT instabilities ; mixture density (left) and density gradient (right) over time. Visualization using Paraview_ software.
 
-When the density variations are low or non-existent, the mesh is as coarse as possible (within the conditions given in mesh.xml) as shown in :numref:`Fig:testCases:PUEq:rayleighTaylorAnim2`. On the contrary, when the variations become significant, the mesh is refined. 
+When the density variations are low or non-existent, the mesh is as coarse as possible (within the conditions given in mesh.xml) as shown in :numref:`Fig:testCases:PUEq:rayleighTaylorAnim2`. On the contrary, when the variations become significant, the mesh is refined.
 
 .. _Fig:testCases:PUEq:rayleighTaylorAnim2:
 
@@ -111,7 +111,7 @@ When the density variations are low or non-existent, the mesh is as coarse as po
   :scale: 80%
   :align: center
 
-  Magnified view of RT instabilities ; mixture density (left) and density gradient (right) over time. Visualization using Paraview_ software. 
+  Magnified view of RT instabilities ; mixture density (left) and density gradient (right) over time. Visualization using Paraview_ software.
 
 
 

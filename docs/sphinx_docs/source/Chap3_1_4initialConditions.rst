@@ -13,20 +13,20 @@ InitialConditions.xml
 	<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 	<CI>
 	  <!-- LIST OF GEOMETRICAL DOMAINS  -->
-	  <physicalDomains> 
+	  <physicalDomains>
 	    <domain name="base" state="leftChamber" type="entireDomain"/>
 	  </physicalDomains>
 
 	  <!-- LIST OF BOUNDARY CONDITIONS -->
 	  <boundaryConditions>
-	    <boundCond name="CLXm" type="nonReflecting" number="1"/>
-	    <boundCond name="CLXp" type="nonReflecting" number="2"/>
+	    <boundCond name="BC_Xmin" type="nonReflecting" number="1"/>
+	    <boundCond name="BC_Xmax" type="nonReflecting" number="2"/>
 	  </boundaryConditions>
 
 	  <!--  LIST OF STATES  -->
 	  <state name="leftChamber">
 	    <material type="fluid" EOS="IG_air.xml">
-	      <dataFluid alpha="0.5" density="1.0"/>  
+	      <dataFluid alpha="0.5" density="1.0"/>
 	    </material>
 	    <material type="fluid" EOS="SG_water.xml">
 	      <dataFluid alpha="0.5" density="1000.0"/>
@@ -44,12 +44,12 @@ InitialConditions.xml
 Physical domains
 ----------------
 The :xml:`<physicalDomains>` markup is mandatory. Different initial conditions can be specified for different regions of the computational domain. This markup must contain as many nodes :xml:`<domain>` as necessary to correctly initialize the computational domain (overlaps are possible). A :xml:`<domain>` node contains the following attributes:
-	
+
 - :xml:`name`: A name for the domain. This name has no influence on the choices remaining in this file.
 - :xml:`state`: This is the state of the fluid which will be specified with the :xml:`<state>` markup further in the file.
 - :xml:`type`: Specify the type of geometric domain to which the state of the fluid will be assigned; :ref:`Sec:input:EntireDomain`, :ref:`Sec:input:HalfSpace`, :ref:`Sec:input:Disc`, :ref:`Sec:input:Rectangle`, :ref:`Sec:input:Ellipse`, :ref:`Sec:input:Cuboid`, :ref:`Sec:input:Sphere`, :ref:`Sec:input:Ellipsoid`, :ref:`Sec:input:Cylinder`.
 
-**Important remark:** 
+**Important remark:**
 
 The initial conditions are attributed on each domain by using an overlapping principle. The order is therefore important: in the case of overlapping, the last attributed data are considered in the flow computation. Hence, it is important to attribute at least the entire domain at the first place thanks to the value *entireDomain*.
 
@@ -222,7 +222,7 @@ In this example, the entire computation domain will be initialized accordingly t
 
 Initializing immersed boundaries
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-When dealing with Cartesian meshes, it is possible to intialize a domain as immersed boundaries by setting the :xml:`physicalIdentity` number to -1 value.
+When dealing with Cartesian meshes, it is possible to initialize a domain as immersed boundaries by setting the :xml:`physicalIdentity` number to -1 value.
 
 Example:
 
@@ -246,9 +246,24 @@ Boundary conditions
 -------------------
 The :xml:`<boundaryConditions>` markup is mandatory. The boundary conditions are specified at the boundary of the computational domain. This markup must contain as many nodes :xml:`<boundCond>` as necessary to cover the entire boundary. Each :xml:`<boundCond>` node contains the following attributes:
 
-- :xml:`name`: A name for the boundary condition. This name has no influence on the choices remaining in this file.
+- :xml:`name`: A name for the boundary condition. Whatever the mesh type, this name has no influence on the choices remaining in this file. It can be used to give a meaningful name to the boundary conditions.
 - :xml:`type`:  The type of boundary condition, to choose among :ref:`Sec:input:NonReflecting`, :ref:`Sec:input:Symmetry`, :ref:`Sec:input:Wall`, :ref:`Sec:input:InletTank`, :ref:`Sec:input:InletInjStagState`, :ref:`Sec:input:InletInjTemp` and :ref:`Sec:input:OutletPressure`.
-- :xml:`number`: Integer corresponding to the identifier of the boundary.
+- :xml:`number`: Integer corresponding to the identifier of the boundary when using unstructured meshes.
+
+.. note::
+
+  The assignation of boundary conditions is made according to the type of mesh given in *mesh.xml* input file and it follows the rules:
+
+  - Cartesian: The boundaries are ordered and labeled from 1 to 6 (in 3D) according to:
+
+	  1. boundary condition at the minimal x location,
+	  2. boundary condition at the maximal x location,
+	  3. boundary condition at the minimal y location,
+	  4. boundary condition at the maximal y location,
+	  5. boundary condition at the minimal z location,
+	  6. boundary condition at the maximal z location.
+
+  - UnStructured: When an unstructured mesh is used, the number of the boundary condition must correspond to the number specified in the mesh file .geo (see example in section :ref:`Sec:tuto:generatingMeshes`).
 
 Depending on the :xml:`<type>`, additional information is required through the use of the following nodes.
 
@@ -365,21 +380,6 @@ In the case of a subsonic flow, the pressure is set equal to the ambient (distan
 	  </dataOutletPressure>
 	</boundCond>
 
-**Important remark**
-
-The choice of the boundary-condition number is made according to the type of mesh given in *mesh.xml* input file and it follows the rules:
-
-- Cartesian: The boundaries are ordered and labeled from 1 to 6 (in 3D) according to:
-
-	1. boundary condition at the minimal x location,
-	2. boundary condition at the maximal x location,
-	3. boundary condition at the minimal y location,
-	4. boundary condition at the maximal y location,
-	5. boundary condition at the minimal z location,
-	6. boundary condition at the maximal z location.
-
-- UnStructured: When an unstructured mesh is used, the number of the boundary condition must correspond to the number specified in the mesh file .geo (see example in section :ref:`Sec:tuto:generatingMeshes`).
- 
 **Remark**
 
 The boundary conditions are dependent on the flow model specified in *model.xml* input file. Some boundary conditions may be not available for the flow model considered.
@@ -389,14 +389,14 @@ Mechanical and thermodynamical states of the fluid
 --------------------------------------------------
 For each physical domain in the :xml:`<physicalDomains>` markup, a fluid state must correspond. It implies an additional :xml:`<state>` markup for each state of fluid. This :xml:`<state>` markup contains:
 
-- As many :xml:`<material>` nodes as the number of phases involved in the simulation. 
+- As many :xml:`<material>` nodes as the number of phases involved in the simulation.
 - A :xml:`<mixture>` node is required if a multiphase model is used.
 
 Each :xml:`<material>` node corresponds to a phase and contains the following attributes or nodes:
 
 - Attribute :xml:`type`: Only the value *fluid* is available in the current ECOGEN version.
 - Attribute :xml:`EOS`: The name of the file corresponding to the fluid equation-of-state parameters. This file must correspond to the one specified in *model.xml* input file for each phase (see section :ref:`Sec:input:FlowModel`).
-- Node :xml:`<dataFluid>`: Contain data related to the considered state of the fluid in the current phase. 
+- Node :xml:`<dataFluid>`: Contain data related to the considered state of the fluid in the current phase.
 
 This last node :xml:`<dataFluid>` as well as the :xml:`<mixture>` node are dependent on the flow model according to:
 
@@ -418,6 +418,7 @@ Single-phase flow. In this case, the :xml:`<mixture>` node is absent and the :xm
 	    <velocity x="1000." y="1000." z="0."/>
 	  </dataFluid>
 	</material>
+
 
 .. _Sec:input:UEq:
 
@@ -462,10 +463,10 @@ Moreover, in this case, the :xml:`<mixture>` node contains:
 .. code-block:: xml
 
 	<material type="fluid" EOS="IG_air.xml">
-	  <dataFluid alpha="0.5" density="1.0"/>  
+	  <dataFluid alpha="0.5" density="1.0"/>
 	</material>
 	<material type="fluid" EOS="SG_water.xml">
-	  <dataFluid alpha="0.5" density="1000.0"/>   
+	  <dataFluid alpha="0.5" density="1000.0"/>
 	</material>
 	<mixture>
 	  <dataMix pressure = "1.e5"/>
@@ -510,15 +511,33 @@ Moreover, in this case, the :xml:`<mixture>` contains the following attributes a
 .. code-block:: xml
 
 	<material type="fluid" EOS="SG_waterLiq.xml">
-	  <dataFluid alpha="0.99"/>  
+	  <dataFluid alpha="0.99"/>
 	</material>
 	<material type="fluid" EOS="IG_waterVap.xml">
-	  <dataFluid alpha="0.01"/>   
+	  <dataFluid alpha="0.01"/>
 	</material>
 	<mixture>
 	  <dataMix pressure = "1.e6"/>
 	  <velocity x="0." y="0." z="0."/>
 	</mixture>
+
+.. _Sec:input:NonLinearSchrodinger:
+
+Non-linear Schrödinger
+~~~~~~~~~~~~~~~~~~~~~~
+Defocusing non-linear Schrödinger equation. In this case, there isn't any EOS, the :xml:`<mixture>` node is absent and the :xml:`<dataFluid>` node contains the following attributes or nodes:
+
+- Attribute :xml:`density`: Initial density of the fluid, real number (unit: kg/m3 (SI)).
+- Node :xml:`<velocity>`: With :xml:`x`, :xml:`y` and :xml:`z` attributes setting the initial values for the components of the velocity vector, real numbers (unit: m/s (SI)).
+
+.. code-block:: xml
+
+    <material type="none">
+        <dataFluid density="2.0">
+            <velocity x="0." y="0." z="0."/>
+        </dataFluid>
+    </material>
+
 
 .. _Sec:input:EulerKorteweg:
 
@@ -537,22 +556,6 @@ Single-phase flow. In this case, the :xml:`<mixture>` node is absent and the :xm
         </dataFluid>
     </material>
 
-.. _Sec:input:NonLinearSchrodinger:
-
-Non-linear Schrödinger
-~~~~~~~~~~~~~~~~~~~~~~
-Defocusing non-linear Schrödinger equation. In this case, there isn't any EOS, the :xml:`<mixture>` node is absent and the :xml:`<dataFluid>` node contains the following attributes or nodes:
-
-- Attribute :xml:`density`: Initial density of the fluid, real number (unit: kg/m3 (SI)).
-- Node :xml:`<velocity>`: With :xml:`x`, :xml:`y` and :xml:`z` attributes setting the initial values for the components of the velocity vector, real numbers (unit: m/s (SI)).
-
-.. code-block:: xml
-
-    <material type="none">
-        <dataFluid density="2.0">
-            <velocity x="0." y="0." z="0."/>
-        </dataFluid>
-    </material>
 
 **Remark**
 

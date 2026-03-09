@@ -13,5 +13,5 @@
 	<gradient>
 		<method>green-gauss</method>
 	</gradient>
-	<restartSimulation restartFileNumber="0" AMRsaveFreq="0"/>
+	<resumeSimulation resumeFileNumber="0" AMRsaveFreq="0"/>
 </computationParam>

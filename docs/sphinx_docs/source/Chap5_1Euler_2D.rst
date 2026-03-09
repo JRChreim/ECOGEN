@@ -2,18 +2,19 @@
   :language: xml
 
 ***
-2D 
+2D
 ***
 
 
-.. toctree:: 
+.. toctree::
 
     ./Chap5_1Euler_2D_1rectangleDiagonal.rst
     ./Chap5_1Euler_2D_2HPregions.rst
     ./Chap5_1Euler_2D_3nozzles.rst
     ./Chap5_1Euler_2D_4RayleighTaylor.rst
+    ./Chap5_1Euler_2D_5acousticWaves.rst
 
-Other 2D test cases 
+Other 2D test cases
 ********************
 
 Other 2D tests are provided within the ECOGEN package and may be described in details later.

@@ -13,14 +13,14 @@ Main.xml
 	<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 	<computationParam>
 	  <run>example</run>
-	  <outputMode format="XML" binary="false"/>
+	  <outputMode format="VTK" binary="false"/>
 	  <timeControlMode iterations="false">
 	    <iterations number="3" iterFreq="1"/>
 	    <physicalTime totalTime="8.e-3" timeFreq="8.e-4"/>
 	  </timeControlMode>
 	  <computationControl CFL="0.8"/>
 	</computationParam>
- 
+
 It contains general parameters for the computation listed below. Some are mandatory, others are optional.
 
 .. _Sec:input:main:runName:
@@ -39,11 +39,11 @@ Output format
 
 .. code-block:: xml
 
-	<outputMode format="XML" binary="false" precision="10" reducedOutput="true"/>
+	<outputMode format="VTK" binary="false" precision="10" reducedOutput="true"/>
 
 The :xml:`<outputMode>` markup is mandatory. The user can choose the writing output format. Attributes are:
 
-- :xml:`format`: Can take the value *GNU* (standard writing in column) or *XML* (XML VTK format).
+- :xml:`format`: Can take the value *GNU* (standard writing in column) or *VTK* (XML VTK format).
 - :xml:`binary`: Can take the value true or false. *Binary* (true) or *ASCII* (false) format can be chosen.
 - :xml:`precision`: Optional attribute. Precision of output files (number of digits). If not precised, set as default.
 - :xml:`reducedOutput`: Optional attribute. Reduced number of output variables when possible (depends on the model). Only available for velocity and pressure-velocity equilibrium model. Can take the value true or false. If not precised, default is false (complete output).
@@ -60,7 +60,7 @@ Time evolution control
 	    <physicalTime totalTime="8.e-3" timeFreq="8.e-4"/>
 	  </timeControlMode>
 
-ECOGEN is a CFD tool based on an explicit integration scheme in time. The :xml:`<timeControlMode>` markup is mandatory and defines the temporal evolution of the current simulation. It contains the 
+ECOGEN is a CFD tool based on an explicit integration scheme in time. The :xml:`<timeControlMode>` markup is mandatory and defines the temporal evolution of the current simulation. It contains the
 :xml:`iterations` attribute that can take the two values:
 
 -	*true*: The time control is done thanks to the total number of timesteps and the :xml:`<iterations>` node must be present.
@@ -74,8 +74,8 @@ The :xml:`<iterations>` markup:
 
 ECOGEN automatically computes the timestep value thanks to a numerical stability criterion (CFL  criterion). This markup is defined with following attributes:
 
--	:xml:`number`: Integer equal to the total number of temporal timesteps. 
--	:xml:`iterFreq`: Integer equal to the writing frequency of the results (results are written every :xml:`iterFreq` timestep)  
+-	:xml:`number`: Integer equal to the total number of temporal timesteps.
+-	:xml:`iterFreq`: Integer equal to the writing frequency of the results (results are written every :xml:`iterFreq` timestep)
 
 The :xml:`<physicalTime>` markup:
 
@@ -92,7 +92,7 @@ CFL criterion
 -------------
 
 .. code-block:: xml
-	
+
 	<computationControl CFL="0.8"/>
 
 The :xml:`<computationControl>` markup is mandatory. It specifies the value of the attribute :xml:`CFL` which ensures the stability of the temporal integration scheme: The value (real number) must be less than 1.
@@ -100,7 +100,7 @@ The :xml:`<computationControl>` markup is mandatory. It specifies the value of t
 Global accuracy order of the numerical scheme
 ---------------------------------------------
 
-By default, the numerical scheme of the hydrodynamic solver is first order in time and space.
+By default, the numerical scheme of the fluid-flow solver is first order in time and space.
 ECOGEN can use a second-order scheme in time and space using the MUSCL method with TVD limiters (see :cite:`toro2013riemann` for example for an overview of the method).
 Depending on whether the mesh is **Cartesian** (with/without AMR) or **unstructured**, the MUSCL method used and its parameters are different.
 
@@ -113,9 +113,9 @@ In this case, the optional markup :xml:`<secondOrder>` can be inserted in the *m
 
 	<secondOrder>
 	  <globalLimiter>minmod</globalLimiter>
-	  <interfaceLimiter>superbee</interfaceLimiter>                            <!-- optionnal node -->
-	  <globalVolumeFractionLimiter>minmod</globalVolumeFractionLimiter>        <!-- optionnal node -->
-	  <interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>   <!-- optionnal node -->
+	  <interfaceLimiter>superbee</interfaceLimiter>                            <!-- optional node -->
+	  <globalVolumeFractionLimiter>minmod</globalVolumeFractionLimiter>        <!-- optional node -->
+	  <interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>   <!-- optional node -->
 	</secondOrder>
 
 The :xml:`<secondOrder>` markup must contain the node :xml:`<globalLimiter>`. The other nodes are optional. The slope limiters available in ECOGEN are the following: minmod :cite:`roe1986superbee`, vanleer :cite:`vanLeer1974`, vanalbada :cite:`vanAlbada1997`, mc :cite:`van1977towards`, superbee :cite:`roe1986superbee` and thinc :cite:`shyue2014thinc` (only for volume fraction at the interface location). Markup significations are:
@@ -127,7 +127,20 @@ The :xml:`<secondOrder>` markup must contain the node :xml:`<globalLimiter>`. Th
 
 Unstructured mesh
 ~~~~~~~~~~~~~~~~~
-The second-order method for unstructured meshes is not yet released because of known bugs.
+For an unstructured mesh, second-order scheme is based on a TVD gradient limitation; see :cite:`chiapolino2017sharpening` for details.
+In this case, the chosen limiter is a global limiter applied everywhere and on all variables.
+Currently the gradient limiters are the following: minmod :cite:`roe1986superbee` and superbee :cite:`roe1986superbee`.
+The optional markup :xml:`<secondOrder>` can be inserted in the *main.xml* input file as in the following example:
+
+.. code-block:: xml
+
+  <secondOrder>
+    <globalLimiter>minmod</globalLimiter>
+  </secondOrder>
+
+.. important::
+
+  Since the MUSCL method relies on gradients computation, the gradient method chosen should be compatible with unstructured meshes (see the markup :xml:`<gradient>`).
 
 Gradient method
 ---------------
@@ -153,7 +166,7 @@ To define explicitly the gradient method, one can use:
 Probes
 ------
 It is possible to record over time flow variables at given locations in the computational domain. This is done by including to the *main.xml* input file the optional :xml:`<probe>` markup.
- 
+
 .. code-block:: xml
 
 	<probe name="capteur1">
@@ -172,10 +185,10 @@ Probe output-result files will be placed in the specific subfolder **ECOGEN/resu
 1. Recording probes with a high frequency could have a significant impact on computation performances due to the computer memory time access. To prevent that, one should fix a reasonable acquisition frequency.
 2. Several probes can be added simultaneously. For that, place as many as wanted :xml:`<probe>` markups in the *main.xml* input files.
 
-Simulation restart option
+Simulation resume option
 -------------------------
-ECOGEN can restart a run from previously written results. To do so, the :xml:`restartFileNumber` attribute of the :xml:`<restartSimulation>` markup must be specified. Furthermore, this markup can include an :xml:`AMRsaveFreq` attribute which gives the frequency at which the mesh information of an AMR simulation is saved. Therefore, an AMR simulation can only restart from a time coherent combination of result and mesh information files.
+ECOGEN can resume a run from previously written results. To do so, the :xml:`resumeFileNumber` attribute of the :xml:`<resumeSimulation>` markup must be specified. Furthermore, this markup can include an :xml:`AMRsaveFreq` attribute which gives the frequency at which the mesh information of an AMR simulation is saved. Therefore, an AMR simulation can only resume from a time coherent combination of result and mesh information files.
 
 .. code-block:: xml
 
-	<restartSimulation restartFileNumber="10" AMRsaveFreq="5"/>
+	<resumeSimulation resumeFileNumber="10" AMRsaveFreq="5"/>

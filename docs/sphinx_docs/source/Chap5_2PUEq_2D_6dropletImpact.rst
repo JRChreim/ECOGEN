@@ -4,7 +4,7 @@
 Droplet impact
 ===============
 
-This case is a 2D Cartesian test case. A liquid droplet is moving upward in a box with solid walls and filled with air. Initial conditions of this test are shown in :numref:`Fig:testCases:PUEq:dropletImpactIni`. 
+This case is a 2D Cartesian test case. A liquid droplet is moving upward in a box with solid walls and filled with air. Initial conditions of this test are shown in :numref:`Fig:testCases:PUEq:dropletImpactIni`.
 Input files for this test are available in *./libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/dropletImpact/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml
@@ -17,7 +17,7 @@ Input files for this test are available in *./libTests/referenceTestCases/PUEq/A
   :scale: 30%
   :align: center
 
-  Initial conditions. Visualization using Paraview_ software. 
+  Initial conditions. Visualization using Paraview_ software.
 
 The initial characteristics of the run are:
 
@@ -39,7 +39,7 @@ The initial characteristics of the run are:
 | precision                    | 2nd order (VanLeer + THINC) |
 +------------------------------+-----------------------------+
 
-Results are shown in :numref:`Fig:testCases:PUEq:dropletImpactAnim` and :numref:`Fig:testCases:PUEq:dropletImpactAnim2`. 
+Results are shown in :numref:`Fig:testCases:PUEq:dropletImpactAnim` and :numref:`Fig:testCases:PUEq:dropletImpactAnim2`.
 At the impact on the upper wall, the droplet is sliding and deforming, and thanks to surface tension it is then dividing in smaller droplets. Due to the gravity, some small droplets fall down while others are sliding down along the vertical wall. One can observe the rebounds of the droplets as well as the various droplet--droplet interactions leading to coalescence phenomena.
 
 .. _Fig:testCases:PUEq:dropletImpactAnim:

@@ -14,7 +14,10 @@ ECOGEN is the legal property of its developers, whose names are listed in the co
 	- Benedikt Dorschner,
 	- Joris Caze,
 	- Fatima Gadiri,
-	- Solène Schropff.
+	- Nicolas Favrie,
+	- Solène Schropff,
+	- Adedotun Ade-Onojobi,
+	- Algiane Froehly.
 
 ECOGEN is a free software: You can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 ECOGEN is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details available at the following address: http://www.gnu.org/licenses.
@@ -42,10 +45,10 @@ To cite ECOGEN, please use :cite:`schmidmayer2020ecogen` |DOI:ecogen|
 .. |DOI:ecogen| image:: https://img.shields.io/badge/DOI-10.1016/j.cpc.2019.107093-green.svg
    :target: https://doi.org/10.1016/j.cpc.2019.107093
 
-Aknowledgments
---------------
+Acknowledgments
+---------------
 
-A special thanks is also adressed to Tim Colonius and Nicolas Favrie for their advising and fundings.
+A special thanks is also addressed to Tim Colonius for his advising and fundings.
 
 They helped to improve ECOGEN software through their valuable feedbacks: Luc Biasiori-Poulanges, Spencer Bryngelson, Theresa Trummler, Mathieu Brasseur, Guillaume Bokman, Vincent Perrier.
 

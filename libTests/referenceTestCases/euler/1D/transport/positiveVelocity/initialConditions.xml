@@ -11,8 +11,8 @@
   </physicalDomains>
   <!-- LIST OF BOUNDARY CONDITIONS -->
   <boundaryConditions>
-    <boundCond type="nonReflecting" number="1" name="CLXm"/>
-    <boundCond type="nonReflecting" number="2" name="CLXp"/>
+    <boundCond type="nonReflecting" number="1" name="BC_Xmin"/>
+    <boundCond type="nonReflecting" number="2" name="BC_Xmax"/>
   </boundaryConditions>
   <!--  LIST OF STATES  -->
   <state name="lowDensity">

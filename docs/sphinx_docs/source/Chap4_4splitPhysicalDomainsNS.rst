@@ -68,14 +68,14 @@ The complete geometry configuration file (*.geo*) is the following:
 Setup of the test case
 ======================
 
-Let's start with the *main.xml* file. We use an *XML* output mode with time control set to *iterations* and a *CFL* number of *0.8*: 
+Let's start with the *main.xml* file. We use an *VTK* output mode with time control set to *iterations* and a *CFL* number of *0.8*:
 
 .. code-block:: xml
 
 	<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 	<computationParam>
 		<run>shockTubeUnstructured</run>
-		<outputMode format="XML" binary="false" precision="15"/>
+		<outputMode format="VTK" binary="false" precision="15"/>
 		<timeControlMode iterations="true">
 			<iterations number="100" iterFreq="10"/>
 			<physicalTime totalTime="1e-3" timeFreq="5.e-5"/>
@@ -93,7 +93,7 @@ To solve this flow we use the model *Euler* with air considered as ideal gas. Th
 		<EOS name="IG_air.xml"/>
 	</model>
 
-Reading of the unstructured mesh is done throught the *mesh.xml* file:
+Reading of the unstructured mesh is done through the *mesh.xml* file:
 
 .. code-block:: xml
 
@@ -112,7 +112,7 @@ All that remains to be done is to initialize the chambers with the corresponding
 	<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 	<CI>
 	    <!-- LIST OF GEOMETRICAL DOMAINS  -->
-	    <physicalDomains> 
+	    <physicalDomains>
 	        <domain name="leftChamber" state="leftChamber" type="entireDomain" physicalEntity="2"/>
 	        <domain name="rightChamber" state="rightChamber" type="entireDomain" physicalEntity="3"/>
 	    </physicalDomains>
@@ -121,7 +121,7 @@ All that remains to be done is to initialize the chambers with the corresponding
 	    <boundaryConditions>
 	        <boundCond name="walls" type="wall" number="1" />
 	    </boundaryConditions>
-	    
+
 	    <!--  LIST OF STATES  -->
 	    <state name="leftChamber">
 	        <material type="fluid" EOS="IG_air.xml">
@@ -140,7 +140,7 @@ All that remains to be done is to initialize the chambers with the corresponding
 	    </state>
 	</CI>
 
-Add the new test case to the main input file *ECOGEN.xml*: :xml:`<testCase>./libTests/myTest/</testCase>`. 
+Add the new test case to the main input file *ECOGEN.xml*: :xml:`<testCase>./libTests/myTest/</testCase>`.
 
 Run the test case simulation with **XX** cores:
 

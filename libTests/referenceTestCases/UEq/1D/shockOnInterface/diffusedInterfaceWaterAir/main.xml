@@ -4,12 +4,12 @@
 	<outputMode format="GNU" binary="false"/>
 	<timeControlMode iterations="false">
 		<iterations number="2" iterFreq="2"/>
-		<physicalTime totalTime="1000.e-6" timeFreq="1000.e-6"/>
+		<physicalTime totalTime="600.e-6" timeFreq="300.e-6"/>
 	</timeControlMode>
 	<computationControl CFL="0.6"/>
-	<secondOrder>
+<!-- 	<secondOrder>
 		<globalLimiter>vanleer</globalLimiter>
 		<globalVolumeFractionLimiter>thinc</globalVolumeFractionLimiter>
     	<interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>
-	</secondOrder>
+	</secondOrder> -->
 </computationParam>

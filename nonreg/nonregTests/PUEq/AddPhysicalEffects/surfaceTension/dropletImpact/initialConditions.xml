@@ -11,10 +11,10 @@
   </physicalDomains>
   <!-- LIST OF BOUNDARY CONDITIONS -->
   <boundaryConditions>
-    <boundCond type="wall" name="CLXm" number="1"/>
-    <boundCond type="wall" name="CLXp" number="2"/>
-    <boundCond type="wall" name="CLYm" number="3"/>
-    <boundCond type="wall" name="CLYp" number="4"/>
+    <boundCond type="wall" name="BC_Xmin" number="1"/>
+    <boundCond type="wall" name="BC_Xmax" number="2"/>
+    <boundCond type="wall" name="BC_Ymin" number="3"/>
+    <boundCond type="wall" name="BC_Ymax" number="4"/>
   </boundaryConditions>
   <!--  LIST OF STATES  -->
   <state name="air">

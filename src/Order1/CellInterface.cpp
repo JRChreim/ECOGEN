@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CellInterface.h"
@@ -37,14 +37,14 @@ Cell* bufferCellRight;
 
 //***********************************************************************
 
-CellInterface::CellInterface() : m_cellLeft(0), m_cellRight(0), m_face(0), m_lvl(0), m_cellInterfacesChildren(0), 
-  m_mrfInterface(false), m_mrfStaticRegionIsLeft(false), m_omega(0.)
+CellInterface::CellInterface() :
+  m_cellLeft(0), m_cellRight(0), m_face(0), m_lvl(0), m_cellInterfacesChildren(0), m_mrfInterface(false), m_mrfStaticRegionIsLeft(false), m_omega(0.)
 {}
 
 //***********************************************************************
 
-CellInterface::CellInterface(const int& lvl) : m_cellLeft(0), m_cellRight(0), m_face(0), m_lvl(lvl), m_cellInterfacesChildren(0),
-  m_mrfInterface(false), m_mrfStaticRegionIsLeft(false), m_omega(0.)
+CellInterface::CellInterface(const int& lvl) :
+  m_cellLeft(0), m_cellRight(0), m_face(0), m_lvl(lvl), m_cellInterfacesChildren(0), m_mrfInterface(false), m_mrfStaticRegionIsLeft(false), m_omega(0.)
 {}
 
 //***********************************************************************
@@ -62,78 +62,73 @@ CellInterface::~CellInterface()
 
 void CellInterface::initialize(Cell* cellLeft, Cell* cellRight)
 {
-  m_cellLeft = cellLeft;
+  m_cellLeft  = cellLeft;
   m_cellRight = cellRight;
 }
 
 //***********************************************************************
 
-void CellInterface::initializeGauche(Cell* cellLeft)
-{
-  m_cellLeft = cellLeft;
-}
+void CellInterface::initializeGauche(Cell* cellLeft) { m_cellLeft = cellLeft; }
 
 //***********************************************************************
 
-void CellInterface::initializeDroite(Cell* cellRight)
-{
-  m_cellRight = cellRight;
-}
+void CellInterface::initializeDroite(Cell* cellRight) { m_cellRight = cellRight; }
 
 //***********************************************************************
 
-void CellInterface::setFace(Face *face)
-{
-  m_face = face;
-}
+void CellInterface::setFace(Face* face) { m_face = face; }
 
 //***********************************************************************
 
 void CellInterface::checkMrfInterface(Source* sourceMRF)
 {
   int rotatingRegion(sourceMRF->getPhysicalEntity());
-  if (m_cellLeft->getElement()->getAppartenancePhysique() != rotatingRegion && 
-    m_cellRight->getElement()->getAppartenancePhysique() == rotatingRegion) 
-  {
-    m_mrfInterface = true;
+  if (m_cellLeft->getElement()->getAppartenancePhysique() != rotatingRegion &&
+      m_cellRight->getElement()->getAppartenancePhysique() == rotatingRegion) {
+    m_mrfInterface          = true;
     m_mrfStaticRegionIsLeft = true;
-    m_omega = sourceMRF->getOmega();
+    m_omega                 = sourceMRF->getOmega();
   }
-  else if (m_cellLeft->getElement()->getAppartenancePhysique() == rotatingRegion && 
-    m_cellRight->getElement()->getAppartenancePhysique() != rotatingRegion) 
-  {
-    m_mrfInterface = true;
+  else if (m_cellLeft->getElement()->getAppartenancePhysique() == rotatingRegion &&
+           m_cellRight->getElement()->getAppartenancePhysique() != rotatingRegion) {
+    m_mrfInterface          = true;
     m_mrfStaticRegionIsLeft = false;
-    m_omega = sourceMRF->getOmega();
+    m_omega                 = sourceMRF->getOmega();
   }
-  else { m_mrfInterface = false; } // SRF
+  else {
+    m_mrfInterface = false;
+  } // SRF
 }
 
 //***********************************************************************
 
-void CellInterface::computeFlux(double& dtMax, Limiter& globalLimiter, Limiter& interfaceLimiter,
-  Limiter& globalVolumeFractionLimiter, Limiter& interfaceVolumeFractionLimiter, Prim type)
+void CellInterface::computeFlux(double& dtMax,
+                                Limiter& globalLimiter,
+                                Limiter& interfaceLimiter,
+                                Limiter& globalVolumeFractionLimiter,
+                                Limiter& interfaceVolumeFractionLimiter,
+                                Prim type)
 {
   if (!m_mrfInterface) { // No MRF or not MRF interface
     this->solveRiemann(dtMax, globalLimiter, interfaceLimiter, globalVolumeFractionLimiter, interfaceVolumeFractionLimiter, type);
-    if (m_cellLeft->getLvl() == m_cellRight->getLvl()) {      //CoefAMR = 1 pour les deux
-      this->addFlux(1.);      //Add of flux on right cell
-      this->subtractFlux(1.); //Subtract of flux on left cell
+    if (m_cellLeft->getLvl() == m_cellRight->getLvl()) { //CoefAMR = 1 pour les deux
+      this->addFlux(1.);                                 //Add of flux on right cell
+      this->subtractFlux(1.);                            //Subtract of flux on left cell
     }
-    else if (m_cellLeft->getLvl() > m_cellRight->getLvl()) {  //CoefAMR = 1 pour la gauche et 0.5 pour la droite
-      this->addFlux(0.5);     //Add of flux on right cell
-      this->subtractFlux(1.); //Subtract of flux on left cell
+    else if (m_cellLeft->getLvl() > m_cellRight->getLvl()) { //CoefAMR = 1 pour la gauche et 0.5 pour la droite
+      this->addFlux(0.5);                                    //Add of flux on right cell
+      this->subtractFlux(1.);                                //Subtract of flux on left cell
     }
-    else {                                                     //CoefAMR = 0.5 pour la gauche et 1 pour la droite
+    else {                     //CoefAMR = 0.5 pour la gauche et 1 pour la droite
       this->addFlux(1.);       //Add of flux on right cell
       this->subtractFlux(0.5); //Subtract of flux on left cell
     }
   }
-  else { // MRF activated 
+  else { // MRF activated
     this->solveRiemannMRF(dtMax);
     if (m_mrfStaticRegionIsLeft) {
       this->addFluxRotatingRegion();
-      this->subtractFlux(1.);  
+      this->subtractFlux(1.);
     }
     else {
       this->addFlux(1.);
@@ -144,15 +139,16 @@ void CellInterface::computeFlux(double& dtMax, Limiter& globalLimiter, Limiter& 
 
 //***********************************************************************
 
-void CellInterface::computeFluxAddPhys(AddPhys &addPhys)
-{
-  addPhys.computeFluxAddPhys(this);
-}
+void CellInterface::computeFluxAddPhys(AddPhys& addPhys) { addPhys.computeFluxAddPhys(this); }
 
 //***********************************************************************
 
-void CellInterface::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, Limiter& /*interfaceLimiter*/,
-  Limiter& /*globalVolumeFractionLimiter*/, Limiter& /*interfaceVolumeFractionLimiter*/, Prim /*type*/)
+void CellInterface::solveRiemann(double& dtMax,
+                                 Limiter& /*globalLimiter*/,
+                                 Limiter& /*interfaceLimiter*/,
+                                 Limiter& /*globalVolumeFractionLimiter*/,
+                                 Limiter& /*interfaceVolumeFractionLimiter*/,
+                                 Prim /*type*/)
 {
   //Vector and tensor projections on geometric reference frame of the face
   m_cellLeft->localProjection(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
@@ -161,11 +157,13 @@ void CellInterface::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, Limi
   //Riemann problem
   double dxLeft(m_cellLeft->getElement()->getLCFL());
   double dxRight(m_cellRight->getElement()->getLCFL());
-  dxLeft = dxLeft*std::pow(2., (double)m_lvl);
-  dxRight = dxRight*std::pow(2., (double)m_lvl);
+  dxLeft  = dxLeft * std::pow(2., (double)m_lvl);
+  dxRight = dxRight * std::pow(2., (double)m_lvl);
   model->solveRiemannIntern(*m_cellLeft, *m_cellRight, dxLeft, dxRight, dtMax);
   //Handling of transport functions (m_Sm known: need to be called after Riemann solver)
-  if (numberTransports > 0) { model->solveRiemannTransportIntern(*m_cellLeft, *m_cellRight); }
+  if (numberTransports > 0) {
+    model->solveRiemannTransportIntern(*m_cellLeft, *m_cellRight);
+  }
 
   //Flux projection on absolute reference frame
   model->reverseProjection(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
@@ -177,42 +175,38 @@ void CellInterface::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, Limi
 
 void CellInterface::solveRiemannMRF(double& dtMax)
 {
-  // This routine allows to compute two fluxes: 
+  // This routine allows to compute two fluxes:
   // - an absolute flux for the static region,
   // - a relative flux for the rotating region.
   // The absolute flux is computed by projection of the velocity of the rotating region into the static one
   // and the relative flux is built from the RP primitive vector solution after the relative velocity reconstruction.
   // For both fluxes the Riemann problem uses an absolute velocity.
-  
+
   Coord buffVel; // Same variable is used for two purpose (1: build abs. vel. of rotating region, 2: re-build rel. vel. of rot. region)
-  Cell *rotatingCell(nullptr);
+  Cell* rotatingCell(nullptr);
 
   // Build absolute velocity in the rotating region
-  if (m_mrfStaticRegionIsLeft) { rotatingCell = m_cellRight; }
-  else { rotatingCell = m_cellLeft; }
-
-  if (numberPhases > 1) {
-    buffVel.setXYZ(
-      rotatingCell->getMixture()->getVelocity().getX(),
-      rotatingCell->getMixture()->getVelocity().getY(),
-      rotatingCell->getMixture()->getVelocity().getZ()
-    );
-    rotatingCell->getMixture()->setVelocity(
-      buffVel + m_omega.cross(this->getFace()->getPos())
-    );
+  if (m_mrfStaticRegionIsLeft) {
+    rotatingCell = m_cellRight;
   }
   else {
-    buffVel.setXYZ(
-      rotatingCell->getPhase(0)->getVelocity().getX(),
-      rotatingCell->getPhase(0)->getVelocity().getY(),
-      rotatingCell->getPhase(0)->getVelocity().getZ()
-    );
-    rotatingCell->getPhase(0)->setVelocity(
-      buffVel + m_omega.cross(this->getFace()->getPos())
-    );
+    rotatingCell = m_cellLeft;
+  }
+
+  if (numberPhases > 1) {
+    buffVel.setXYZ(rotatingCell->getMixture()->getVelocity().getX(),
+                   rotatingCell->getMixture()->getVelocity().getY(),
+                   rotatingCell->getMixture()->getVelocity().getZ());
+    rotatingCell->getMixture()->setVelocity(buffVel + m_omega.cross(this->getFace()->getPos()));
+  }
+  else {
+    buffVel.setXYZ(rotatingCell->getPhase(0)->getVelocity().getX(),
+                   rotatingCell->getPhase(0)->getVelocity().getY(),
+                   rotatingCell->getPhase(0)->getVelocity().getZ());
+    rotatingCell->getPhase(0)->setVelocity(buffVel + m_omega.cross(this->getFace()->getPos()));
   }
   rotatingCell->fulfillState(); // Required to compute total energy
-  
+
   // Vector and tensor projections on geometric reference frame of the face
   m_cellLeft->localProjection(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
   m_cellRight->localProjection(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
@@ -220,17 +214,20 @@ void CellInterface::solveRiemannMRF(double& dtMax)
   // Riemann problem to build relative and absolute fluxes
   double dxLeft(m_cellLeft->getElement()->getLCFL());
   double dxRight(m_cellRight->getElement()->getLCFL());
-  dxLeft = dxLeft*std::pow(2., (double)m_lvl);
-  dxRight = dxRight*std::pow(2., (double)m_lvl);
+  dxLeft  = dxLeft * std::pow(2., (double)m_lvl);
+  dxRight = dxRight * std::pow(2., (double)m_lvl);
   std::vector<double> primStar(VarBoundary::SIZE, 0); // Vector of intermediate state primitive variables from RP
-  model->solveRiemannInternMRF(*m_cellLeft, *m_cellRight, dxLeft, dxRight, dtMax, m_omega, m_face->getNormal(), m_face->getTangent(), m_face->getBinormal(), m_face->getPos());
-  
+  model->solveRiemannInternMRF(
+    *m_cellLeft, *m_cellRight, dxLeft, dxRight, dtMax, m_omega, m_face->getNormal(), m_face->getTangent(), m_face->getBinormal(), m_face->getPos());
+
   // Finish build of relative flux for rotating region
   model->addNonConsMrfFlux(rotatingCell->getPhases());
   model->reverseProjectionMrfFlux(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
 
   // Handling of transport functions (m_Sm known: need to be called after Riemann solver)
-  if (numberTransports > 0) { model->solveRiemannTransportIntern(*m_cellLeft, *m_cellRight); }
+  if (numberTransports > 0) {
+    model->solveRiemannTransportIntern(*m_cellLeft, *m_cellRight);
+  }
 
   // Absolute flux is projected into global frame
   model->reverseProjection(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
@@ -239,24 +236,16 @@ void CellInterface::solveRiemannMRF(double& dtMax)
 
   // Reset velocity of the rotating region to relative one for Godunov scheme
   if (numberPhases > 1) {
-    buffVel.setXYZ(
-      rotatingCell->getMixture()->getVelocity().getX(),
-      rotatingCell->getMixture()->getVelocity().getY(),
-      rotatingCell->getMixture()->getVelocity().getZ()
-    );
-    rotatingCell->getMixture()->setVelocity(
-      buffVel - m_omega.cross(this->getFace()->getPos())
-    );
+    buffVel.setXYZ(rotatingCell->getMixture()->getVelocity().getX(),
+                   rotatingCell->getMixture()->getVelocity().getY(),
+                   rotatingCell->getMixture()->getVelocity().getZ());
+    rotatingCell->getMixture()->setVelocity(buffVel - m_omega.cross(this->getFace()->getPos()));
   }
   else {
-    buffVel.setXYZ(
-      rotatingCell->getPhase(0)->getVelocity().getX(),
-      rotatingCell->getPhase(0)->getVelocity().getY(),
-      rotatingCell->getPhase(0)->getVelocity().getZ()
-    );
-    rotatingCell->getPhase(0)->setVelocity(
-      buffVel - m_omega.cross(this->getFace()->getPos())
-    );
+    buffVel.setXYZ(rotatingCell->getPhase(0)->getVelocity().getX(),
+                   rotatingCell->getPhase(0)->getVelocity().getY(),
+                   rotatingCell->getPhase(0)->getVelocity().getZ());
+    rotatingCell->getPhase(0)->setVelocity(buffVel - m_omega.cross(this->getFace()->getPos()));
   }
   rotatingCell->fulfillState(); // Required to compute total energy
   rotatingCell = nullptr;
@@ -272,7 +261,9 @@ void CellInterface::addFlux(const double& coefAMR)
   m_cellRight->getCons()->addNonCons(coefA, m_cellRight, m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
   for (int k = 0; k < numberTransports; k++) {
     m_cellRight->getConsTransport(k)->addFlux(coefA, k);
-    m_cellRight->getConsTransport(k)->addNonCons(coefA, m_cellRight->getTransport(k).getValue(), model->getSM());
+    m_cellRight->getConsTransport(k)->addNonCons(coefA,
+                                                 m_cellRight->getTransport(k).getValue(),
+                                                 model->getSM()); //FP//CAUTION// Does not work with NEq model
   }
   if (model->isSmoothCrossSection1d()) {
     m_cellRight->getCons()->addFluxSmooth1D(coefA, m_face->getNormal(), m_cellRight);
@@ -289,9 +280,11 @@ void CellInterface::subtractFlux(const double& coefAMR)
   m_cellLeft->getCons()->subtractNonCons(coefA, m_cellLeft, m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
   for (int k = 0; k < numberTransports; k++) {
     m_cellLeft->getConsTransport(k)->subtractFlux(coefA, k);
-    m_cellLeft->getConsTransport(k)->subtractNonCons(coefA, m_cellLeft->getTransport(k).getValue(), model->getSM());
+    m_cellLeft->getConsTransport(k)->subtractNonCons(coefA,
+                                                     m_cellLeft->getTransport(k).getValue(),
+                                                     model->getSM()); //FP//CAUTION// Does not work with NEq model
   }
-  if (model->isSmoothCrossSection1d()) { 
+  if (model->isSmoothCrossSection1d()) {
     m_cellLeft->getCons()->substractFluxSmooth1D(coefA, m_face->getNormal(), m_cellLeft);
   }
 }
@@ -316,53 +309,42 @@ void CellInterface::substractFluxRotatingRegion()
 
 //***********************************************************************
 
-double CellInterface::distance(Cell* c)
-{
-  return m_face->distance(c->getElement());
-}
+double CellInterface::distance(Cell* c) { return m_face->distance(c->getElement()); }
 
 //***********************************************************************
 
-Face *CellInterface::getFace()
-{
-  return m_face;
-}
+Face* CellInterface::getFace() { return m_face; }
 
 //***********************************************************************
 
-Model* CellInterface::getMod() const
-{
-  return model;
-}
+Model* CellInterface::getMod() const { return model; }
 
 //***********************************************************************
 
-Cell* CellInterface::getCellLeft() const
-{
-  return m_cellLeft;
-}
+Cell* CellInterface::getCellLeft() const { return m_cellLeft; }
 
 //***********************************************************************
 
-Cell* CellInterface::getCellRight() const
-{
-  return m_cellRight;
-}
+Cell* CellInterface::getCellRight() const { return m_cellRight; }
 
 //****************************************************************************
 //******************************AMR Method***********************************
 //****************************************************************************
 
-void CellInterface::computeXi(const double& criteriaVar, const bool &varRho, const bool &varP, const bool &varU, const bool &varAlpha)
+void CellInterface::computeXi(const double& criteriaVar, const bool& varRho, const bool& varP, const bool& varU, const bool& varAlpha)
 {
-  if (varRho) { this->computeCritereAMR(criteriaVar, Variable::density, -1); }
+  if (varRho) {
+    this->computeCritereAMR(criteriaVar, Variable::density, -1);
+  }
   if (varP) {
     if (m_cellLeft->getXi() < 0.99 || m_cellRight->getXi() < 0.99) {
       this->computeCritereAMR(criteriaVar, Variable::pressure, -1);
     }
   }
   if (varU) {
-    if (m_cellLeft->getXi() < 0.99 || m_cellRight->getXi() < 0.99) { this->computeCritereAMR(criteriaVar, Variable::velocityMag); }
+    if (m_cellLeft->getXi() < 0.99 || m_cellRight->getXi() < 0.99) {
+      this->computeCritereAMR(criteriaVar, Variable::velocityMag);
+    }
   }
   if (varAlpha) {
     if (m_cellLeft->getXi() < 0.99 || m_cellRight->getXi() < 0.99) {
@@ -385,8 +367,12 @@ void CellInterface::computeCritereAMR(const double& criteriaVar, Variable nameVa
   // Valeur de la variation
   valueMin = std::min(std::fabs(cd), std::fabs(cg));
   if (valueMin < 1.e-2) { //Utile pour alpha (quasi-seulement) ou velocity
-    if (nameVariable == Variable::velocityMag) { valueMin = 0.1; }
-    else {                             valueMin = 1.e-2; }
+    if (nameVariable == Variable::velocityMag) {
+      valueMin = 0.1;
+    }
+    else {
+      valueMin = 1.e-2;
+    }
   }
   variation = std::fabs(cd - cg) / valueMin;
 
@@ -423,10 +409,7 @@ void CellInterface::computeFluxXi()
 
 //***********************************************************************
 
-void CellInterface::creerCellInterfaceChild()
-{
-  m_cellInterfacesChildren.push_back(new CellInterface(m_lvl + 1));
-}
+void CellInterface::creerCellInterfaceChild() { m_cellInterfacesChildren.push_back(new CellInterface(m_lvl + 1)); }
 
 //***********************************************************************
 
@@ -437,21 +420,20 @@ void CellInterface::creerCellInterfaceChildInterne(const int& lvl, std::vector<C
 
 //***********************************************************************
 
-void CellInterface::creerFaceChild(CellInterface* cellInterfaceParent)
-{
-  m_face = cellInterfaceParent->m_face->creerNouvelleFace();
-}
+void CellInterface::creerFaceChild(CellInterface* cellInterfaceParent) { m_face = cellInterfaceParent->m_face->creerNouvelleFace(); }
 
 //***********************************************************************
 
-void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCellsZ, const double& dXParent, const double& dYParent, const double& dZParent, Cell* cellRef, const int& dim)
+void CellInterface::raffineCellInterfaceExterne(
+  const int& nbCellsY, const int& nbCellsZ, const double& dXParent, const double& dYParent, const double& dZParent, Cell* cellRef, const int& dim)
 {
   //La creation des children cell interfaces n'est pas systematique, on regarde d'abord si ces children cell interfaces ne sont pas deja crees.
   //Dans tous les cas on re-attribut les liaisons cells/cell interfaces.
 
   double epsilon(1.e-6);
   int allocateSlopeLocal(1);
-  double surfaceChild(std::pow(0.5,dim-1.)*m_face->getSurface());
+  //AF//TODO// Remove call to pow
+  double surfaceChild(std::pow(0.5, dim - 1.) * m_face->getSurface());
 
   if (nbCellsZ == 1) {
     if (nbCellsY == 1) {
@@ -526,7 +508,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             for (int i = 0; i < 2; i++) {
               //First face
               if (i == 0) {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                            m_face->getPos().getY() - 0.25 * dYParent,
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
                 m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(0));
                 m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -534,13 +518,15 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
               }
               //Second face
               else {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                            m_face->getPos().getY() + 0.25 * dYParent,
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
                 m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(2));
                 m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
                 cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
               }
-              m_cellInterfacesChildren[i]->m_face->setSize(0., 0.5*m_face->getSizeY(), m_face->getSizeZ());
+              m_cellInterfacesChildren[i]->m_face->setSize(0., 0.5 * m_face->getSizeY(), m_face->getSizeZ());
             }
           }
           //Cote droite
@@ -548,7 +534,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             for (int i = 0; i < 2; i++) {
               //First face
               if (i == 0) {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                            m_face->getPos().getY() - 0.25 * dYParent,
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(1));
                 m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
                 cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -556,13 +544,15 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
               }
               //Second face
               else {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                            m_face->getPos().getY() + 0.25 * dYParent,
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
                 m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
                 cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
                 m_cellRight->addCellInterface(m_cellInterfacesChildren[i]);
               }
-              m_cellInterfacesChildren[i]->m_face->setSize(0., 0.5*m_face->getSizeY(), m_face->getSizeZ());
+              m_cellInterfacesChildren[i]->m_face->setSize(0., 0.5 * m_face->getSizeY(), m_face->getSizeZ());
             }
           }
         }
@@ -575,7 +565,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             for (int i = 0; i < 2; i++) {
               //First face
               if (i == 0) {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                            m_face->getPos().getY(),
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
                 m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(0));
                 m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -583,13 +575,15 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
               }
               //Second face
               else {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                            m_face->getPos().getY(),
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
                 m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(1));
                 m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
                 cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
               }
-              m_cellInterfacesChildren[i]->m_face->setSize(0.5*m_face->getSizeX(), 0., m_face->getSizeZ());
+              m_cellInterfacesChildren[i]->m_face->setSize(0.5 * m_face->getSizeX(), 0., m_face->getSizeZ());
             }
           }
           //Cote haut
@@ -597,7 +591,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             for (int i = 0; i < 2; i++) {
               //First face
               if (i == 0) {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                            m_face->getPos().getY(),
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(2));
                 m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
                 cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -605,13 +601,15 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
               }
               //Second face
               else {
-                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+                m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                            m_face->getPos().getY(),
+                                                            m_face->getPos().getZ());
                 m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
                 m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
                 cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
                 m_cellRight->addCellInterface(m_cellInterfacesChildren[i]);
               }
-              m_cellInterfacesChildren[i]->m_face->setSize(0.5*m_face->getSizeX(), 0., m_face->getSizeZ());
+              m_cellInterfacesChildren[i]->m_face->setSize(0.5 * m_face->getSizeX(), 0., m_face->getSizeZ());
             }
           }
         }
@@ -621,7 +619,6 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
         for (int i = 0; i < 2; i++) {
           m_cellInterfacesChildren[i]->allocateSlopes(allocateSlopeLocal);
         }
-
       }
 
       //Cell interface deja split -> on met seulement a jour les liaisons cells/cell interfaces
@@ -708,7 +705,7 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
         this->creerCellInterfaceChild();
         m_cellInterfacesChildren[i]->m_face = m_face->creerNouvelleFace();
         m_cellInterfacesChildren[i]->m_face->initializeOthers(surfaceChild, m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
-        m_cellInterfacesChildren[i]->m_face->setSize(0.5*m_face->getSize());
+        m_cellInterfacesChildren[i]->m_face->setSize(0.5 * m_face->getSize());
       }
 
       //Face selon X
@@ -719,7 +716,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
           for (int i = 0; i < 4; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(0));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -727,7 +726,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Second face
             else if (i == 1) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(4));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -735,7 +736,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Third face
             else if (i == 2) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(2));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -743,7 +746,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Fourth face
             else {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(6));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -756,7 +761,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
           for (int i = 0; i < 4; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(1));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -764,7 +771,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Second face
             else if (i == 1) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(5));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(5)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -772,7 +781,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Third face
             else if (i == 2) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -780,7 +791,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Fourth face
             else {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX(),
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(7));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(7)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -798,7 +811,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
           for (int i = 0; i < 4; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(0));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -806,7 +821,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Second face
             else if (i == 1) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(1));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -814,7 +831,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Third face
             else if (i == 2) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(4));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -822,7 +841,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Fourth face
             else {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(5));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -835,7 +856,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
           for (int i = 0; i < 4; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(2));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -843,7 +866,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Second face
             else if (i == 1) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() - 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -851,7 +876,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Third face
             else if (i == 2) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(6));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(6)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -859,7 +886,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Fourth face
             else {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY(),
+                                                          m_face->getPos().getZ() + 0.25 * dZParent);
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(7));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(7)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -877,7 +906,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
           for (int i = 0; i < 4; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(0));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -885,7 +916,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Second face
             else if (i == 1) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(1));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -893,7 +926,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Third face
             else if (i == 2) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(2));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -901,7 +936,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Fourth face
             else {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(m_cellLeft);
               m_cellInterfacesChildren[i]->initializeDroite(cellRef->getCellChild(3));
               m_cellLeft->addCellInterface(m_cellInterfacesChildren[i]);
@@ -914,7 +951,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
           for (int i = 0; i < 4; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(4));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(4)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -922,7 +961,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Second face
             else if (i == 1) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY() - 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(5));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(5)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -930,7 +971,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Third face
             else if (i == 2) {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(6));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(6)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -938,7 +981,9 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
             }
             //Fourth face
             else {
-              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->m_face->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                          m_face->getPos().getY() + 0.25 * dYParent,
+                                                          m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(7));
               m_cellInterfacesChildren[i]->initializeDroite(m_cellRight);
               cellRef->getCellChild(7)->addCellInterface(m_cellInterfacesChildren[i]);
@@ -953,7 +998,6 @@ void CellInterface::raffineCellInterfaceExterne(const int& nbCellsY, const int& 
       for (int i = 0; i < 4; i++) {
         m_cellInterfacesChildren[i]->allocateSlopes(allocateSlopeLocal);
       }
-
     }
 
     //Cell interface deja split -> on met seulement a jour les liaisons cells/cell interfaces
@@ -1192,9 +1236,14 @@ void CellInterface::deraffineCellInterfaceExterne(Cell* cellRef)
     for (unsigned int cellInterfaceChild = 0; cellInterfaceChild < m_cellInterfacesChildren.size(); cellInterfaceChild++) {
       bool addChildToCellInterfacesCellRef(true);
       for (int i = 0; i < cellRef->getCellInterfacesSize(); i++) {
-        if (cellRef->getCellInterface(i) == m_cellInterfacesChildren[cellInterfaceChild]) { addChildToCellInterfacesCellRef = false; break; }
+        if (cellRef->getCellInterface(i) == m_cellInterfacesChildren[cellInterfaceChild]) {
+          addChildToCellInterfacesCellRef = false;
+          break;
+        }
       }
-      if (addChildToCellInterfacesCellRef) { cellRef->addCellInterface(m_cellInterfacesChildren[cellInterfaceChild]); }
+      if (addChildToCellInterfacesCellRef) {
+        cellRef->addCellInterface(m_cellInterfacesChildren[cellInterfaceChild]);
+      }
     }
   }
 }
@@ -1223,30 +1272,23 @@ void CellInterface::constructionArrayExternalCellInterfacesLvl(std::vector<CellI
 bool CellInterface::getSplit() const
 {
   bool split = false;
-  if (m_cellInterfacesChildren.size() > 0) { split = true; }
+  if (m_cellInterfacesChildren.size() > 0) {
+    split = true;
+  }
   return split;
 }
 
 //***********************************************************************
 
-int CellInterface::getNumberCellInterfacesChildren() const
-{
-  return m_cellInterfacesChildren.size();
-}
+int CellInterface::getNumberCellInterfacesChildren() const { return m_cellInterfacesChildren.size(); }
 
 //***********************************************************************
 
-CellInterface* CellInterface::getCellInterfaceChild(const int& numChild)
-{
-  return m_cellInterfacesChildren[numChild];
-}
+CellInterface* CellInterface::getCellInterfaceChild(const int& numChild) { return m_cellInterfacesChildren[numChild]; }
 
 //***********************************************************************
 
-CellInterface* CellInterface::getCellInterfaceChildBack()
-{
-  return m_cellInterfacesChildren.back();
-}
+CellInterface* CellInterface::getCellInterfaceChildBack() { return m_cellInterfacesChildren.back(); }
 
 //***************************************************************************
 
@@ -1257,7 +1299,8 @@ void CellInterface::updatePointersInternalCellInterfaces()
   //Left
   for (int b = 0; b < m_cellLeft->getCellInterfacesSize(); b++) {
     if (m_cellLeft->getCellInterface(b) == this) {
-      foundCellInterface = true; break;
+      foundCellInterface = true;
+      break;
     }
   }
   if (!foundCellInterface) m_cellLeft->addCellInterface(this);
@@ -1266,7 +1309,8 @@ void CellInterface::updatePointersInternalCellInterfaces()
   foundCellInterface = false;
   for (int b = 0; b < m_cellRight->getCellInterfacesSize(); b++) {
     if (m_cellRight->getCellInterface(b) == this) {
-      foundCellInterface = true; break;
+      foundCellInterface = true;
+      break;
     }
   }
   if (!foundCellInterface) m_cellRight->addCellInterface(this);

@@ -38,7 +38,7 @@ Circle(8) = {9, 1, 6};
 Line Loop(2) = {5,6,7,8};
 
 // Physical boundaries/surface
-Plane Surface(1) = {1,2}; 
+Plane Surface(1) = {1,2};
 Physical Line(bcWallExt) = {1,2,3,4};
 Physical Line(bcWallInt) = {5,6,7,8};
 Physical Surface(fluidSurface) = {1};

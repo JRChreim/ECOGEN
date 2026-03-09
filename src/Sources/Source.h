@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef SOURCE_H
@@ -54,7 +54,10 @@ class Source
     //! \brief     Source terms integration on conservative quantities
     //! \param     cell           cell for source term integration
     //! \param     dt             integration time step
-    virtual void integrateSourceTerms(Cell* /*cell*/, const double& /*dt*/) { Errors::errorMessage("integrateSourceTerms not available for required source"); };
+    virtual void integrateSourceTerms(Cell* /*cell*/, const double& /*dt*/)
+    {
+      Errors::errorMessage("integrateSourceTerms not available for required source");
+    };
 
     //! \brief     Allows to modifiy the source term along time
     //! \param     time            physical time of the computation
@@ -63,11 +66,23 @@ class Source
     //! \brief     Compute the absolute velocity in the fixed coordinate system
     //! \param     relVelocity     velocity in the moving coordinate system
     //! \param     position        position vector in the fixed coordinate system
-    virtual Coord computeAbsVelocity(const Coord& /*relVelocity*/, const Coord& /*position*/) { Errors::errorMessage("computeAbsVelocity not available for required source"); return 0.; };
+    virtual Coord computeAbsVelocity(const Coord& /*relVelocity*/, const Coord& /*position*/)
+    {
+      Errors::errorMessage("computeAbsVelocity not available for required source");
+      return 0.;
+    };
 
-    virtual Coord getOmega() { Errors::errorMessage("getOmega not available for required source"); return Coord::defaultCoord; }
-    virtual bool getRiemannCoupling() { Errors::errorMessage("getRiemannCoupling not available for required source"); return false;}
-    
+    virtual Coord getOmega()
+    {
+      Errors::errorMessage("getOmega not available for required source");
+      return Coord::defaultCoord;
+    }
+    virtual bool getRiemannCoupling()
+    {
+      Errors::errorMessage("getRiemannCoupling not available for required source");
+      return false;
+    }
+
     virtual int getPhysicalEntity() { return m_physicalEntity; }
 
   protected:

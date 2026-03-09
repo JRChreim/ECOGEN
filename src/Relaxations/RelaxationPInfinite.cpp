@@ -1,42 +1,42 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "RelaxationPInfinite.h"
 
 //***********************************************************************
 
-RelaxationPInfinite::RelaxationPInfinite(){}
+RelaxationPInfinite::RelaxationPInfinite() {}
 
 //***********************************************************************
 
-RelaxationPInfinite::~RelaxationPInfinite(){}
+RelaxationPInfinite::~RelaxationPInfinite() {}
 
 //***********************************************************************
 
@@ -57,11 +57,11 @@ void RelaxationPInfinite::relaxation(Cell* cell, const double& /*dt*/, Prim type
     //Initial state
     double pStar(0.);
     for (int k = 0; k < numberPhases; k++) {
-      phase = cell->getPhase(k, type);
-      TB->ak[k] = phase->getAlpha();
-      TB->pk[k] = phase->getPressure();
-      TB->rhok[k] = phase->getDensity();
-      pStar += TB->ak[k] * TB->pk[k];
+      phase        = cell->getPhase(k, type);
+      TB->ak[k]    = phase->getAlpha();
+      TB->pk[k]    = phase->getPressure();
+      TB->rhok[k]  = phase->getDensity();
+      pStar       += TB->ak[k] * TB->pk[k];
     }
 
     //Iterative process for relaxed pressure determination
@@ -83,12 +83,15 @@ void RelaxationPInfinite::relaxation(Cell* cell, const double& /*dt*/, Prim type
     else {
       double pI(0.), drhodp(0.);
       pI = computeInterfacePressure(cell, type);
-      for (int k = 0; k < numberPhases; k++) { TB->eos[k]->verifyAndModifyPressure(pI); } //Physical pressure?
+      for (int k = 0; k < numberPhases; k++) {
+        //Physical pressure?
+        TB->eos[k]->verifyAndModifyPressure(pI);
+      }
 
       for (int k = 0; k < numberPhases; k++) {
         TB->rhokS[k] = TB->eos[k]->computeDensityPfinal(TB->pk[k], TB->rhok[k], pI, &drhodp);
-        TB->akS[k] = TB->ak[k] * TB->rhok[k] / TB->rhokS[k];
-        phase = cell->getPhase(k, type);
+        TB->akS[k]   = TB->ak[k] * TB->rhok[k] / TB->rhokS[k];
+        phase        = cell->getPhase(k, type);
         phase->setAlpha(TB->akS[k]);
         phase->setDensity(TB->rhokS[k]);
         phase->setPressure(pI);

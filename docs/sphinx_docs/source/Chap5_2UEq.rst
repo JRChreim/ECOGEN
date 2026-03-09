@@ -5,7 +5,7 @@
 Velocity-equilibrium model
 **************************
 
-Velocity-equilibrium and mechanical-equilibrium flows are solved in ECOGEN using the velocity-equilibrium model :cite:`schmidmayer2021UEq`. For *N* phases involved and without any extra physics (surface tension, viscosity...), this model reads:
+Velocity-equilibrium and mechanical-equilibrium flows are solved in ECOGEN using the velocity-equilibrium model :cite:`schmidmayer2023UEq`. For *N* phases involved and without any extra physics (surface tension, viscosity...), this model reads:
 
 .. math::
   :nowrap:
@@ -14,9 +14,9 @@ Velocity-equilibrium and mechanical-equilibrium flows are solved in ECOGEN using
   \label{system_UEq}
   \left\{
   {\begin{array}{*{20}{l}}
-    \cfrac{\partial \alpha_k}{\partial t} + \mathbf{u} \cdot \nabla \alpha_k & = \delta p_k , \\ 
+    \cfrac{\partial \alpha_k}{\partial t} + \mathbf{u} \cdot \nabla \alpha_k & = \delta p_k , \\
     \cfrac{\partial \alpha_k \rho_k}{\partial t} + \nabla \cdot \left( \alpha_k \rho_k \mathbf{u} \right) & = 0 , \\
-    \cfrac{\partial \rho \mathbf{u}}{\partial t} + \nabla \cdot \left( \rho \mathbf{u} \otimes \mathbf{u} + p \mathbf{I} \right) & = \mathbf{0} , \\ 
+    \cfrac{\partial \rho \mathbf{u}}{\partial t} + \nabla \cdot \left( \rho \mathbf{u} \otimes \mathbf{u} + p \mathbf{I} \right) & = \mathbf{0} , \\
     \cfrac{\partial \alpha_k \rho_k e_k}{\partial t} + \nabla \cdot \left( \alpha_k \rho_k e_k \mathbf{u} \right) + \alpha_k p_k \nabla \cdot \mathbf{u} & = - p_I \delta p_k ,
   \end{array}} \right.\
   \end{equation}
@@ -31,7 +31,7 @@ The mixture density and pressure are
     \rho = \sum_{k=1}^N \alpha _k \rho_k  \quad \text{and} \quad p = \sum_{k=1}^N \alpha _k p_k ,
   \end{equation}
 
-while the mixture total energy is 
+while the mixture total energy is
 
 .. math::
   :nowrap:
@@ -67,7 +67,7 @@ The relaxation of pressures between the phases is
     \delta p_k = \sum_{j \neq k}^N \mu_{k,j} \left( p_k - p_j \right) ,
   \end{equation}
 
-where :math:`j` are phases different from :math:`k` and :math:`\mu_{k,j}` are the pressure-relaxation coefficients related to the :math:`k`--:math:`j` interactions. Herein, the pressure-relaxation coefficient :math:`\mu` is considered the same for each phase combination.
+where :math:`j` are phases different from :math:`k` and :math:`\mu_{k,j}` are the pressure-relaxation coefficients related to the :math:`k`--:math:`j` interactions :cite:`biasiori2023phenomenological`. Herein, the pressure-relaxation coefficient :math:`\mu` is considered the same for each phase combination.
 The interfacial pressure is defined as
 
 .. math::
@@ -90,7 +90,7 @@ Since pressures are in disequilibrium here, the total energy equation of the mix
 
 We note that this equation is redundant when the internal energy equations are also computed. However, in practice, we include it in our computations to ensure that the total energy is numerically conserved, and thus preserve a correct treatment of shock waves.
 
-This model is solved thanks to the numerical method presented in :cite:`schmidmayer2021UEq` where infinite as well as finite pressure-relaxation rates are possible.
+This model is solved thanks to the numerical method presented in :cite:`schmidmayer2023UEq` where infinite as well as finite pressure-relaxation rates are possible.
 
 Tests cases
 ===========

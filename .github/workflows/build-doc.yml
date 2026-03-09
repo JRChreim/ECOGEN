@@ -1,0 +1,82 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy documentation to Github Pages
+
+on:
+  push:
+    # Pattern matched against refs/tags
+    tags:
+      - '**'           # Push events to every tag including hierarchical tags like v1.0/beta
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+ build-and-deploy:
+   environment:
+     name: github-pages
+     url: ${{ steps.deployment.outputs.page_url }}
+
+   runs-on: ubuntu-latest
+
+   steps:
+     - name: Checkout doc sources
+       uses: actions/checkout@v5
+       with:
+         path: doc_sources
+
+     - name: Checkout website
+       uses: actions/checkout@v5
+       with:
+         fetch-depth: 0
+         ref: gh-pages
+         path: website
+
+     - name: Set up Python
+       run: |
+          pip install -r doc_sources/docs/sphinx_docs/requirements.req
+
+     - name: Install APT dependencies (doxygen, graphviz, TeX)
+       run: |
+         sudo apt-get update
+         sudo apt-get install -y \
+           doxygen doxygen-doc doxygen-latex \
+           graphviz \
+           texlive texlive-latex-extra latexmk
+
+     - name: Sphinx build
+       run: |
+          cd doc_sources/docs/sphinx_docs && make html
+
+     - name: Doxygen build
+       run: |
+          cd doc_sources/docs/doxygen_docs && doxygen doxygen.conf
+
+     - name: Clean old documentation
+       run: |
+          rm -rf website/docs/sphinx_docs
+          rm -rf website/docs/doxygen_docs
+
+     - name: Move builds to directory to publish
+       run: |
+          mv doc_sources/docs/sphinx_docs/build/html website/docs/sphinx_docs
+          mv doc_sources/docs/doxygen_docs/build/html website/docs/doxygen_docs
+
+     - name: Deploy documentation to GitHub Pages
+       uses: peaceiris/actions-gh-pages@v4
+       with:
+         publish_branch: gh-pages
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         publish_dir: website
+         force_orphan: true

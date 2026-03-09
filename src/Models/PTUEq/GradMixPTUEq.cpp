@@ -1,3 +1,33 @@
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
+//      Official webSite: https://code-mphi.github.io/ECOGEN/
+//
+//  This file is part of ECOGEN.
+//
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
+//  distribution.
+//
+//  ECOGEN is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
+//  or (at your option) any later version.
+//
+//  ECOGEN is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with ECOGEN (file LICENSE).
+//  If not, see <http://www.gnu.org/licenses/>.
+
 #include "GradMixPTUEq.h"
 
 //***************************************************************************
@@ -12,9 +42,7 @@ GradMixPTUEq::GradMixPTUEq()
 
 //***************************************************************************
 
-GradMixPTUEq::~GradMixPTUEq()
-{
-}
+GradMixPTUEq::~GradMixPTUEq() {}
 
 //***************************************************************************
 
@@ -22,22 +50,22 @@ void GradMixPTUEq::initializeGradientVectors()
 {
   this->initializeGradsVariablesNamesNumerators();
 
-  variableNamesMixture[VarLocal::pressure] = Variable::pressure;
+  variableNamesMixture[VarLocal::pressure]    = Variable::pressure;
   variableNamesMixture[VarLocal::temperature] = Variable::temperature;
-  variableNamesMixture[VarLocal::velocityU] = Variable::velocityU;
-  variableNamesMixture[VarLocal::velocityV] = Variable::velocityV;
-  variableNamesMixture[VarLocal::velocityW] = Variable::velocityW;
+  variableNamesMixture[VarLocal::velocityU]   = Variable::velocityU;
+  variableNamesMixture[VarLocal::velocityV]   = Variable::velocityV;
+  variableNamesMixture[VarLocal::velocityW]   = Variable::velocityW;
 }
 
 //***************************************************************************
 
 void GradMixPTUEq::computeDistanceGradientScalarProduct(Coord const& distance, Mixture* mixture) const
 {
-  static_cast<MixPTUEq*> (mixture)->setPressure(distance.scalar(m_grads[VarLocal::pressure]));
-  static_cast<MixPTUEq*> (mixture)->setTemperature(distance.scalar(m_grads[VarLocal::temperature]));
-  static_cast<MixPTUEq*> (mixture)->setVelocity(distance.scalar(m_grads[VarLocal::velocityU]),
-                                                distance.scalar(m_grads[VarLocal::velocityV]),
-                                                distance.scalar(m_grads[VarLocal::velocityW]));
+  static_cast<MixPTUEq*>(mixture)->setPressure(distance.scalar(m_grads[VarLocal::pressure]));
+  static_cast<MixPTUEq*>(mixture)->setTemperature(distance.scalar(m_grads[VarLocal::temperature]));
+  static_cast<MixPTUEq*>(mixture)->setVelocity(distance.scalar(m_grads[VarLocal::velocityU]),
+                                               distance.scalar(m_grads[VarLocal::velocityV]),
+                                               distance.scalar(m_grads[VarLocal::velocityW]));
 }
 
 //***************************************************************************
@@ -69,9 +97,6 @@ void GradMixPTUEq::limitGradients(const Mixture& gradientLimiter)
 //************************** ORDER 2 PARALLEL *******************************
 //***************************************************************************
 
-int GradMixPTUEq::numberOfTransmittedGradients() const
-{
-  return 15;
-}
+int GradMixPTUEq::numberOfTransmittedGradients() const { return 15; }
 
 //***************************************************************************

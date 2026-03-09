@@ -5,20 +5,20 @@ Typical example for initialConditions input file
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
   <!-- LIST OF GEOMETRICAL DOMAINS  -->
-  <physicalDomains> 
+  <physicalDomains>
     <domain name="base" state="leftChamber" type="entireDomain"/>
   </physicalDomains>
 
   <!-- LIST OF BOUNDARY CONDITIONS -->
   <boundaryConditions>
-    <boundCond name="CLXm" type="nonReflecting" number="1"/>
-    <boundCond name="CLXp" type="nonReflecting" number="2"/>
+    <boundCond name="BC_Xmin" type="nonReflecting" number="1"/>
+    <boundCond name="BC_Xmax" type="nonReflecting" number="2"/>
   </boundaryConditions>
 
   <!--  LIST OF STATES  -->
   <state name="leftChamber">
     <material type="fluid" EOS="IG_air.xml">
-      <dataFluid alpha="0.5" density="1.0"/>  
+      <dataFluid alpha="0.5" density="1.0"/>
     </material>
     <material type="fluid" EOS="SG_water.xml">
       <dataFluid alpha="0.5" density="1000.0"/>
@@ -39,7 +39,7 @@ REQUIRED initial condition parameters
 ******************
 Contains one or more <domain> nodes. Each node contains a domain geometrical properties as well as a material state name (defined below).
 %%%%%%%%%%%%%%%%%% << copy between these lines
-<physicalDomains> 
+<physicalDomains>
   <domain name="base" state="leftChamber" type="entireDomain"/>
   <domain name="HP"  state="rightChamber" type="rectangle">
     <!-- <dataHalfSpace axis="x" origin="0.5" direction="positive"/> -->
@@ -88,7 +88,7 @@ In this example the entire computation domain will be initialize accordingly to 
 
 Immersed boundaries:
 ********************
-Immersed boundaries can also be set by using physicalEntity=-1. These domains are then filled by non deformable solids and treated as walls.
+Immersed boundaries can also be set by using `physicalEntity="-1"`. These domains are then filled by non deformable solids and treated as walls.
 Example:
 <domain name="HP"  state="rightChamber" type="rectangle" physicalEntity="-1">
   <dataRectangle axis1="x" axis2="y" lAxis1="0.3" lAxis2="0.2">
@@ -105,14 +105,14 @@ Contains the list of needed boundary conditions.
 </boundaryConditions>
 %%%%%%%%%%%%%%%%%% << copy between these lines
 Default value of BC are non-reflecting.
-a) For a Cartesian mesh, boundary conditions order and names are imposed:
-CLXm: boundary condition on X minus side
-CLXp: boundary condition on X plus side
-CLYm: boundary condition on Y minus side
-CLYp: boundary condition on Y plus side
-CLZm: boundary condition on Z minus side
-CLZp: boundary condition on Z plus side
-b) For unStrucutred meshes, the number is important and should be in agreement with physical conditions determined in the mesh file comming from GMSH.
+a) For a Cartesian mesh, boundary conditions order are imposed (the `name` and `number` fields are not used by ECOGEN and can be used by the user to store any relevant information):
+1. boundary condition on minimal X side (named `BC_Xmin` in ECOGEN examples)
+2. boundary condition on maximal X side (BC_Xmax` in ECOGEN examples)
+3. boundary condition on minimal Y side (BC_Ymin` in ECOGEN examples)
+4. boundary condition on maximal Y side (BC_Ymax` in ECOGEN examples)
+5. boundary condition on minimal Z side (BC_Zmin` in ECOGEN examples)
+6. boundary condition on maximal Z side (BC_Zmax` in ECOGEN examples)
+b) For unStrucutred meshes, the `number` field is important and should be in agreement with physical conditions determined in the mesh file comming from GMSH (while the `name` field is unused).
 
 Available boundary conditions are: nonReflecting, wall, symmetry, inletTank, inletInjStagState, inletInjTemp, outletPressure, outletMassflow, nullFlux. Some of them needs to refer to a material state.
 <!-- nonReflecting -->
@@ -156,12 +156,12 @@ Available boundary conditions are: nonReflecting, wall, symmetry, inletTank, inl
 ******************
 One could use wall boundary condition with specific heat boundary condition such as imposed temperature, imposed flux or adiabatic (default). This option requires the conductivity additionnal physics (defined in model.xml).
 Example:
-<boundCond name="CLXp" type="wall" number="2">
+<boundCond name="BC_Xmax" type="wall" number="2">
   <dataWall>
     <dataWallHeatTransfer heatCondition="temperature" temperature="250."/>
   </dataWall>
-</boundCond> 
-For Moving Reference Frame computation with viscous additionnal physics it is possible to set a specific wall rotational velocity. 
+</boundCond>
+For Moving Reference Frame computation with viscous additionnal physics it is possible to set a specific wall rotational velocity.
 The wall velocity is defined in the rotating frame. In case the wall is static in the absolute frame, the wall rotational velocity in the reference frame should be the opposite of the one given in the MRF source term.
 Be aware that this option requires the MRF source term and the viscosity additionnal physics (see model.xml) with Green-Gauss gradient method (see main.xml).
 Example:
@@ -169,7 +169,7 @@ Example:
   <dataWall>
     <dataWallMRF omegaX="0." omegaY="0." omegaZ="-100."/>
   </dataWall>
-</boundCond> 
+</boundCond>
 
 3) Materials states list
 ************************
@@ -177,10 +177,10 @@ The list of materials states used in domains and boundCond must be precised. Eac
 %%%%%%%%%%%%%%%%%% << copy between these lines
 <state name="leftChamber">
   <material type="fluid" EOS="IG_air.xml">
-    <dataFluid alpha="0.5" density="1.0"/>  
+    <dataFluid alpha="0.5" density="1.0"/>
   </material>
   <material type="fluid" EOS="SG_water.xml">
-    <dataFluid alpha="0.5" density="1000.0"/>   
+    <dataFluid alpha="0.5" density="1000.0"/>
   </material>
   <mixture>
     <dataMix pressure = "1.e5"/>
@@ -194,10 +194,10 @@ a) For pressure-velocity-equilibrium multiphase model (Kapila)
 Volume fractions, densities (or temperatures), pressure and velocity components. Caution, pressure and velocity data are linked to the mixture.
 %%%%%%%%%%%%%%%%%% << copy between these lines
 <material type="fluid" EOS="IG_air.xml">
-  <dataFluid alpha="0.5" density="1.0"/>  
+  <dataFluid alpha="0.5" density="1.0"/>
 </material>
 <material type="fluid" EOS="SG_water.xml">
-  <dataFluid alpha="0.5" density="1000.0"/>   
+  <dataFluid alpha="0.5" density="1000.0"/>
 </material>
 <mixture>
   <dataMix pressure = "1.e5"/>
@@ -209,10 +209,10 @@ b) For velocity-equilibrium multiphase model (either with internal- or total-ene
 Volume fractions, densities (or temperatures), pressure and velocity components. Caution, velocity data are linked to the mixture.
 %%%%%%%%%%%%%%%%%% << copy between these lines
 <material type="fluid" EOS="IG_air.xml">
-  <dataFluid alpha="0.5" density="1.0" pressure = "1.e5"/>  
+  <dataFluid alpha="0.5" density="1.0" pressure = "1.e5"/>
 </material>
 <material type="fluid" EOS="SG_water.xml">
-  <dataFluid alpha="0.5" density="1000.0" pressure = "1.e5"/>   
+  <dataFluid alpha="0.5" density="1000.0" pressure = "1.e5"/>
 </material>
 <mixture>
   <velocity x="0." y="0." z="0."/>
@@ -248,10 +248,10 @@ e) For homogeneous Euler equations
 Volume fractions, pressure and velocity components. Caution, pressure and velocity data are linked to the mixture.
 %%%%%%%%%%%%%%%%%% << copy between these lines
 <material type="fluid" EOS="SG_waterLiq.xml">
-  <dataFluid alpha="0.99"/>  
+  <dataFluid alpha="0.99"/>
 </material>
 <material type="fluid" EOS="IG_waterVap.xml">
-  <dataFluid alpha="0.01"/>   
+  <dataFluid alpha="0.01"/>
 </material>
 <mixture>
   <dataMix pressure = "1.e6"/>
@@ -263,10 +263,10 @@ f) For velocity-equilibrium multiphase model
 Volume fractions, densities (or temperatures), pressure and velocity components. Caution, velocity data are linked to the mixture.
 %%%%%%%%%%%%%%%%%% << copy between these lines
 <material type="fluid" EOS="IG_air.xml">
-  <dataFluid alpha="0.5" density="1.0" pressure = "1.e5"/>  
+  <dataFluid alpha="0.5" density="1.0" pressure = "1.e5"/>
 </material>
 <material type="fluid" EOS="SG_water.xml">
-  <dataFluid alpha="0.5" density="1000.0" pressure = "1.e5"/>   
+  <dataFluid alpha="0.5" density="1000.0" pressure = "1.e5"/>
 </material>
 <mixture>
   <velocity x="0." y="0." z="0."/>

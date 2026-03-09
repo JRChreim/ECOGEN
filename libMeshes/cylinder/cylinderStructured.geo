@@ -38,7 +38,7 @@ Circle(2) = {3,1,4};
 Circle(3) = {4,1,5};
 Circle(4) = {5,1,2};
 
-// O-grid 
+// O-grid
 Point(6) = {refX+rOgrid, refY, posZInflow};
 Point(7) = {refX, refY+rOgrid, posZInflow};
 Point(8) = {refX-rOgrid, refY, posZInflow};
@@ -61,7 +61,7 @@ Transfinite Line{5:8} = Ntheta; // Nb of cells for each O-grid side
 Transfinite Line{9:12} = Nr;    // Nb of cells along the radius
 
 // Cross surface inflow outside O-grid
-Line Loop(1) = {5, -10, -1, 9}; Plane Surface(1) = {1}; 
+Line Loop(1) = {5, -10, -1, 9}; Plane Surface(1) = {1};
 Line Loop(2) = {6, -11, -2, 10}; Plane Surface(2) = {2};
 Line Loop(3) = {7, -12, -3, 11}; Plane Surface(3) = {3};
 Line Loop(4) = {8, -9, -4, 12}; Plane Surface(4) = {4};
@@ -75,7 +75,7 @@ Line Loop(5) = {5, 6, 7, 8}; Plane Surface(5) = {5};
 Transfinite Surface{5};
 Recombine Surface{5};
 
-// ------- 
+// -------
 
 // Outflow circle center
 posZOutflow = refZ+h;
@@ -92,7 +92,7 @@ Circle(14) = {12,10,13};
 Circle(15) = {13,10,14};
 Circle(16) = {14,10,11};
 
-// O-grid 
+// O-grid
 Point(15) = {refX+rOgrid, refY, posZOutflow};
 Point(16) = {refX, refY+rOgrid, posZOutflow};
 Point(17) = {refX-rOgrid, refY, posZOutflow};
@@ -115,7 +115,7 @@ Transfinite Line{17:20} = Ntheta; // Nb of cells for each O-grid side
 Transfinite Line{21:24} = Nr;    // Nb of cells along the radius
 
 // Cross surface outflow outside O-grid
-Line Loop(6) = {17, -22, -13, 21}; Plane Surface(6) = {6}; 
+Line Loop(6) = {17, -22, -13, 21}; Plane Surface(6) = {6};
 Line Loop(7) = {18, -23, -14, 22}; Plane Surface(7) = {7};
 Line Loop(8) = {19, -24, -15, 23}; Plane Surface(8) = {8};
 Line Loop(9) = {20, -21, -16, 24}; Plane Surface(9) = {9};
@@ -129,7 +129,7 @@ Line Loop(10) = {17, 18, 19, 20}; Plane Surface(10) = {10};
 Transfinite Surface{10};
 Recombine Surface{10};
 
-// ------- 
+// -------
 
 // Links inflow to outflow
 
@@ -147,10 +147,10 @@ Line(32) = {9, 18};
 
 Transfinite Line{25:32} = Nz; // Nb of cells along the cylinder length
 
-// ------- 
+// -------
 
 // Plane surfaces outside O-grid linking inflow/outflow
-Line Loop(11) = {29, -21, -25, 9}; Plane Surface(11) = {11}; 
+Line Loop(11) = {29, -21, -25, 9}; Plane Surface(11) = {11};
 Line Loop(12) = {30, -22, -26, 10}; Plane Surface(12) = {12};
 Line Loop(13) = {31, -23, -27, 11}; Plane Surface(13) = {13};
 Line Loop(14) = {32, -24, -28, 12}; Plane Surface(14) = {14};
@@ -160,7 +160,7 @@ Transfinite Surface{11:14};
 Recombine Surface{11:14};
 
 // Plane surfaces O-grid linking inflow/outflow
-Line Loop(15) = {29, 17, -30, -5}; Plane Surface(15) = {15}; 
+Line Loop(15) = {29, 17, -30, -5}; Plane Surface(15) = {15};
 Line Loop(16) = {30, 18, -31, -6}; Plane Surface(16) = {16};
 Line Loop(17) = {31, 19, -32, -7}; Plane Surface(17) = {17};
 Line Loop(18) = {32, 20, -29, -8}; Plane Surface(18) = {18};
@@ -169,7 +169,7 @@ Line Loop(18) = {32, 20, -29, -8}; Plane Surface(18) = {18};
 Transfinite Surface{15:18};
 Recombine Surface{15:18};
 
-// ------- 
+// -------
 
 // Curved surfaces cylinder linking inflow/outflow
 Line Loop(19) = {25, 13, -26, -1}; Surface(19) = {19};
@@ -214,7 +214,7 @@ Transfinite Volume{5};
 Recombine Volume{5};
 
 // Physical boundaries/volume
-Physical Surface(boundCondInflow) = {1:5}; 
+Physical Surface(boundCondInflow) = {1:5};
 Physical Surface(boundCondOutflow) = {6:10};
 Physical Surface(boundCondWalls) = {19:22};
 

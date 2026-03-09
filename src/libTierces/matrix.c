@@ -161,7 +161,7 @@ void unit_matrix(Matrix *u)
   zero_matrix(u);
   for (i=0; i<n; i++)
     p[i][i] = 1.0;
-  
+
 }
 
 Matrix *dup_matrix(const Matrix *a)
@@ -177,7 +177,7 @@ Matrix *dup_matrix(const Matrix *a)
   return c;
 }
 
-  
+
 
 /*
  *    add two matrices
@@ -189,9 +189,9 @@ Matrix *add_matrix(const Matrix *a, const Matrix *b, Matrix *c)
 {
   int i, j;
 
-  if (a->nr != b->nr) 
+  if (a->nr != b->nr)
     error("add_matrix: nr not equal: a[%d][%d] b[%d][%d]",a->nr,a->nc,b->nr,b->nc);
-  if (a->nc != b->nc) 
+  if (a->nc != b->nc)
     error("add_matrix: nc not equal: a[%d][%d] b[%d][%d]",a->nr,a->nc,b->nr,b->nc);
 
   if (c == NULL)
@@ -201,12 +201,12 @@ Matrix *add_matrix(const Matrix *a, const Matrix *b, Matrix *c)
       error("add_matrix: A and C not equal: a[%d][%d] c[%d][%d]",a->nr,a->nc,c->nr,c->nc);
   for (i=0; i<a->nr; i++)
     for (j=0; j<a->nc; j++)
-      c->p[i][j] = a->p[i][j] + b->p[i][j]; 
+      c->p[i][j] = a->p[i][j] + b->p[i][j];
 
   return c;
 }
 
-/* 
+/*
  *     a += b (scalar)
  */
 
@@ -225,7 +225,7 @@ void adds_matrix(Matrix *a, const double b)
  *
  *   c = a * b
  *
- *   if c==0, allocate new and return it 
+ *   if c==0, allocate new and return it
  */
 
 #if 1
@@ -243,8 +243,8 @@ Matrix *mul_matrix(const Matrix *a, const Matrix *b, Matrix *c)
   double *d1, *d2;
 #endif
 
-    
-  if (a->nc != b->nr) 
+
+  if (a->nc != b->nr)
     error("mul_matrix: cannot a[%d][%d] x b[%d][%d]",a->nr,a->nc,b->nr,b->nc);
   if (c == NULL)
     c = allocate_matrix(a->nr,b->nc);
@@ -271,7 +271,7 @@ Matrix *mul_matrix(const Matrix *a, const Matrix *b, Matrix *c)
   for (j=0; j<c->nc; j++) {
     for (i=0; i<c->nr; i++) {
       s = 0;
-      d1 = &ad[i*a->nc]; 
+      d1 = &ad[i*a->nc];
       d2 = &bd[j];
       for (k=0; k<a->nc; k++) {
         s+= (*d1) * (*d2);
@@ -292,15 +292,15 @@ Matrix *mul_matrix(const Matrix *a, const Matrix *b, Matrix *c)
  *        B[1][n] is treated as a diagonal square matrix B[n][n]
  *
  *        Only useful to speed up SVD type multiplications - an interface hack
- *      
+ *
  */
 
 Matrix *imul_matrix(const Matrix *a, const Matrix *b, Matrix *c)
 {
   int i,j;
   double **ap, **bp, **cp;
-    
-  if (b->nr != 1) 
+
+  if (b->nr != 1)
     error("imul_matrix: expect b[1][%d], got b[%d][%d]",b->nr,b->nr,b->nc);
   if (c == NULL)
     c = allocate_matrix(a->nr,b->nc);
@@ -331,7 +331,7 @@ void vmul_matrix(const double *v, const Matrix *a, double *b)
   }
 }
 
-/* 
+/*
  *  multiply a matrix with a scalar
  *     a *= b (scalar)
  */
@@ -368,11 +368,11 @@ void print_matrix(const Matrix *a, const char *msg)
 }
 
 
-/*  
+/*
  *  COST:  100x100 at 0.26ms/call
  *
  *  100x100  ::  1000 in  0.8"  wo/ free_matrix
- *             100000 in 26.4"  w/ free_matrix   (-O2)  
+ *             100000 in 26.4"  w/ free_matrix   (-O2)
  *
  */
 
@@ -443,10 +443,10 @@ Matrix *laplace_matrix(const Matrix *a)
 }
 
 /*
- *  return a matrix that can be used for binning by right-hand 
+ *  return a matrix that can be used for binning by right-hand
  *  matrix multiplication, i.e.
  *      M[nx][ny] * B[ny][nbin] = MB[nx][nbin]
- * 
+ *
  */
 
 Matrix *bin_matrix(const Matrix *a, const int nbin, const int *bin0, const int *bin1)
@@ -469,7 +469,7 @@ Matrix *bin_matrix(const Matrix *a, const int nbin, const int *bin0, const int *
   return mp;
 }
 
-/* 
+/*
  * Gauss-Jordan matrix inversion (Stoer, I), see NEMO's matinv.c code
  * the words column and row can be interchanged, as this code (and
  * comments) was taken from a C/Fortran-style code.
@@ -497,7 +497,7 @@ double invert_matrix(Matrix *a)
     error("invert_matrix: null matrix");
   }
 
-  if (a->nc != a->nr) 
+  if (a->nc != a->nr)
     error("matrix[%d][%d] not square",a->nr,a->nc);
 
   size = a->nc;
@@ -516,7 +516,7 @@ double invert_matrix(Matrix *a)
   }
 
   det=1.0;    /* in case of normal end */
-    
+
   for (i=0; i<size; i++)    /* set permutation array */
     per[i]=i;
 
@@ -533,7 +533,7 @@ double invert_matrix(Matrix *a)
     }
     if (matrix[j][row] == 0.0)      /* determinant zero ? */
       return 0.0;                   /* no solution possible */
-       
+
     if (row > j) {  /* if largest element not on diagonal: */
       /* then permute rows */
       for (k=0; k<size; k++) {  /*    permutation loop */
@@ -546,7 +546,7 @@ double invert_matrix(Matrix *a)
       per[row]=evin;
     }
     even=1.0/matrix[j][j];       /* modify column */
-    for(i=0; i<size; i++) 
+    for(i=0; i<size; i++)
       matrix[j][i]=even*matrix[j][i];
 
     matrix[j][j]=even;
@@ -615,9 +615,9 @@ void svd_matrix(const Matrix *a, Matrix *u, Matrix *v, Matrix *w)
   double **wp;
 
 #if 0
-  print_matrix(a,"a-before"); 
+  print_matrix(a,"a-before");
 #endif
-  
+
   reallocate_matrix(u,nr,nc);
   reallocate_matrix(v,nc,nc);
 #if 1
@@ -636,13 +636,13 @@ void svd_matrix(const Matrix *a, Matrix *u, Matrix *v, Matrix *w)
   /* Kevin's NR-emulator */
   svdcmp(u->dat, w->dat, v->dat, a->dat, a->nr, a->nc);
   /* the first row of the W matrix needs to become its diagonal */
-  wp = w->p; 
+  wp = w->p;
   for (i=1; i<nc; i++) {    /* but skip 1st element !! */
     wp[i][i] = wp[0][i];
     wp[0][i] = 0.0;
   }
 #endif
-  
+
 #if 0
   print_matrix(u,"U");
   print_matrix(w,"W");
@@ -672,7 +672,7 @@ void svd_solve(const Matrix *a, const Matrix *u, const Matrix *v, const Matrix *
   check_matrix(w,n,n,"svd_solve: W");
   check_matrix(b,n,p,"svd_solve: B");
   check_matrix(x,n,p,"svd_solve: X");
-  
+
 
   /* call Kevin's NR routine */
   svbksb(x->dat, u->dat, w->dat, v->dat, b->dat, m, n, p);

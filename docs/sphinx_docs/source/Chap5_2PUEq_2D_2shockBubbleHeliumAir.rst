@@ -5,7 +5,7 @@ Air shock on helium bubble
 ==========================
 
 This is a 2D Cartesian test case representing the interaction between an air shock and a helium bubble.
-Even before the shock, the bubble contains lighter fluid (helium) than the surrounding gas (air). 
+Even before the shock, the bubble contains lighter fluid (helium) than the surrounding gas (air).
 Initial conditions are shown in :numref:`Fig:testCases:PUEq:HeliumAirIni`. This test is referenced in *./libTests/referenceTestCases/PUEq/2D/shockBubble/heliumAir/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml

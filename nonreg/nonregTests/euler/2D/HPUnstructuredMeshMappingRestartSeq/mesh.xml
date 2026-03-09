@@ -4,9 +4,9 @@
 	<unstructuredMesh>
 		<file name="libMeshes/square/squareRefinedPart.msh"/>
     <parallel GMSHPretraitement="true"/>
-    <meshMappingRestart 
-      resultFolder="euler2DHPUnstructured" 
-      restartFileNumber="1" 
+    <meshMappingRestart
+      resultFolder="euler2DHPUnstructured"
+      restartFileNumber="1"
       meshFile="libMeshes/square/squarePart.msh"
     />
 	</unstructuredMesh>

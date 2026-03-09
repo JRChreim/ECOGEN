@@ -3,6 +3,6 @@
 	<type structure="unStructured"/>
 	<unstructuredMesh>
 		<file name="./libMeshes/venturi/venturi.msh"/>
-		<parallel GMSHPretraitement="true"/> 
+		<parallel GMSHPretraitement="true"/>
 	</unstructuredMesh>
 </mesh>

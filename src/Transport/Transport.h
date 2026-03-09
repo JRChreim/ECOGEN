@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef TRANSPORT_H
@@ -53,7 +53,7 @@ class Transport
     //! \param     transportLeft          left value of transport variable
     //! \param     transportRight         right value of transport variable
     //! \param     sM                     fluid velocity for intercell interfaces
-   	void solveRiemann(double transportLeft, double transportRight, double sM);
+    void solveRiemann(double transportLeft, double transportRight, double sM);
     //! \brief     Wall half Riemann solver for the corresponding transport equation
     void solveRiemannWall();
     //! \brief     Piston half Riemann solver for the corresponding transport equation
@@ -106,7 +106,7 @@ class Transport
     void add(double scalar);
     //! \brief     Change the sign of the corresponding transport value
     void changeSign();
-    
+
     //Second order
     //! \brief     Extrapolate the value of the corresponding transport equation from the center of the cell to its edge
     //! \param     slope                  value of the slope
@@ -120,7 +120,7 @@ class Transport
     void computeSlopeTransport(const double valueLeft, const double valueRight, const double& distance);
 
   private:
-    double m_value;     //! Value of the corresponding transport variable
+    double m_value; //! Value of the corresponding transport variable
 };
 
 extern Transport* fluxBufferTransport;

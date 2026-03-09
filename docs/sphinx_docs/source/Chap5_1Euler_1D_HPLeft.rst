@@ -43,7 +43,7 @@ The initial characteristics of the run are:
 | precision                   | 2nd order (VanLeer)  |
 +-----------------------------+----------------------+
 
-Solution of this Riemann problem induces 3 waves: 
+Solution of this Riemann problem induces 3 waves:
 
 - expansion waves propagating in high-pressure chamber,
 - a right-facing shock wave propagating in low-pressure chamber,
@@ -59,7 +59,7 @@ These waves are clearly observable on the results:
 
   Shock tube filled with air. Visualization using Paraview_ software.
 
-This test is also equipped with 3 Eulerian sensors. For example, two sensors are positionned at :math:`x = 0.6 m` and :math:`x= 0.8 m`. They record the following pressures:
+This test is also equipped with 3 Eulerian sensors. For example, two sensors are positioned at :math:`x = 0.6 m` and :math:`x= 0.8 m`. They record the following pressures:
 
 .. _Fig:testCases:Euler:sensors:
 

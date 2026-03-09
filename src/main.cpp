@@ -1,29 +1,29 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
 //  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
   MPI_Comm_rank(MPI_COMM_WORLD, &rankCpu);
   MPI_Comm_size(MPI_COMM_WORLD, &Ncpu);
 
-  if(rankCpu == 0) displayHeader();
+  if (rankCpu == 0) displayHeader();
   MPI_Barrier(MPI_COMM_WORLD);
 
   //Parsing of the XML file by the tinyxml2 library
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
     XMLError error(xmlEcogen.LoadFile(fileName.str().c_str())); //The file is parse here
     if (error != XML_NO_ERROR) throw ErrorXML(fileName.str().c_str(), __FILE__, __LINE__);
     //Find the root of the XML folder
-    XMLNode *xmlNode = xmlEcogen.FirstChildElement("ecogen");
+    XMLNode* xmlNode = xmlEcogen.FirstChildElement("ecogen");
 
     //Loop on the test cases to execute
     //---------------------------------
@@ -108,10 +108,10 @@ int main(int argc, char* argv[])
         //3) Removal of the test case
         delete run;
       }
-    
+
       //Input exceptions (XML + mesh file)
       //----------------------------------
-      catch (ErrorInput &e) {
+      catch (ErrorInput& e) {
         errorCode = e.getErrorCode();
         if (rankCpu == 0) std::cout << e.infoError() << std::endl;
         if (run) {
@@ -121,16 +121,17 @@ int main(int argc, char* argv[])
       }
       //General or runtime exceptions
       //-----------------------------
-      catch (ErrorECOGEN &e) {
+      catch (ErrorECOGEN& e) {
         errorCode = e.getErrorCode();
-       // if(rankCpu==0) std::cerr << "T" << numTestCase << " | " << e.infoError() << std::endl;
+        //AF//VERIF// Commented by commit 7211aa6e5: why? As it, errors are not printed in the output error file
+        // if(rankCpu==0) std::cerr << "T" << numTestCase << " | " << e.infoError() << std::endl;
         if (run) {
           run->finalize();
           delete run;
         }
       }
       elementTestCase = elementTestCase->NextSiblingElement("testCase");
-    }//End of the loop on test cases
+    } //End of the loop on test cases
   }
   catch (ErrorXML& e) {
     errorCode = e.getErrorCode();
@@ -157,7 +158,10 @@ void displayHeader()
   std::cout << "    |  `--.  \\  `-.  \\ `-' /   \\  `-) ) |  `--.  | | |)| " << std::endl;
   std::cout << "    /( __.'   \\____\\  )---'    )\\____/  /( __.'  /(  (_) " << std::endl;
   std::cout << "   (__)              (_)      (__)     (__)     (__)     " << std::endl;
-  std::cout << "   Official webSite: https://code-mphi.github.io/ECOGEN/" << std::endl;
+  std::cout << std::endl;
+  std::cout << "   Official website: https://code-mphi.github.io/ECOGEN/" << std::endl;
+  std::cout << "   License: GPLv3 (GNU GENERAL PUBLIC LICENSE, Version 3)" << std::endl;
+  std::cout << "            Details in file LICENSE" << std::endl;
   std::cout << std::endl;
 }
 

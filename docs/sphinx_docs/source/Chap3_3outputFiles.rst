@@ -4,10 +4,10 @@ Output Files
 ============
 
 Writing the result files is done according to the user’s choice in *main.xml* input file of the current test (see section :ref:`Sec:input:main`). For each run, the results are recorded in the specified folder **ECOGEN/results/XXX/** where XXX is the test case *name*.
-One can select the following format: 
+One can select the following format:
 
 - *GNU*: Format in ASCII, results are given in column.
-- *XML*: VTK file format (ASCII or binary).
+- *VTK*: VTK file format (ASCII or binary).
 
 The result files are placed within the **ECOGEN/results/XXX/datasets/** subfolder and their names follow the rules:
 
@@ -31,7 +31,7 @@ ECOGEN can provide output using XML files in VTK file format (ASCII or BINARY). 
 - *(ext)=vtr*: Cartesian mesh.
 - *(ext)=vtu*: Unstructured mesh.
 
-ECOGEN also produces files named *collectionParaview.pvd* and *collectionVisIt.visit* (or *collectionParaviewB64.pvd* and *collectionParaviewB64.pvd* for BINARY) in order to load only one pack of files when the softwares `ParaView`_ and `VisIt`_ are used, respectively.
+ECOGEN also produces files named *collectionParaview.pvd* and *collectionVisIt.visit* (or *collectionParaviewB64.pvd* and *collectionParaviewB64.pvd* for BINARY) in order to load only one pack of files when the software `ParaView`_ and `VisIt`_ are used, respectively.
 
 Saving input files
 ------------------
@@ -43,12 +43,12 @@ All the output files linked to the probes and cuts of the simulation are placed 
 
 Mesh information
 ----------------
-When using AMR, mesh information is saved at a frequency specified in the *main.xml* file to allow a restart of the simulation and the corresponding files are placed within the subfolders **ECOGEN/results/XXX/infoMesh/**.
+When using AMR, mesh information is saved at a frequency specified in the *main.xml* file to allow a resume of the simulation and the corresponding files are placed within the subfolders **ECOGEN/results/XXX/infoMesh/**.
 
 Screen output
 -------------
 In real time, some data are available during the simulation directly at the terminal screen as soon as ECOGEN starts. Hereafter is an example of a screenshot:
- 
+
 .. figure:: ./_static/tutos/default/RunECOGEN_Logo.png
   :scale: 100%
   :align: center

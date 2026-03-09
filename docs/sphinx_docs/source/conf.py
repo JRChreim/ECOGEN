@@ -23,13 +23,13 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 # -- Project information -----------------------------------------------------
 
 project = 'ECOGEN'
-copyright = '2023, code-mphi'
+copyright = '2025, code-mphi'
 author = 'code-mphi'
 
 # The short X.Y version
-version = '4.0'
+version = '5.0'
 # The full version, including alpha/beta/rc tags
-release = '4.0'
+release = '5.0'
 
 
 # -- General configuration ---------------------------------------------------

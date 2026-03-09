@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="base" state="air" type="entireDomain"/>
         <domain name="square"  state="waterSquare" type="rectangle">
             <dataRectangle axis1="x" axis2="y" lAxis1="0.2" lAxis2="0.2">
@@ -12,12 +12,12 @@
 
     <!-- LIST OF BOUNDARY CONDITIONS -->
     <boundaryConditions>
-        <boundCond name="CLXm" type="nonReflecting" number="1"/>
-        <boundCond name="CLXp" type="nonReflecting" number="2"/>
-        <boundCond name="CLYm" type="nonReflecting" number="3"/>
-        <boundCond name="CLYp" type="nonReflecting" number="4"/>
+        <boundCond name="BC_Xmin" type="nonReflecting" number="1"/>
+        <boundCond name="BC_Xmax" type="nonReflecting" number="2"/>
+        <boundCond name="BC_Ymin" type="nonReflecting" number="3"/>
+        <boundCond name="BC_Ymax" type="nonReflecting" number="4"/>
     </boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="air">
         <material type="fluid" EOS="IG_air.xml">

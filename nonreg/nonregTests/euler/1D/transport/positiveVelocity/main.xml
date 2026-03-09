@@ -10,5 +10,5 @@
   <!-- 	<secondOrder>
 		<globalLimiter>superbee</globalLimiter>
 	</secondOrder> -->
-  <restartSimulation AMRsaveFreq="0" restartFileNumber="0"/>
+  <resumeSimulation AMRsaveFreq="0" resumeFileNumber="0"/>
 </computationParam>

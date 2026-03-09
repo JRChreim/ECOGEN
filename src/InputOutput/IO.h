@@ -1,140 +1,132 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef IO_H
-#define IO_H
+  #define IO_H
 
-#include <fstream>
-#include <algorithm>
-#include <sstream>
+  #include <fstream>
+  #include <algorithm>
+  #include <sstream>
 
 class IO
 {
-public:
-  IO();
-  virtual ~IO();
+  public:
+    IO();
+    virtual ~IO();
 
-  //Templates pour convertir donnees depuis ou vers string
-  //-----------------------------------------------------
-  template <typename T>
-  static std::string toString(const T& i)
-  {
-	  std::ostringstream stream;
-	  stream << i;
-	  return stream.str();
-  }
+    //Templates pour convertir donnees depuis ou vers string
+    //-----------------------------------------------------
+    template <typename T> static std::string toString(const T& i)
+    {
+      std::ostringstream stream;
+      stream << i;
+      return stream.str();
+    }
 
-  template <typename T>
-  static T fromString(const std::string& str)
-  {
-	  std::istringstream stream(str);
-	  T tmp;
-	  stream >> tmp;
-	  return tmp;
-  }
+    template <typename T> static T fromString(const std::string& str)
+    {
+      std::istringstream stream(str);
+      T tmp;
+      stream >> tmp;
+      return tmp;
+    }
 
-  //Templates Format Binaire pour le Legacy VTK
-  //-------------------------------------------
+    //Templates Format Binaire pour le Legacy VTK
+    //-------------------------------------------
 
-  //Definition de template pour print au format binary
-  template <typename T>
-  static std::ostream& write(std::ostream& fluxSortie, T& value)
-  {
-    //Swap Little <-> Big endian eventuel
-    IO::endswap(&value);
-    return fluxSortie.write(reinterpret_cast<char*>(&value), sizeof(T));
-  }
+    //Definition de template pour print au format binary
+    template <typename T> static std::ostream& write(std::ostream& fluxSortie, T& value)
+    {
+      //Swap Little <-> Big endian eventuel
+      IO::endswap(&value);
+      return fluxSortie.write(reinterpret_cast<char*>(&value), sizeof(T));
+    }
 
-  // //Definition de template pour read au format binary
-  // template <typename T>
-  // static std::istream& read(std::istream &fluxEntree, T& value)
-  // {
-  //   return fluxEntree.read(reinterpret_cast<char*>(&value), sizeof(T));
-  //   //Swap Little <-> Big endian eventuel
-  //   IO::endswap(&value);
-  //   //Bug ici je pense, a voir...
-  // }
+    // //Definition de template pour read au format binary
+    // template <typename T>
+    // static std::istream& read(std::istream &fluxEntree, T& value)
+    // {
+    //   return fluxEntree.read(reinterpret_cast<char*>(&value), sizeof(T));
+    //   //Swap Little <-> Big endian eventuel
+    //   IO::endswap(&value);
+    //   //Bug ici je pense, a voir...
+    // }
 
-  //Templates Format Binaire Base64 pour le XML VTK
-  //-----------------------------------------------
+    //Templates Format Binaire Base64 pour le XML VTK
+    //-----------------------------------------------
 
-  //Template to add any type of data to a string
-  template <typename T>
-  static void addToTheString(char* chaine, int& taille, T& value)
-  {
-    char* conversionChaine = reinterpret_cast<char*>(&value);
-    for (unsigned int octet = 0; octet < sizeof(value); octet++)
-    { chaine[taille++] = conversionChaine[octet]; }  
-  }
+    //Template to add any type of data to a string
+    template <typename T> static void addToTheString(char* chaine, int& taille, T& value)
+    {
+      char* conversionChaine = reinterpret_cast<char*>(&value);
+      for (unsigned int octet = 0; octet < sizeof(value); octet++) {
+        chaine[taille++] = conversionChaine[octet];
+      }
+    }
 
-  //Definition de template pour print d un number au format binary base64
-  template <typename T>
-  static std::ostream& writeb64(std::ostream& fluxSortie, T& value)
-  {
-    //Swap Little <-> Big endian eventuel ne marche pas ??
-    //IO::endswap(&value);
-    //Encodage Base64
-    char* chaine = reinterpret_cast<char*>(&value);
-    int tailleChaine = sizeof(value);
-    return IO::writeb64Chaine(fluxSortie, chaine, tailleChaine);
-  }
+    //Definition de template pour print d un number au format binary base64
+    template <typename T> static std::ostream& writeb64(std::ostream& fluxSortie, T& value)
+    {
+      //Swap Little <-> Big endian eventuel ne marche pas ??
+      //IO::endswap(&value);
+      //Encodage Base64
+      char* chaine     = reinterpret_cast<char*>(&value);
+      int tailleChaine = sizeof(value);
+      return IO::writeb64Chaine(fluxSortie, chaine, tailleChaine);
+    }
 
-  // //ATTENTION !!!!!!!!!!!Read non Fonctionnelle !!!!!!!!!!!!!!
-  // //Definition de template pour read au format binary base64
-  // template <typename T>
-  // static std::istream& readb64(std::istream &fluxEntree, T& value)
-  // {
-  //   return fluxEntree.read(reinterpret_cast<char*>(&value), sizeof(T));
-  //   //Swap Little <-> Big endian eventuel
-  //   IO::endswap(&value);
-  // };
-  // //ATTENTION !!!!!!!!!!!Read non Fonctionnelle !!!!!!!!!!!!!!
+    // //ATTENTION !!!!!!!!!!!Read non Fonctionnelle !!!!!!!!!!!!!!
+    // //Definition de template pour read au format binary base64
+    // template <typename T>
+    // static std::istream& readb64(std::istream &fluxEntree, T& value)
+    // {
+    //   return fluxEntree.read(reinterpret_cast<char*>(&value), sizeof(T));
+    //   //Swap Little <-> Big endian eventuel
+    //   IO::endswap(&value);
+    // };
+    // //ATTENTION !!!!!!!!!!!Read non Fonctionnelle !!!!!!!!!!!!!!
 
-  static std::ostream& writeb64Chaine(std::ostream& fluxSortie, char* chaineAEncoder, int& taille);
+    static std::ostream& writeb64Chaine(std::ostream& fluxSortie, char* chaineAEncoder, int& taille);
 
-  static void copyFile(std::string file, std::string srcFolder, std::string destFolder);
+    static void copyFile(std::string file, std::string srcFolder, std::string destFolder);
 
-private:
-
-  //Swap Little <-> Big Endian
-  template <typename T>
-  static void endswap(T* objp)
-  {
-    unsigned char* memp = reinterpret_cast<unsigned char*>(objp);
-    std::reverse(memp, memp + sizeof(T));
-  }
-  
+  private:
+    //Swap Little <-> Big Endian
+    template <typename T> static void endswap(T* objp)
+    {
+      unsigned char* memp = reinterpret_cast<unsigned char*>(objp);
+      std::reverse(memp, memp + sizeof(T));
+    }
 };
 
 #endif // IO_H
-
 
 /*
 ----------------Mode d emploi binary-----------------
@@ -186,7 +178,7 @@ CwsLCwsLCws=    //chaine binary 64 d'entiers sur 8 bits
 CQkJCQkJCQkJCQkJCQkJCQ==
 000010 010000 100100 001001 000010 010000 100100 001001 000010 010000 100100 001001 000010 010000 100100 001001 000010 010000 100100 001001 000010 010000
 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 00001001 0000
-9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 
+9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9
 
 
 */

@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef PHASENONLINEARSCHRODINGER_H
@@ -50,25 +50,25 @@ class PhaseNonLinearSchrodinger : public PhaseEulerKorteweg
     //! \param     eos                EOS pointer to compute thermodynamic variables
     //! \param     fileName           string name of readed XML file
     PhaseNonLinearSchrodinger(tinyxml2::XMLElement* material, Eos* eos, std::string fileName);
-    virtual ~PhaseNonLinearSchrodinger();
+    ~PhaseNonLinearSchrodinger() override;
 
-    virtual void allocateAndCopyPhase(Phase** vecPhase);
+    void allocateAndCopyPhase(Phase** vecPhase) override;
 
     //Specific methods for data printing
     //----------------------------------
-    virtual int getNumberScalars() const { return 3; };
+    int getNumberScalars() const override { return 3; };
 
     //Specific methods for parallel computing
     //---------------------------------------
-    virtual int numberOfTransmittedVariables() const;
-    virtual void fillBuffer(double* buffer, int& counter) const;
-    virtual void fillBuffer(std::vector<double>& dataToSend) const;
-    virtual void getBuffer(double* buffer, int& counter, Eos** /*eos*/);
-    virtual void getBuffer(std::vector<double>& dataToReceive, int& counter, Eos** /*eos*/);
+    int numberOfTransmittedVariables() const override;
+    void fillBuffer(double* buffer, int& counter) const override;
+    void fillBuffer(std::vector<double>& dataToSend) const override;
+    void getBuffer(double* buffer, int& counter, Eos** /*eos*/) override;
+    void getBuffer(std::vector<double>& dataToReceive, int& counter, Eos** /*eos*/) override;
 
     //Verifications
     //-------------
-    virtual void verifyAndCorrectDensityMax() {};
+    void verifyAndCorrectDensityMax() override {};
 };
 
 #endif // PHASENONLINEARSCHRODINGER_H

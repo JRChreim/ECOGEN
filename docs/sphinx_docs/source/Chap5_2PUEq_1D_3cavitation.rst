@@ -1,7 +1,10 @@
 .. role:: xml(code)
   :language: xml
 
-Cavitation 
+
+.. _pueq-cavitation:
+
+Cavitation
 ==========
 
 The phenomenon of cavitation consists in the disruption of continuity in the liquid where there is considerable local reduction of pressure. The formation of bubbles within liquids (cavitation) begins even in the presence of positive pressures that are equal to or close to the pressure of saturated vapor of the fluid at the given temperature.

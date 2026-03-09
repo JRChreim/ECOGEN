@@ -1,10 +1,11 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <computationParam>
 	<run>pressureVelocityEq2DsurfaceTensionSquareToCircleSymmetry</run>
-	<outputMode format="XML" binary="false" precision="16"/>
+	<outputMode format="VTK" binary="false" precision="16"/>
 <!-- 	<cut1D>
 	    <vertex x="0.37501" y="0." z="0.375"/>
 		<vecDir x="0" y="1" z="0"/>
+		<timeControl acqFreq="1.e-2"/>
 	</cut1D> -->
 	<timeControlMode iterations="false">
 		<iterations number="20" iterFreq="1"/>
@@ -17,5 +18,5 @@
 		<globalVolumeFractionLimiter>minmod</globalVolumeFractionLimiter>
 		<interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>
   </secondOrder>
-  <restartSimulation restartFileNumber="0" AMRsaveFreq="5"/>
+  <resumeSimulation resumeFileNumber="0" AMRsaveFreq="5"/>
 </computationParam>

@@ -1,44 +1,44 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "APEViscosity.h"
 
 //***********************************************************************
 
-APEViscosity::APEViscosity(){}
+APEViscosity::APEViscosity() {}
 
 //***********************************************************************
 
 APEViscosity::APEViscosity(int& numberQPA, Eos** eos)
 {
-  m_mu = eos[0]->getMu();
+  m_mu     = eos[0]->getMu();
   m_numQPA = numberQPA++;
 }
 
@@ -48,34 +48,31 @@ APEViscosity::~APEViscosity() {}
 
 //***********************************************************************
 
-void APEViscosity::addQuantityAddPhys(Cell* cell)
-{
-  cell->getVecQuantitiesAddPhys().push_back(new QAPViscosity(this));
-}
+void APEViscosity::addQuantityAddPhys(Cell* cell) { cell->getVecQuantitiesAddPhys().push_back(new QAPViscosity(this)); }
 
 //***********************************************************************
 
 void APEViscosity::solveFluxAddPhys(CellInterface* cellInterface)
 {
   // Copy velocities and gradients of left and right cells
-  m_velocityLeft = cellInterface->getCellLeft()->getPhase(0)->getVelocity();
+  m_velocityLeft  = cellInterface->getCellLeft()->getPhase(0)->getVelocity();
   m_velocityRight = cellInterface->getCellRight()->getPhase(0)->getVelocity();
 
-  m_gradULeft = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(1);
+  m_gradULeft  = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(1);
   m_gradURight = cellInterface->getCellRight()->getQPA(m_numQPA)->getGrad(1);
-  m_gradVLeft = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(2);
+  m_gradVLeft  = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(2);
   m_gradVRight = cellInterface->getCellRight()->getQPA(m_numQPA)->getGrad(2);
-  m_gradWLeft = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(3);
+  m_gradWLeft  = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(3);
   m_gradWRight = cellInterface->getCellRight()->getQPA(m_numQPA)->getGrad(3);
 
-  m_normal = cellInterface->getFace()->getNormal();
-  m_tangent = cellInterface->getFace()->getTangent();
+  m_normal   = cellInterface->getFace()->getNormal();
+  m_tangent  = cellInterface->getFace()->getTangent();
   m_binormal = cellInterface->getFace()->getBinormal();
 
   // Projection on orientation axes attached to the edge of velocities and gradients
   m_velocityLeft.localProjection(m_normal, m_tangent, m_binormal);
   m_velocityRight.localProjection(m_normal, m_tangent, m_binormal);
-  
+
   m_tensorLeft.setTensorByLines(m_gradULeft, m_gradVLeft, m_gradWLeft);
   m_tensorRight.setTensorByLines(m_gradURight, m_gradVRight, m_gradWRight);
   m_tensorLeft.localProjection(m_normal, m_tangent, m_binormal);
@@ -83,8 +80,7 @@ void APEViscosity::solveFluxAddPhys(CellInterface* cellInterface)
   m_tensorLeft.tensorToCoords(m_gradULeft, m_gradVLeft, m_gradWLeft);
   m_tensorRight.tensorToCoords(m_gradURight, m_gradVRight, m_gradWRight);
 
-  this->solveFluxViscosityInner(m_velocityLeft, m_velocityRight, m_gradULeft, m_gradURight,
-    m_gradVLeft, m_gradVRight, m_gradWLeft, m_gradWRight, m_mu);
+  this->solveFluxViscosityInner(m_velocityLeft, m_velocityRight, m_gradULeft, m_gradURight, m_gradVLeft, m_gradVRight, m_gradWLeft, m_gradWRight, m_mu);
 
   // Flux projection on the absolute orientation axes
   cellInterface->getMod()->reverseProjection(m_normal, m_tangent, m_binormal);
@@ -98,12 +94,12 @@ void APEViscosity::solveFluxAddPhysBoundary(CellInterface* cellInterface)
 
   // Copy velocities and gradients of left and right cells
   m_velocityLeft = cellInterface->getCellLeft()->getPhase(0)->getVelocity();
-  m_gradULeft = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(1);
-  m_gradVLeft = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(2);
-  m_gradWLeft = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(3);
+  m_gradULeft    = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(1);
+  m_gradVLeft    = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(2);
+  m_gradWLeft    = cellInterface->getCellLeft()->getQPA(m_numQPA)->getGrad(3);
 
-  m_normal = cellInterface->getFace()->getNormal();
-  m_tangent = cellInterface->getFace()->getTangent();
+  m_normal   = cellInterface->getFace()->getNormal();
+  m_tangent  = cellInterface->getFace()->getTangent();
   m_binormal = cellInterface->getFace()->getBinormal();
 
   // Projection on orientation axes attached to the edge of velocities and gradients
@@ -116,12 +112,16 @@ void APEViscosity::solveFluxAddPhysBoundary(CellInterface* cellInterface)
   // Distances cells/cell interfaces for weighting on the flux
   double distLeft = cellInterface->getCellLeft()->distance(cellInterface);
 
-  int typeCellInterface = cellInterface->whoAmI();
-  if (typeCellInterface == NONREFLECTING || typeCellInterface == OUTLETPRESSURE || typeCellInterface == INLETINJSTAGSTATE || typeCellInterface == INLETTANK || typeCellInterface == INLETINJTEMP) {
+  switch (cellInterface->whoAmI()) {
+  case NONREFLECTING:
+  case OUTLETPRESSURE:
+  case INLETINJSTAGSTATE:
+  case INLETTANK:
+  case INLETINJTEMP:
     this->solveFluxViscosityNonReflecting(m_velocityLeft, m_gradULeft, m_gradVLeft, m_gradWLeft, m_mu);
-  }
-  else if (typeCellInterface == WALL) {
-    if ( !cellInterface->isMRFWall() ) {
+    break;
+  case WALL:
+    if (!cellInterface->isMRFWall()) {
       this->solveFluxViscosityWall(m_velocityLeft, m_mu, distLeft);
     }
     else {
@@ -131,11 +131,13 @@ void APEViscosity::solveFluxAddPhysBoundary(CellInterface* cellInterface)
       velocityWall.setX(0.); // Fluid not crossing boundary
       this->solveFluxViscosityWall(m_velocityLeft, m_mu, distLeft, velocityWall);
     }
-  }
-  else if (typeCellInterface == SYMMETRY) {
+    break;
+  case SYMMETRY:
     this->solveFluxViscositySymmetry(m_gradULeft, m_gradVLeft, m_gradWLeft, m_mu);
+    break;
+  default:
+    this->solveFluxViscosityOther();
   }
-  else { this->solveFluxViscosityOther(); }
 
   // Flux projection on the absolute orientation axes
   cellInterface->getMod()->reverseProjection(m_normal, m_tangent, m_binormal);
@@ -143,8 +145,15 @@ void APEViscosity::solveFluxAddPhysBoundary(CellInterface* cellInterface)
 
 //***********************************************************************
 
-void APEViscosity::solveFluxViscosityInner(const Coord& velocityLeft, const Coord& velocityRight, const Coord& gradULeft, const Coord& gradURight,
-  const Coord& gradVLeft, const Coord& gradVRight, const Coord& gradWLeft, const Coord& gradWRight, const double& mu) const
+void APEViscosity::solveFluxViscosityInner(const Coord& velocityLeft,
+                                           const Coord& velocityRight,
+                                           const Coord& gradULeft,
+                                           const Coord& gradURight,
+                                           const Coord& gradVLeft,
+                                           const Coord& gradVRight,
+                                           const Coord& gradWLeft,
+                                           const Coord& gradWRight,
+                                           const double& mu) const
 {
   //Extraction of data
   double uL, vL, wL, uR, vR, wR;
@@ -180,7 +189,7 @@ void APEViscosity::solveFluxViscosityInner(const Coord& velocityLeft, const Coor
   double dudx, dudy, dudz;
   double dvdx, dvdy;
   double dwdx, dwdz;
-  
+
   u = (uL + uR) / 2.;
   v = (vL + vR) / 2.;
   w = (wL + wR) / 2.;
@@ -196,19 +205,20 @@ void APEViscosity::solveFluxViscosityInner(const Coord& velocityLeft, const Coor
   dwdz = (dwdzL + dwdzR) / 2.;
 
   //Writing of viscous terms on each equation of fluxBuffEuler
-  static_cast<FluxEuler*> (fluxBuff)->m_mass = 0.;
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setX(-mu / 3. * (4. * dudx - 2. * (dvdy + dwdz)));
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setY(-mu * (dvdx + dudy));
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setZ(-mu * (dwdx + dudz));
-  static_cast<FluxEuler*> (fluxBuff)->m_energ = -mu * (1./3.*u*(4*dudx - 2.*(dvdy + dwdz)) + (dvdx + dudy)*v + (dwdx + dudz)*w);
+  //AF//TODO// Precompute mu/3.
+  static_cast<FluxEuler*>(fluxBuff)->m_mass = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setX(-mu / 3. * (4. * dudx - 2. * (dvdy + dwdz)));
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setY(-mu * (dvdx + dudy));
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setZ(-mu * (dwdx + dudz));
+  static_cast<FluxEuler*>(fluxBuff)->m_energ = -mu * (1. / 3. * u * (4 * dudx - 2. * (dvdy + dwdz)) + (dvdx + dudy) * v + (dwdx + dudz) * w);
 }
 
 //***********************************************************************
 
-void APEViscosity::solveFluxViscosityNonReflecting(const Coord& velocityLeft, const Coord& gradULeft, const Coord& gradVLeft, const Coord& gradWLeft, const double& muLeft) const
+void APEViscosity::solveFluxViscosityNonReflecting(
+  const Coord& velocityLeft, const Coord& gradULeft, const Coord& gradVLeft, const Coord& gradWLeft, const double& muLeft) const
 {
-  this->solveFluxViscosityInner(velocityLeft, velocityLeft, gradULeft, gradULeft,
-    gradVLeft, gradVLeft, gradWLeft, gradWLeft, muLeft);
+  this->solveFluxViscosityInner(velocityLeft, velocityLeft, gradULeft, gradULeft, gradVLeft, gradVLeft, gradWLeft, gradWLeft, muLeft);
 }
 
 //***********************************************************************
@@ -221,11 +231,11 @@ void APEViscosity::solveFluxViscosityWall(const Coord& velocityLeft, const doubl
   double dwdx = velocityWall.getZ() - velocityLeft.getZ() / distLeft;
 
   //Writing of viscous terms on each equation of fluxBuffEuler
-  static_cast<FluxEuler*> (fluxBuff)->m_mass = 0.;
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setX(-muLeft / 3. * 4. * dudx);
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setY(-muLeft * dvdx);
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setZ(-muLeft * dwdx);
-  static_cast<FluxEuler*> (fluxBuff)->m_energ = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_mass = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setX(-muLeft / 3. * 4. * dudx);
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setY(-muLeft * dvdx);
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setZ(-muLeft * dwdx);
+  static_cast<FluxEuler*>(fluxBuff)->m_energ = 0.;
 }
 
 //***********************************************************************
@@ -240,11 +250,11 @@ void APEViscosity::solveFluxViscositySymmetry(const Coord& gradULeft, const Coor
   dwdz = gradWLeft.getZ();
 
   //Writing of viscous terms on each equation of fluxBuffEuler
-  static_cast<FluxEuler*> (fluxBuff)->m_mass = 0.;
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setX(-mu / 3. * (4. * dudx - 2. * (dvdy + dwdz)));
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setY(0.);
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum.setZ(0.);
-  static_cast<FluxEuler*> (fluxBuff)->m_energ = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_mass = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setX(-mu / 3. * (4. * dudx - 2. * (dvdy + dwdz)));
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setY(0.);
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum.setZ(0.);
+  static_cast<FluxEuler*>(fluxBuff)->m_energ = 0.;
 }
 
 //***********************************************************************
@@ -255,9 +265,9 @@ void APEViscosity::solveFluxViscosityOther() const
   //std::cout << "Viscous boundary not managed" << std::endl;
 
   // To avoid bug when not managed
-  static_cast<FluxEuler*> (fluxBuff)->m_mass = 0.;
-  static_cast<FluxEuler*> (fluxBuff)->m_momentum = 0.;
-  static_cast<FluxEuler*> (fluxBuff)->m_energ = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_mass     = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_momentum = 0.;
+  static_cast<FluxEuler*>(fluxBuff)->m_energ    = 0.;
 }
 
 //***********************************************************************

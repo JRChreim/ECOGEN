@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "MixPTUEq.h"
@@ -34,12 +34,11 @@ using namespace tinyxml2;
 
 //***************************************************************************
 
-MixPTUEq::MixPTUEq() :m_density(0.), m_pressure(0.), m_velocity(0), m_energy(0.), m_totalEnergy(0.), m_PTUEqSoundSpeed(0.) {}
+MixPTUEq::MixPTUEq() : m_density(0.), m_pressure(0.), m_velocity(0), m_energy(0.), m_totalEnergy(0.), m_PTUEqSoundSpeed(0.) {}
 
 //***************************************************************************
 
-MixPTUEq::MixPTUEq(XMLElement* state, std::string fileName) :
-  m_density(0.), m_pressure(0.), m_energy(0.), m_totalEnergy(0.), m_PTUEqSoundSpeed(0.)
+MixPTUEq::MixPTUEq(XMLElement* state, std::string fileName) : m_density(0.), m_pressure(0.), m_energy(0.), m_totalEnergy(0.), m_PTUEqSoundSpeed(0.)
 {
   XMLElement* sousElement(state->FirstChildElement("mixture"));
   if (sousElement == NULL) throw ErrorXMLElement("mixture", fileName, __FILE__, __LINE__);
@@ -70,25 +69,22 @@ MixPTUEq::MixPTUEq(XMLElement* state, std::string fileName) :
 
 //***************************************************************************
 
-MixPTUEq::~MixPTUEq(){}
+MixPTUEq::~MixPTUEq() {}
 
 //***************************************************************************
 
-void MixPTUEq::allocateAndCopyMixture(Mixture** mixture)
-{
-  *mixture = new MixPTUEq(*this);
-}
+void MixPTUEq::allocateAndCopyMixture(Mixture** mixture) { *mixture = new MixPTUEq(*this); }
 
 //***************************************************************************
 
-void MixPTUEq::copyMixture(Mixture &mixture)
+void MixPTUEq::copyMixture(Mixture& mixture)
 {
-  m_density = mixture.getDensity();
-  m_pressure = mixture.getPressure();
-  m_temperature = mixture.getTemperature();
-  m_velocity = mixture.getVelocity();
-  m_energy = mixture.getEnergy();
-  m_totalEnergy = mixture.getTotalEnergy();
+  m_density         = mixture.getDensity();
+  m_pressure        = mixture.getPressure();
+  m_temperature     = mixture.getTemperature();
+  m_velocity        = mixture.getVelocity();
+  m_energy          = mixture.getEnergy();
+  m_totalEnergy     = mixture.getTotalEnergy();
   m_PTUEqSoundSpeed = mixture.getMixSoundSpeed();
 }
 
@@ -97,9 +93,8 @@ void MixPTUEq::copyMixture(Mixture &mixture)
 double MixPTUEq::computeDensity(const double* alphak, const double* rhok)
 {
   double rho(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      rho += alphak[k]*rhok[k];
+  for (int k = 0; k < numberPhases; k++) {
+    rho += alphak[k] * rhok[k];
   }
   return rho;
 }
@@ -109,9 +104,8 @@ double MixPTUEq::computeDensity(const double* alphak, const double* rhok)
 double MixPTUEq::computePressure(const double* alphak, const double* pk)
 {
   double p(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      p += alphak[k]*pk[k];
+  for (int k = 0; k < numberPhases; k++) {
+    p += alphak[k] * pk[k];
   }
   return p;
 }
@@ -123,7 +117,9 @@ double MixPTUEq::computePressure(double* masses, const double& mixInternalEnerg,
   //Restrictions //FP//TODO// to improve
   if (numberPhases > 2) Errors::errorMessage("more than two phases not permitted in thermal equilibrium model : MixPTUEq::computePressure");
   for (int k = 0; k < numberPhases; k++) {
-    if (phases[k]->getEos()->getType() != TypeEOS::IG && phases[k]->getEos()->getType() != TypeEOS::SG) { Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computePressure"); }
+    if (phases[k]->getEos()->getType() != TypeEOS::IG && phases[k]->getEos()->getType() != TypeEOS::SG) {
+      Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computePressure");
+    }
   }
 
   double rhoMel(0.);
@@ -133,25 +129,25 @@ double MixPTUEq::computePressure(double* masses, const double& mixInternalEnerg,
 
   //Formulae of pressure for 2 phases goverened by SG EOS (Le Martelot, 2013, thesis)
   double gamma1 = phases[0]->getEos()->getGamma();
-  double pInf1 = phases[0]->getEos()->getPInf();
-  double cv1 = phases[0]->getEos()->getCv();
-  double e01 = phases[0]->getEos()->getERef();
-  double Y1 = masses[0] / rhoMel;
+  double pInf1  = phases[0]->getEos()->getPInf();
+  double cv1    = phases[0]->getEos()->getCv();
+  double e01    = phases[0]->getEos()->getERef();
+  double Y1     = masses[0] / rhoMel;
 
   double gamma2 = phases[1]->getEos()->getGamma();
-  double pInf2 = phases[1]->getEos()->getPInf();
-  double cv2 = phases[1]->getEos()->getCv();
-  double e02 = phases[1]->getEos()->getERef();
-  double Y2 = masses[1] / rhoMel;
+  double pInf2  = phases[1]->getEos()->getPInf();
+  double cv2    = phases[1]->getEos()->getCv();
+  double e02    = phases[1]->getEos()->getERef();
+  double Y2     = masses[1] / rhoMel;
 
-  double q = Y1*e01 + Y2*e02;
-  double cvMel = Y1*cv1 + Y2*cv2;
-  
-  double A1 = Y1*(gamma1 - 1.)*cv1 / cvMel*(rhoMel*(mixInternalEnerg - q) - pInf1);
-  double A2 = Y2*(gamma2 - 1.)*cv2 / cvMel*(rhoMel*(mixInternalEnerg - q) - pInf2);
+  double q     = Y1 * e01 + Y2 * e02;
+  double cvMel = Y1 * cv1 + Y2 * cv2;
 
-  m_pressure = 0.5*(A1 + A2 - (pInf1 + pInf2)) + sqrt(0.25*(A2 - A1 - (pInf2 - pInf1))*(A2 - A1 - (pInf2 - pInf1)) + A1*A2);
- 
+  double A1 = Y1 * (gamma1 - 1.) * cv1 / cvMel * (rhoMel * (mixInternalEnerg - q) - pInf1);
+  double A2 = Y2 * (gamma2 - 1.) * cv2 / cvMel * (rhoMel * (mixInternalEnerg - q) - pInf2);
+
+  m_pressure = 0.5 * (A1 + A2 - (pInf1 + pInf2)) + sqrt(0.25 * (A2 - A1 - (pInf2 - pInf1)) * (A2 - A1 - (pInf2 - pInf1)) + A1 * A2);
+
   return m_pressure;
 }
 
@@ -161,7 +157,9 @@ double MixPTUEq::computeTemperature(double* masses, const double& pressure, Phas
 {
   //Restrictions //FP//TODO// to improve
   for (int k = 0; k < numberPhases; k++) {
-    if (phases[k]->getEos()->getType() != TypeEOS::IG && phases[k]->getEos()->getType() != TypeEOS::SG) { Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computePressure"); }
+    if (phases[k]->getEos()->getType() != TypeEOS::IG && phases[k]->getEos()->getType() != TypeEOS::SG) {
+      Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computePressure");
+    }
   }
 
   double rhoMel(0.);
@@ -173,13 +171,13 @@ double MixPTUEq::computeTemperature(double* masses, const double& pressure, Phas
   double gammak, pInfk, cvk, Yk;
   m_temperature = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    gammak = phases[k]->getEos()->getGamma();
-    pInfk = phases[k]->getEos()->getPInf();
-    cvk = phases[k]->getEos()->getCv();
-    Yk = masses[k] / rhoMel;
-    m_temperature += Yk*(gammak - 1.)*cvk / (pressure + pInfk);
+    gammak         = phases[k]->getEos()->getGamma();
+    pInfk          = phases[k]->getEos()->getPInf();
+    cvk            = phases[k]->getEos()->getCv();
+    Yk             = masses[k] / rhoMel;
+    m_temperature += Yk * (gammak - 1.) * cvk / (pressure + pInfk);
   }
-  m_temperature = 1. / (m_temperature*rhoMel);
+  m_temperature = 1. / (m_temperature * rhoMel);
 
   return m_temperature;
 }
@@ -189,9 +187,8 @@ double MixPTUEq::computeTemperature(double* masses, const double& pressure, Phas
 double MixPTUEq::computeInternalEnergy(const double* Yk, const double* ek)
 {
   double e(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      e += Yk[k]*ek[k];
+  for (int k = 0; k < numberPhases; k++) {
+    e += Yk[k] * ek[k];
   }
   return e;
 }
@@ -201,35 +198,37 @@ double MixPTUEq::computeInternalEnergy(const double* Yk, const double* ek)
 double MixPTUEq::computeFrozenSoundSpeed(const double* Yk, const double* ck)
 {
   double cF(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      cF += Yk[k]*ck[k]*ck[k];
+  for (int k = 0; k < numberPhases; k++) {
+    cF += Yk[k] * ck[k] * ck[k];
   }
   return sqrt(cF);
 }
 
 //***************************************************************************
 
-double MixPTUEq::computeTemperatureIsentrope(const double* Yk, const double& p0, const double& T0, const double& p, double* dTdp)
+double MixPTUEq::computeTemperatureIsentrope(const std::vector<double>& Yk, const double& p0, const double& T0, const double& p, double* dTdp)
 {
   //Restrictions //FP//TODO// to improve
-  if (numberPhases > 2) Errors::errorMessage("more than two phases not permitted in thermal equilibrium model : MixPTUEq::computeTemperatureIsentrope");
+  if (numberPhases > 2)
+    Errors::errorMessage("more than two phases not permitted in thermal equilibrium model : MixPTUEq::computeTemperatureIsentrope");
   for (int k = 0; k < numberPhases; k++) {
-    if (TB->eos[k]->getType() != TypeEOS::IG && TB->eos[k]->getType() != TypeEOS::SG) { Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computeTemperatureIsentrope"); }
+    if (TB->eos[k]->getType() != TypeEOS::IG && TB->eos[k]->getType() != TypeEOS::SG) {
+      Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computeTemperatureIsentrope");
+    }
   }
 
   //Formulae for phases goverened by SG EOS
-  double T(T0), cM(0.); 
+  double T(T0), cM(0.);
   if (dTdp != NULL) *dTdp = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    cM += Yk[k] * TB->eos[k]->getGamma()* TB->eos[k]->getCv();
+    cM += Yk[k] * TB->eos[k]->getGamma() * TB->eos[k]->getCv();
   }
   double puissance(0.), fk;
   for (int k = 0; k < numberPhases; k++) {
-    puissance = (TB->eos[k]->getGamma() - 1.)*Yk[k] * TB->eos[k]->getCv()/cM;
-    fk = std::pow((p + TB->eos[k]->getPInf()) / ((p0 + TB->eos[k]->getPInf())), puissance);
-    T *= fk;
-    if (dTdp != NULL) *dTdp += puissance/ (p + TB->eos[k]->getPInf());
+    puissance  = (TB->eos[k]->getGamma() - 1.) * Yk[k] * TB->eos[k]->getCv() / cM;
+    fk         = std::pow((p + TB->eos[k]->getPInf()) / ((p0 + TB->eos[k]->getPInf())), puissance);
+    T         *= fk;
+    if (dTdp != NULL) *dTdp += puissance / (p + TB->eos[k]->getPInf());
   }
   if (dTdp != NULL) *dTdp *= T;
 
@@ -238,11 +237,13 @@ double MixPTUEq::computeTemperatureIsentrope(const double* Yk, const double& p0,
 
 //***************************************************************************
 
-double MixPTUEq::computeEnthalpyIsentrope(const double* Yk, const double& p0, const double& T0, const double& p, double* dhdp)
+double MixPTUEq::computeEnthalpyIsentrope(const std::vector<double>& Yk, const double& p0, const double& T0, const double& p, double* dhdp)
 {
   //Restrictions //FP//TODO// to improve
   for (int k = 0; k < numberPhases; k++) {
-    if (TB->eos[k]->getType() != TypeEOS::IG && TB->eos[k]->getType() != TypeEOS::SG) { Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computeEnthalpyIsentrope"); }
+    if (TB->eos[k]->getType() != TypeEOS::IG && TB->eos[k]->getType() != TypeEOS::SG) {
+      Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computeEnthalpyIsentrope");
+    }
   }
 
   double dTdp(0.);
@@ -251,31 +252,33 @@ double MixPTUEq::computeEnthalpyIsentrope(const double* Yk, const double& p0, co
   double h(0.);
   if (dhdp != NULL) *dhdp = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    h += Yk[k] * (TB->eos[k]->getGamma()*TB->eos[k]->getCv()*T + TB->eos[k]->getERef());
-    if (dhdp != NULL) *dhdp += Yk[k] * TB->eos[k]->getGamma()*TB->eos[k]->getCv()*dTdp;
+    h += Yk[k] * (TB->eos[k]->getGamma() * TB->eos[k]->getCv() * T + TB->eos[k]->getERef());
+    if (dhdp != NULL) *dhdp += Yk[k] * TB->eos[k]->getGamma() * TB->eos[k]->getCv() * dTdp;
   }
-  
+
   return h;
 }
 
 //***************************************************************************
 
-double MixPTUEq::computeVolumeIsentrope(const double* Yk, const double& p0, const double& T0, const double& p, double* dvdp)
+double MixPTUEq::computeVolumeIsentrope(const std::vector<double>& Yk, const double& p0, const double& T0, const double& p, double* dvdp)
 {
   //Restrictions //FP//TODO// to improve
   for (int k = 0; k < numberPhases; k++) {
-    if (TB->eos[k]->getType() != TypeEOS::IG && TB->eos[k]->getType() != TypeEOS::SG) { Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computeVolumeIsentrope"); }
+    if (TB->eos[k]->getType() != TypeEOS::IG && TB->eos[k]->getType() != TypeEOS::SG) {
+      Errors::errorMessage("Only IG and SG permitted in thermal equilibrium model: MixPTUEq::computeVolumeIsentrope");
+    }
   }
 
   double dTdp(0.);
   double T = this->computeTemperatureIsentrope(Yk, p0, T0, p, &dTdp);
   //Formulae for phases goverened by SG EOS
-  double v(0.), vk(0.), dvk(0.); 
+  double v(0.), vk(0.), dvk(0.);
   if (dvdp != NULL) *dvdp = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    vk = ((TB->eos[k]->getGamma() - 1.)*TB->eos[k]->getCv()*T)/ (p + TB->eos[k]->getPInf());
-    dvk = ((TB->eos[k]->getGamma() - 1.)*TB->eos[k]->getCv()*dTdp - vk) / (p + TB->eos[k]->getPInf());
-    v += Yk[k] * vk;
+    vk   = ((TB->eos[k]->getGamma() - 1.) * TB->eos[k]->getCv() * T) / (p + TB->eos[k]->getPInf());
+    dvk  = ((TB->eos[k]->getGamma() - 1.) * TB->eos[k]->getCv() * dTdp - vk) / (p + TB->eos[k]->getPInf());
+    v   += Yk[k] * vk;
     if (dvdp != NULL) *dvdp += Yk[k] * dvk;
   }
 
@@ -289,20 +292,20 @@ void MixPTUEq::computeMixtureVariables(Phase** vecPhase)
   //mixture density and pressure
   m_density = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    m_density += vecPhase[k]->getAlpha()*vecPhase[k]->getDensity();
+    m_density += vecPhase[k]->getAlpha() * vecPhase[k]->getDensity();
   }
   //Mass fraction
   for (int k = 0; k < numberPhases; k++) {
-    TB->Yk[k] = vecPhase[k]->getAlpha()*vecPhase[k]->getDensity() / m_density;
+    TB->Yk[k] = vecPhase[k]->getAlpha() * vecPhase[k]->getDensity() / m_density;
   }
   //Specific internal energy, speed of sound (frozen for now //FP//TODO//CHANGE sound speed)
-  m_energy = 0.;
+  m_energy          = 0.;
   m_PTUEqSoundSpeed = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    m_energy += TB->Yk[k] * vecPhase[k]->getEnergy();
-    m_PTUEqSoundSpeed += TB->Yk[k] * vecPhase[k]->getSoundSpeed()*vecPhase[k]->getSoundSpeed();
+    m_energy          += TB->Yk[k] * vecPhase[k]->getEnergy();
+    m_PTUEqSoundSpeed += TB->Yk[k] * vecPhase[k]->getSoundSpeed() * vecPhase[k]->getSoundSpeed();
   }
-  m_PTUEqSoundSpeed = sqrt(m_PTUEqSoundSpeed);  
+  m_PTUEqSoundSpeed = sqrt(m_PTUEqSoundSpeed);
   //m_totalEnergy cannot be computed here because depending on extra additional energies
 }
 
@@ -310,9 +313,9 @@ void MixPTUEq::computeMixtureVariables(Phase** vecPhase)
 
 void MixPTUEq::computeTotalEnergy(std::vector<QuantitiesAddPhys*>& vecGPA)
 {
-  m_totalEnergy = m_energy + 0.5*m_velocity.squaredNorm();
+  m_totalEnergy = m_energy + 0.5 * m_velocity.squaredNorm();
   for (unsigned int pa = 0; pa < vecGPA.size(); pa++) {
-    m_totalEnergy += vecGPA[pa]->computeEnergyAddPhys()/m_density; //Caution /m_density important
+    m_totalEnergy += vecGPA[pa]->computeEnergyAddPhys() / m_density; //Caution /m_density important
   }
 }
 
@@ -320,9 +323,9 @@ void MixPTUEq::computeTotalEnergy(std::vector<QuantitiesAddPhys*>& vecGPA)
 
 void MixPTUEq::totalEnergyToInternalEnergy(std::vector<QuantitiesAddPhys*>& vecGPA)
 {
-  m_energy = m_totalEnergy - 0.5*m_velocity.squaredNorm();
+  m_energy = m_totalEnergy - 0.5 * m_velocity.squaredNorm();
   for (unsigned int pa = 0; pa < vecGPA.size(); pa++) {
-    m_energy -= vecGPA[pa]->computeEnergyAddPhys()/m_density; //Caution /m_density important
+    m_energy -= vecGPA[pa]->computeEnergyAddPhys() / m_density; //Caution /m_density important
   }
 }
 
@@ -346,16 +349,19 @@ void MixPTUEq::reverseProjection(const Coord& normal, const Coord& tangent, cons
 
 double MixPTUEq::returnScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_density; break;
+    return m_density;
+    break;
   case 2:
-    return m_pressure; break;
+    return m_pressure;
+    break;
   case 3:
-    return m_temperature; break;
+    return m_temperature;
+    break;
   default:
-    return 0.; break;
+    return 0.;
+    break;
   }
 }
 
@@ -363,12 +369,13 @@ double MixPTUEq::returnScalar(const int& numVar) const
 
 Coord MixPTUEq::returnVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_velocity; break;
+    return m_velocity;
+    break;
   default:
-    return 0; break;
+    return 0;
+    break;
   }
 }
 
@@ -376,16 +383,19 @@ Coord MixPTUEq::returnVector(const int& numVar) const
 
 std::string MixPTUEq::returnNameScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Density_Mixture"; break;
+    return "Density_Mixture";
+    break;
   case 2:
-    return "Pressure_Mixture"; break;
+    return "Pressure_Mixture";
+    break;
   case 3:
-    return "Temperature_Mixture"; break;
+    return "Temperature_Mixture";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -393,12 +403,13 @@ std::string MixPTUEq::returnNameScalar(const int& numVar) const
 
 std::string MixPTUEq::returnNameVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Velocity_Mixture_norm"; break;
+    return "Velocity_Mixture_norm";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -408,16 +419,19 @@ std::string MixPTUEq::returnNameVector(const int& numVar) const
 
 void MixPTUEq::setScalar(const int& numVar, const double& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_density = value; break;
+    m_density = value;
+    break;
   case 2:
-    m_pressure = value; break;
+    m_pressure = value;
+    break;
   case 3:
-    m_temperature = value; break;
+    m_temperature = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in MixPTUEq::setScalar"); break;
+    Errors::errorMessage("numVar not found in MixPTUEq::setScalar");
+    break;
   }
 }
 
@@ -425,12 +439,13 @@ void MixPTUEq::setScalar(const int& numVar, const double& value)
 
 void MixPTUEq::setVector(const int& numVar, const Coord& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_velocity = value; break;
+    m_velocity = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in MixPTUEq::setVector"); break;
+    Errors::errorMessage("numVar not found in MixPTUEq::setVector");
+    break;
   }
 }
 
@@ -472,7 +487,7 @@ void MixPTUEq::fillBuffer(std::vector<double>& dataToSend) const
 
 void MixPTUEq::getBuffer(double* buffer, int& counter)
 {
-  m_pressure = buffer[++counter];
+  m_pressure    = buffer[++counter];
   m_temperature = buffer[++counter];
   m_velocity.setX(buffer[++counter]);
   m_velocity.setY(buffer[++counter]);
@@ -484,7 +499,7 @@ void MixPTUEq::getBuffer(double* buffer, int& counter)
 
 void MixPTUEq::getBuffer(std::vector<double>& dataToReceive, int& counter)
 {
-  m_pressure = dataToReceive[counter++];
+  m_pressure    = dataToReceive[counter++];
   m_temperature = dataToReceive[counter++];
   m_velocity.setX(dataToReceive[counter++]);
   m_velocity.setY(dataToReceive[counter++]);
@@ -496,9 +511,9 @@ void MixPTUEq::getBuffer(std::vector<double>& dataToReceive, int& counter)
 //******************************* ORDER 2 ************************************
 //****************************************************************************
 
-void MixPTUEq::computeSlopesMixture(const Mixture &sLeft, const Mixture &sRight, const double& distance)
+void MixPTUEq::computeSlopesMixture(const Mixture& sLeft, const Mixture& sRight, const double& distance)
 {
-  m_pressure = (sRight.getPressure() - sLeft.getPressure()) / distance;
+  m_pressure    = (sRight.getPressure() - sLeft.getPressure()) / distance;
   m_temperature = (sRight.getTemperature() - sLeft.getTemperature()) / distance;
   m_velocity.setX((sRight.getVelocity().getX() - sLeft.getVelocity().getX()) / distance);
   m_velocity.setY((sRight.getVelocity().getY() - sLeft.getVelocity().getY()) / distance);
@@ -509,24 +524,30 @@ void MixPTUEq::computeSlopesMixture(const Mixture &sLeft, const Mixture &sRight,
 
 void MixPTUEq::setToZero()
 {
-  m_pressure = 0.; m_temperature = 0.;
-  m_velocity.setX(0.); m_velocity.setY(0.); m_velocity.setZ(0.);
+  m_pressure    = 0.;
+  m_temperature = 0.;
+  m_velocity.setX(0.);
+  m_velocity.setY(0.);
+  m_velocity.setZ(0.);
 }
 
 //***************************************************************************
 
 void MixPTUEq::setToMax()
 {
-  m_pressure = 1.e15; m_temperature = 1.e15;
-  m_velocity.setX(1.e15); m_velocity.setY(1.e15); m_velocity.setZ(1.e15);
+  m_pressure    = 1.e15;
+  m_temperature = 1.e15;
+  m_velocity.setX(1.e15);
+  m_velocity.setY(1.e15);
+  m_velocity.setZ(1.e15);
 }
 
 //***************************************************************************
 
-void MixPTUEq::extrapolate(const Mixture &slope, const double& distance)
+void MixPTUEq::extrapolate(const Mixture& slope, const double& distance)
 {
-  m_pressure += slope.getPressure()*distance;
-  m_temperature += slope.getTemperature()*distance;
+  m_pressure    += slope.getPressure() * distance;
+  m_temperature += slope.getTemperature() * distance;
   m_velocity.setX(m_velocity.getX() + slope.getVelocity().getX() * distance);
   m_velocity.setY(m_velocity.getY() + slope.getVelocity().getY() * distance);
   m_velocity.setZ(m_velocity.getZ() + slope.getVelocity().getZ() * distance);
@@ -534,9 +555,9 @@ void MixPTUEq::extrapolate(const Mixture &slope, const double& distance)
 
 //***************************************************************************
 
-void MixPTUEq::limitSlopes(const Mixture &slopeGauche, const Mixture &slopeDroite, Limiter& globalLimiter)
+void MixPTUEq::limitSlopes(const Mixture& slopeGauche, const Mixture& slopeDroite, Limiter& globalLimiter)
 {
-  m_pressure = globalLimiter.limiteSlope(slopeGauche.getPressure(), slopeDroite.getPressure());
+  m_pressure    = globalLimiter.limiteSlope(slopeGauche.getPressure(), slopeDroite.getPressure());
   m_temperature = globalLimiter.limiteSlope(slopeGauche.getTemperature(), slopeDroite.getTemperature());
   m_velocity.setX(globalLimiter.limiteSlope(slopeGauche.getVelocity().getX(), slopeDroite.getVelocity().getX()));
   m_velocity.setY(globalLimiter.limiteSlope(slopeGauche.getVelocity().getY(), slopeDroite.getVelocity().getY()));
@@ -547,7 +568,7 @@ void MixPTUEq::limitSlopes(const Mixture &slopeGauche, const Mixture &slopeDroit
 
 void MixPTUEq::setMin(const Mixture& mixture1, const Mixture& mixture2)
 {
-  m_pressure = std::min(mixture1.getPressure(), mixture2.getPressure());
+  m_pressure    = std::min(mixture1.getPressure(), mixture2.getPressure());
   m_temperature = std::min(mixture1.getTemperature(), mixture2.getTemperature());
   m_velocity.setX(std::min(mixture1.getVelocity().getX(), mixture2.getVelocity().getX()));
   m_velocity.setY(std::min(mixture1.getVelocity().getY(), mixture2.getVelocity().getY()));
@@ -558,7 +579,7 @@ void MixPTUEq::setMin(const Mixture& mixture1, const Mixture& mixture2)
 
 void MixPTUEq::setMax(const Mixture& mixture1, const Mixture& mixture2)
 {
-  m_pressure = std::max(mixture1.getPressure(), mixture2.getPressure());
+  m_pressure    = std::max(mixture1.getPressure(), mixture2.getPressure());
   m_temperature = std::max(mixture1.getTemperature(), mixture2.getTemperature());
   m_velocity.setX(std::max(mixture1.getVelocity().getX(), mixture2.getVelocity().getX()));
   m_velocity.setY(std::max(mixture1.getVelocity().getY(), mixture2.getVelocity().getY()));
@@ -567,23 +588,36 @@ void MixPTUEq::setMax(const Mixture& mixture1, const Mixture& mixture2)
 
 //****************************************************************************
 
-void MixPTUEq::computeGradientLimiter(const Limiter& globalLimiter, const Mixture &mixture, const Mixture &mixtureMin, const Mixture &mixtureMax, const Mixture& slope)
+void MixPTUEq::computeGradientLimiter(
+  const Limiter& globalLimiter, const Mixture& mixture, const Mixture& mixtureMin, const Mixture& mixtureMax, const Mixture& slope)
 {
-  m_pressure = std::min(m_pressure, globalLimiter.computeGradientLimiter(mixture.getPressure(), mixtureMin.getPressure(), mixtureMax.getPressure(), slope.getPressure()));
-  m_temperature = std::min(m_temperature, globalLimiter.computeGradientLimiter(mixture.getTemperature(), mixtureMin.getTemperature(), mixtureMax.getTemperature(), slope.getTemperature()));
-  m_velocity.setX(std::min(m_velocity.getX(), globalLimiter.computeGradientLimiter(mixture.getVelocity().getX(), mixtureMin.getVelocity().getX(), mixtureMax.getVelocity().getX(), slope.getVelocity().getX())));
-  m_velocity.setY(std::min(m_velocity.getY(), globalLimiter.computeGradientLimiter(mixture.getVelocity().getY(), mixtureMin.getVelocity().getY(), mixtureMax.getVelocity().getY(), slope.getVelocity().getY())));
-  m_velocity.setZ(std::min(m_velocity.getZ(), globalLimiter.computeGradientLimiter(mixture.getVelocity().getZ(), mixtureMin.getVelocity().getZ(), mixtureMax.getVelocity().getZ(), slope.getVelocity().getZ())));
+  m_pressure = std::min(
+    m_pressure, globalLimiter.computeGradientLimiter(mixture.getPressure(), mixtureMin.getPressure(), mixtureMax.getPressure(), slope.getPressure()));
+  m_temperature = std::min(
+    m_temperature,
+    globalLimiter.computeGradientLimiter(mixture.getTemperature(), mixtureMin.getTemperature(), mixtureMax.getTemperature(), slope.getTemperature()));
+  m_velocity.setX(std::min(m_velocity.getX(),
+                           globalLimiter.computeGradientLimiter(mixture.getVelocity().getX(),
+                                                                mixtureMin.getVelocity().getX(),
+                                                                mixtureMax.getVelocity().getX(),
+                                                                slope.getVelocity().getX())));
+  m_velocity.setY(std::min(m_velocity.getY(),
+                           globalLimiter.computeGradientLimiter(mixture.getVelocity().getY(),
+                                                                mixtureMin.getVelocity().getY(),
+                                                                mixtureMax.getVelocity().getY(),
+                                                                slope.getVelocity().getY())));
+  m_velocity.setZ(std::min(m_velocity.getZ(),
+                           globalLimiter.computeGradientLimiter(mixture.getVelocity().getZ(),
+                                                                mixtureMin.getVelocity().getZ(),
+                                                                mixtureMax.getVelocity().getZ(),
+                                                                slope.getVelocity().getZ())));
 }
 
 //****************************************************************************
 //************************** ORDER 2 PARALLEL ********************************
 //****************************************************************************
 
-int MixPTUEq::numberOfTransmittedSlopes() const
-{
-	return 5;
-}
+int MixPTUEq::numberOfTransmittedSlopes() const { return 5; }
 
 //***************************************************************************
 
@@ -591,20 +625,20 @@ void MixPTUEq::fillBufferSlopes(double* buffer, int& counter) const
 {
   buffer[++counter] = m_pressure;
   buffer[++counter] = m_temperature;
-	buffer[++counter] = m_velocity.getX();
-	buffer[++counter] = m_velocity.getY();
-	buffer[++counter] = m_velocity.getZ();
+  buffer[++counter] = m_velocity.getX();
+  buffer[++counter] = m_velocity.getY();
+  buffer[++counter] = m_velocity.getZ();
 }
 
 //***************************************************************************
 
 void MixPTUEq::getBufferSlopes(double* buffer, int& counter)
 {
-  m_pressure = buffer[++counter];
+  m_pressure    = buffer[++counter];
   m_temperature = buffer[++counter];
-	m_velocity.setX(buffer[++counter]);
-	m_velocity.setY(buffer[++counter]);
-	m_velocity.setZ(buffer[++counter]);
+  m_velocity.setX(buffer[++counter]);
+  m_velocity.setY(buffer[++counter]);
+  m_velocity.setZ(buffer[++counter]);
 }
 
 //****************************************************************************
@@ -635,17 +669,11 @@ void MixPTUEq::setW(const double& w) { m_velocity.setZ(w); }
 
 //***************************************************************************
 
-void MixPTUEq::setTotalEnergy(double& totalEnergy)
-{
-  m_totalEnergy = totalEnergy;
-}
+void MixPTUEq::setTotalEnergy(double& totalEnergy) { m_totalEnergy = totalEnergy; }
 
 //***************************************************************************
 
-void MixPTUEq::setTemperature(const double& T)
-{
-  m_temperature = T;
-}
+void MixPTUEq::setTemperature(const double& T) { m_temperature = T; }
 
 //****************************************************************************
 //***************************** OPERATORS ************************************
@@ -653,25 +681,25 @@ void MixPTUEq::setTemperature(const double& T)
 
 void MixPTUEq::changeSign()
 {
-  m_pressure = -m_pressure;
+  m_pressure    = -m_pressure;
   m_temperature = -m_temperature;
-  m_velocity = m_velocity*-1.;
+  m_velocity    = m_velocity * -1.;
 }
 
 //***************************************************************************
 
-void MixPTUEq::multiplyAndAdd(const Mixture &slopesMixtureTemp, const double& coeff)
+void MixPTUEq::multiplyAndAdd(const Mixture& slopesMixtureTemp, const double& coeff)
 {
-  m_pressure += slopesMixtureTemp.getPressure()*coeff;
-  m_temperature += slopesMixtureTemp.getTemperature()*coeff;
-  m_velocity += slopesMixtureTemp.getVelocity()*coeff;
+  m_pressure    += slopesMixtureTemp.getPressure() * coeff;
+  m_temperature += slopesMixtureTemp.getTemperature() * coeff;
+  m_velocity    += slopesMixtureTemp.getVelocity() * coeff;
 }
 
 //***************************************************************************
 
 void MixPTUEq::divide(const double& coeff)
 {
-  m_pressure /= coeff;
+  m_pressure    /= coeff;
   m_temperature /= coeff;
-  m_velocity /= coeff;
+  m_velocity    /= coeff;
 }

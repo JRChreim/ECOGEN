@@ -38,7 +38,7 @@ inline int svdcmp(double u[/*m x n*/], double w[/*n*/], double v[/*n x n*/],
 {
 /*
   Compute the SVD A = U x W x V^T of the m (rows) by n (columns) matrix A;
-  on output, u[] holds the m by n matrix U, w[] holds the n diagonal 
+  on output, u[] holds the m by n matrix U, w[] holds the n diagonal
   elements of the (diagonal) n by n matrix W, and v[] holds the transpose of
   the n by n matrix V^T; note that u[] can be identical to a[].
   Returns 0 on success, or a system error code otherwise
@@ -139,8 +139,8 @@ inline int svdcmp(double u[/*m x n*/], double w[/*n*/], double v[/*n x n*/],
       }
       { double *uji=u+i*n+i;  for (j=i; j<m; j++, uji+=n) (*uji)*=g; }
     } else {
-      double *uji=u+i*n+i; 
-      
+      double *uji=u+i*n+i;
+
       for (j=i; j<m; j++, uji+=n) *uji=0;
     }
     ++u[i*n+i];
@@ -185,7 +185,7 @@ inline int svdcmp(double u[/*m x n*/], double w[/*n*/], double v[/*n x n*/],
       g=hypot(f, 1); f=((x-z)*(x+z)+h*((y/(f+SIGN(g,f)))-h))/x; c=s=1;
       for (j=l; j<=nm; j++) {
         i=j+1; g=rv1[i]; y=w[i]; h=s*g; g=c*g; z=hypot(f,h);
-        rv1[j]=z; 
+        rv1[j]=z;
         { double z1=1/z;  c=f*z1; s=h*z1; }
         f=x*c+g*s; g=g*c-x*s; h=y*s; y*=c;
         {
@@ -256,7 +256,7 @@ inline int svsolve(double x[/*n x p*/], double wmin, double a[/*m x n*/],
   const double b[/*m x p*/], int m, int n, int p, int preserve)
 {
 /*
-   Solve a (least squares) system of linear equations A X = B by singular value 
+   Solve a (least squares) system of linear equations A X = B by singular value
    decomposition. Zero all singular values smaller than wmin*max(w[]), using
    wmin=WMIN if wmin<0. If preserve is non-zero, A is copied before
    decomposition; A is m x n, B is m x p, and X will be n x p.
@@ -298,7 +298,7 @@ inline int svsolve(double x[/*n x p*/], double wmin, double a[/*m x n*/],
 inline int svinverse(double x[/*n x m*/], double wmin, const double a[/*m x n*/],
   int m, int n)
 {
-/* 
+/*
    Find the pseudoinverse of the m x n matrix A, zeroing singular values below
    wmin*max(w[]). X should have space for an n x m matrix and can be the
    same as A.  Returns 0 on success, or a system error code otherwise.

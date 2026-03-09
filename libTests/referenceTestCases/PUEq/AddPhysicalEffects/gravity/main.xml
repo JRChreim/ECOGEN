@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <computationParam>
   <run>pressureVelocityEq2Dgravity</run>
-  <outputMode format="XML" binary="false"/>
+  <outputMode format="VTK" binary="false"/>
   <timeControlMode iterations="false">
     <iterations iterFreq="100" number="1000"/>
     <physicalTime timeFreq="0.04" totalTime="0.4"/>
@@ -11,5 +11,5 @@
     <globalLimiter>vanleer</globalLimiter>
     <interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>
   </secondOrder>
-  <!-- <restartSimulation restartFileNumber="10" AMRsaveFreq="5"/> -->
+  <!-- <resumeSimulation resumeFileNumber="10" AMRsaveFreq="5"/> -->
 </computationParam>

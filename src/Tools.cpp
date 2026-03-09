@@ -1,128 +1,142 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Tools.h"
 
-Tools *TB;
+Tools* TB;
 
 //***********************************************************************
 
 Tools::Tools(const int& numbPhases, const int& numbSolids, const int& numbTransports)
 {
-  ak = new double[numbPhases];
-  Yk = new double[numbPhases];
-  rhok = new double[numbPhases];
-  pk = new double[numbPhases];
-  ek = new double[numbPhases];
-  Ek = new double[numbPhases];
-  akS = new double[numbPhases];
-  rhokS = new double[numbPhases];
-  rhokStar = new double[numbPhases];
-  pkStar = new double[numbPhases];
-  ekStar = new double[numbPhases];
-  EkStar = new double[numbPhases];
-  YkStar = new double[numbPhases];
-  vkStar = new double[numbPhases];
-  Deltapk = new double[numbPhases];
-  zk = new double[numbPhases];
-  rho_cIksquare = new double[numbPhases];
-  eos = new Eos*[numbPhases];
-  Hk0 = new double[numbPhases];
-  Yk0 = new double[numbPhases];
-  compactionPk = new double[numbPhases];
-  dlambda = new double[numbPhases];
-  dplast = new Tensor[numbPhases];
-  alphaNull = new bool[numbPhases];
-  relaxSolidPlast = new bool[numbPhases];
+  ak.resize(numbPhases);
+  ak4.resize(numbPhases);
+  ak5.resize(numbPhases);
+  Yk.resize(numbPhases);
+  rhok.resize(numbPhases);
+  pk.resize(numbPhases);
+  ek.resize(numbPhases);
+  ek4.resize(numbPhases);
+  ek5.resize(numbPhases);
+  Ek.resize(numbPhases);
+  akS.resize(numbPhases);
+  rhokS.resize(numbPhases);
+  rhokStar.resize(numbPhases);
+  pkStar.resize(numbPhases);
+  ekStar.resize(numbPhases);
+  EkStar.resize(numbPhases);
+  YkStar.resize(numbPhases);
+  vkStar.resize(numbPhases);
+  Deltapk.resize(numbPhases);
+  zk.resize(numbPhases);
+  rho_cIksquare.resize(numbPhases);
+  eos.resize(numbPhases);
+  Hk0.resize(numbPhases);
+  Yk0.resize(numbPhases);
+  compactionPk_dkappadxi.resize(numbPhases);
+  compactionPk_dkappadalpha.resize(numbPhases);
+  dlambda.resize(numbPhases);
+  dplast.resize(numbPhases);
+  LogCobase.resize(numbPhases);
+  LogCobase4.resize(numbPhases);
+  LogCobase5.resize(numbPhases);
+  LogLambda.resize(numbPhases);
+  LogLambda4.resize(numbPhases);
+  LogLambda5.resize(numbPhases);
+  alphaNull.resize(numbPhases);
+  relaxSolidPlast.resize(numbPhases);
+  dLogCobaseDt1.resize(numbSolids);
+  dLogCobaseDt2.resize(numbSolids);
+  dLogCobaseDt3.resize(numbSolids);
+  dLogCobaseDt4.resize(numbSolids);
+  dLogCobaseDt5.resize(numbSolids);
+  dLogCobaseDt6.resize(numbSolids);
+  dLogLambdaDt1.resize(numbPhases);
+  dLogLambdaDt2.resize(numbPhases);
+  dLogLambdaDt3.resize(numbPhases);
+  dLogLambdaDt4.resize(numbPhases);
+  dLogLambdaDt5.resize(numbPhases);
+  dLogLambdaDt6.resize(numbPhases);
+  dakDt1.resize(numbPhases);
+  dakDt2.resize(numbPhases);
+  dakDt3.resize(numbPhases);
+  dakDt4.resize(numbPhases);
+  dakDt5.resize(numbPhases);
+  dakDt6.resize(numbPhases);
+  dekDt1.resize(numbPhases);
+  dekDt2.resize(numbPhases);
+  dekDt3.resize(numbPhases);
+  dekDt4.resize(numbPhases);
+  dekDt5.resize(numbPhases);
+  dekDt6.resize(numbPhases);
 
   for (int k = 0; k < numbPhases; k++) {
-    compactionPk[k] = 0.;
-    alphaNull[k] = false;
-    relaxSolidPlast[k] = false;
+    compactionPk_dkappadxi[k]    = 0.;
+    compactionPk_dkappadalpha[k] = 0.;
+    dlambda[k]                   = 0.;
+    alphaNull[k]                 = false;
+    relaxSolidPlast[k]           = false;
   }
 
   physicalTime = 0.;
 
-  numberPhases = numbPhases;
-  numberSolids = numbSolids;
+  numberPhases     = numbPhases;
+  numberSolids     = numbSolids;
   numberTransports = numbTransports;
 }
 
 //***********************************************************************
 
-Tools::~Tools()
-{
-  if (ak != 0) delete[] ak;
-  if (Yk != 0) delete[] Yk;
-  if (rhok != 0) delete[] rhok;
-  if (pk != 0) delete[] pk;
-  if (ek != 0) delete[] ek;
-  if (Ek != 0) delete[] Ek;
-  if (akS != 0) delete[] akS;
-  if (rhokS != 0) delete[] rhokS;
-  if (rhokStar != 0) delete[] rhokStar;
-  if (pkStar != 0) delete[] pkStar;
-  if (ekStar != 0) delete[] ekStar;
-  if (EkStar != 0) delete[] EkStar;
-  if (YkStar != 0) delete[] YkStar;
-  if (vkStar != 0) delete[] vkStar;
-  if (Deltapk != 0) delete[] Deltapk;
-  if (zk != 0) delete[] zk;
-  if (rho_cIksquare != 0) delete[] rho_cIksquare;
-  if (eos != 0) delete[] eos;
-  if (Hk0 != 0) delete[] Hk0;
-  if (Yk0 != 0) delete[] Yk0;
-  if (compactionPk != 0) delete[] compactionPk;
-  if (dlambda != 0) delete[] dlambda;
-  if (dplast != 0) delete[] dplast;
-  if (alphaNull != 0) delete[] alphaNull;
-  if (relaxSolidPlast != 0) delete[] relaxSolidPlast;
-}
+Tools::~Tools() {}
 
 //***********************************************************************
 
 void Tools::uppercase(std::string& string)
 {
-  for (unsigned int c = 0; c < string.size(); c++){ string[c] = toupper(string[c]); }
+  for (unsigned int c = 0; c < string.size(); c++) {
+    string[c] = toupper(string[c]);
+  }
 }
 
 //***********************************************************************
 
 void Tools::lowercase(std::string& string)
 {
-	for (unsigned int c = 0; c < string.size(); c++) { string[c] = tolower(string[c]); }
+  for (unsigned int c = 0; c < string.size(); c++) {
+    string[c] = tolower(string[c]);
+  }
 }
 
 //***********************************************************************
 
-void Tools::swap(double &a, double &b)
+void Tools::swap(double& a, double& b)
 {
   double buff(a);
   a = b;
@@ -133,11 +147,11 @@ void Tools::swap(double &a, double &b)
 
 double Tools::returnNonZeroValue(double a)
 {
-  if (a > epsilonAlphaNull || a < - epsilonAlphaNull) {
-   return a;
+  if (a > epsilonAlphaNull || a < -epsilonAlphaNull) {
+    return a;
   }
   else {
-   return sign(a) * epsilonAlphaNull;
+    return sign(a) * epsilonAlphaNull;
   }
 }
 

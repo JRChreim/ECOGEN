@@ -21,7 +21,7 @@ This case is a 2D Cartesian test case. This test case shows an air-bubble collap
 
 A spherical air bubble is initialized at low pressure (approximately saturated vapor pressure) in the corner of a 2D-axisymmetric domain filled with water at high pressure (here P = 50 atm).
 
-The initial characteristics of the run are: 
+The initial characteristics of the run are:
 
 +------------------------------+---------------------------+
 | Characteristic               | Value                     |

@@ -5,9 +5,9 @@
 Nozzles
 *******
 
-Nozzles are pipes or tubes of variable cross sections. It can control the direction or characteristics of a fluid flow. 
+Nozzles are pipes or tubes of variable cross sections. It can control the direction or characteristics of a fluid flow.
 
-Here, tests are divided into 3 categories: 
+Here, tests are divided into 3 categories:
 
 - Tank with shock.
 - Injection at imposed temperature.
@@ -16,7 +16,7 @@ Here, tests are divided into 3 categories:
 Tank with shock
 ---------------
 
-It means that there is a shock in the tank which is placed before the nozzle. Initial conditions are described in :numref:`Fig:testCases:Euler:TankwithShockIni`. This test is referenced in *./libTests/referenceTestCases/euler/2D/nozzles/tankWithShock/*. The corresponding uncommented line in *ECOGEN.xml* is: 
+It means that there is a shock in the tank which is placed before the nozzle. Initial conditions are described in :numref:`Fig:testCases:Euler:TankwithShockIni`. This test is referenced in *./libTests/referenceTestCases/euler/2D/nozzles/tankWithShock/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml
 
@@ -82,7 +82,7 @@ Maximum pressure differences are located at the ends of the nozzle and the minim
 Injection at imposed temperature
 --------------------------------
 
-Before the nozzle, one injects air with Mach < 1. Therefore, air flow is subsonic and will cross the nozzle. Initial conditions are described on figures :numref:`Fig:testCases:Euler:subsonicIni` and :numref:`Fig:testCases:Euler:subsupersonicIni`. This test is referenced in *./libTests/referenceTestCases/euler/2D/nozzles/subsonicInjection/*. The corresponding uncommented line in *ECOGEN.xml* is: 
+Before the nozzle, one injects air with Mach < 1. Therefore, air flow is subsonic and will cross the nozzle. Initial conditions are described on figures :numref:`Fig:testCases:Euler:subsonicIni` and :numref:`Fig:testCases:Euler:subsupersonicIni`. This test is referenced in *./libTests/referenceTestCases/euler/2D/nozzles/subsonicInjection/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml
 
@@ -141,7 +141,7 @@ This case is when the flow is supersonic at the exit (:numref:`Fig:testCases:Eul
 .. figure:: ./_static/testCases/Euler/Nozzles/supToggle.*
   :scale: 40%
   :align: center
-  
+
 Here, the nozzle is primed at the minimal section. So, at the exit, one observes that the flow is supersonic.
 
 This is the other case, when the flow is subsonic at the exit (:numref:`Fig:testCases:Euler:subsubsonic`).
@@ -158,7 +158,7 @@ This is the other case, when the flow is subsonic at the exit (:numref:`Fig:test
   :scale: 57%
   :align: center
 
-Because of a subsonic flow over the whole nozzle, it is not primed at the throat. Thus, one notices that the fluid accelerates when the section is reduced, then slows down when the section is enlarged. This is due to the conservation of the mass flow. 
+Because of a subsonic flow over the whole nozzle, it is not primed at the throat. Thus, one notices that the fluid accelerates when the section is reduced, then slows down when the section is enlarged. This is due to the conservation of the mass flow.
 
 .. _Sec:tests:euler:2d:nozzleLowMach:
 
@@ -172,8 +172,8 @@ In the test case provided below, a subsonic flow at really low speeds is studied
   <testCase>libTests/referenceTestCases/euler/2D/nozzles/lowMachSmoothCrossSection/</testCase>
 
 In this configuration, liquid water flows through a smooth varying cross section nozzle.
-Due to the considered velocity range, the flow is nearly incompressible. 
-To guarantee the convergence of the compressible solver to the exact solution, a low-Mach preconditionning technique is used. 
+Due to the considered velocity range, the flow is nearly incompressible.
+To guarantee the convergence of the compressible solver to the exact solution, a low-Mach preconditionning technique is used.
 Section variation is modeled using a 1D scheme with smooth varying cross section.
 With this scheme, upper and lower boundary conditions are directly taken into consideration.
 For that reason, *nullFlux* boundary condition must be set at these boundaries (otherwise wall effects are counted twice).
@@ -194,7 +194,7 @@ For that reason, *nullFlux* boundary condition must be set at these boundaries (
 
 Pressure and velocity fields in the nozzle are presented below.
 One can notice that the low-Mach preconditionning technique (called *Mref* or *local Mref*) is required for the solution to convergence to the exact solution.
-Be aware that, to address a wider range of applications, *local Mref* is the only preconditionning method available in ECOGEN. 
+Be aware that, to address a wider range of applications, *local Mref* is the only preconditionning method available in ECOGEN.
 
 .. figure:: ./_static/testCases/Euler/Nozzles/pLowMach.png
   :scale: 40%

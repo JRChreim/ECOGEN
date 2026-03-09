@@ -2,7 +2,7 @@
 <computationParam>
 	<!-- <run>pressureVelocityEq1DsphericalCollapse_Pratio353_100cellsPerD</run> -->
 	<run>pressureVelocityEq1DsphericalCollapse_Pratio353_50cellsPerD</run>
-	<outputMode format="XML" binary="false"/>
+	<outputMode format="VTK" binary="false"/>
 	<timeControlMode iterations="false">
 		<iterations number="300" iterFreq="30"/>
 		<physicalTime totalTime="1.e-6" timeFreq="1.e-9"/>

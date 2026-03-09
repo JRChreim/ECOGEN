@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef ADDPHYS_H
@@ -47,12 +47,16 @@ class AddPhys
   public:
     AddPhys();
     virtual ~AddPhys();
-    
+
     //! \brief     Add the quantities for the additional physic
     //! \param     cell                 corresponding cell
     virtual void addQuantityAddPhys(Cell* /*cell*/) { Errors::errorMessage("addQuantityAddPhys not implemented for used additional physic"); };
 
-    virtual std::string whoAmI() const { Errors::errorMessage("whoAmI not implemented for used additional physic"); return 0; };
+    virtual std::string whoAmI() const
+    {
+      Errors::errorMessage("whoAmI not implemented for used additional physic");
+      return 0;
+    };
 
     //! \brief     Compute and send back mass energy linked to the physic (0 if no linked energy)
     //! \param     QPA                  corresponding additional physic quantities
@@ -68,10 +72,16 @@ class AddPhys
     void addNonConsAddPhys(Cell* cell);
     //! \brief     Solve the additional physic flux between two cells
     //! \param     cellInterface        cell interface
-    virtual void solveFluxAddPhys(CellInterface* /*cellInterface*/) { Errors::errorMessage("solveFluxAddPhys not implemented for used additional physic"); };
+    virtual void solveFluxAddPhys(CellInterface* /*cellInterface*/)
+    {
+      Errors::errorMessage("solveFluxAddPhys not implemented for used additional physic");
+    };
     //! \brief     Solve the additional physic flux at a domain boundary
     //! \param     cellInterface        cell interface
-    virtual void solveFluxAddPhysBoundary(CellInterface* /*cellInterface*/) { Errors::errorMessage("solveFluxAddPhysLimite not implemented for used additional physic"); };
+    virtual void solveFluxAddPhysBoundary(CellInterface* /*cellInterface*/)
+    {
+      Errors::errorMessage("solveFluxAddPhysLimite not implemented for used additional physic");
+    };
     //! \brief     Add the additional physic flux between two cells at the corresponding cell
     //! \param     cellInterface        cell interface
     //! \param     coefAMR              Adaptive Mesh Refinement coefficient for numerical scheme purposes
@@ -85,10 +95,16 @@ class AddPhys
     virtual void addNonCons(Cell* /*cell*/) { Errors::errorMessage("addNonCons not implemented for used additional physic"); };
     //! \brief     Add the symmetrical terms of the corresponding additional physic in a cell (when radial axis is on X)
     //! \param     cell                 cell
-    virtual void addSymmetricTermsRadialAxisOnX(Cell* /*cell*/) { Errors::errorMessage("addSymmetricTerms not implemented for used additional physic"); };
+    virtual void addSymmetricTermsRadialAxisOnX(Cell* /*cell*/)
+    {
+      Errors::errorMessage("addSymmetricTerms not implemented for used additional physic");
+    };
     //! \brief     Add the symmetrical terms of the corresponding additional physic in a cell (when radial axis is on Y)
     //! \param     cell                 cell
-    virtual void addSymmetricTermsRadialAxisOnY(Cell* /*cell*/) { Errors::errorMessage("addSymmetricTerms not implemented for used additional physic"); };
+    virtual void addSymmetricTermsRadialAxisOnY(Cell* /*cell*/)
+    {
+      Errors::errorMessage("addSymmetricTerms not implemented for used additional physic");
+    };
 
     //! \brief     Reinitialize the color function for the surface-tension terms with the volume fraction equation
     //! \param     cellsLvl             cells vector for every level
@@ -101,13 +117,19 @@ class AddPhys
     //! \brief     Communication of the additional physics quantities for parallel purposes with Adaptive Mesh Refinement
     //! \param     dim                  dimension
     //! \param     lvl                  level
-    virtual void communicationsAddPhys(const int& /*dim*/, const int& /*lvl*/) { Errors::errorMessage("communicationsAddPhys not implemented for used additional physic"); };
-    
+    virtual void communicationsAddPhys(const int& /*dim*/, const int& /*lvl*/)
+    {
+      Errors::errorMessage("communicationsAddPhys not implemented for used additional physic");
+    };
+
     //! \brief     Return the associated number of the transport equation (only used for surface tension)
-    virtual const int& getNumTransportAssociated() const { Errors::errorMessage("getNumTransportAssociated not implemented for used additional physic"); return Errors::defaultInt; };
+    virtual const int& getNumTransportAssociated() const
+    {
+      Errors::errorMessage("getNumTransportAssociated not implemented for used additional physic");
+      return Errors::defaultInt;
+    };
 
   protected:
-    
   private:
 };
 

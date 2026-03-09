@@ -1,10 +1,10 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
 	<!-- LIST OF GEOMETRICAL DOMAINS  -->
-	<physicalDomains>	
+	<physicalDomains>
 		<domain name="base" state="init" type="entireDomain" physicalEntity="10"/>
     <domain name="base" state="init" type="entireDomain" physicalEntity="11"/>
-	</physicalDomains>	
+	</physicalDomains>
 
 	<!-- LIST OF BOUNDARY CONDITIONS -->
 	<boundaryConditions>

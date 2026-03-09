@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
 	<!-- LIST OF GEOMETRICAL DOMAINS  -->
-	<physicalDomains>	
+	<physicalDomains>
 		<!-- complete domain -->
 		<domain name="base" state="around" type="entireDomain"/>
 		<!-- chamber high pressure -->
@@ -10,7 +10,7 @@
 				<posInferiorVertex x="0.2" y="0.2" z="0."/>
 			</dataRectangle>
 		</domain>
-	</physicalDomains>	
+	</physicalDomains>
 
 	<!-- LIST OF BOUNDARY CONDITIONS -->
 	<boundaryConditions>
@@ -32,5 +32,5 @@
 			</dataFluid>
 		</material>
 	</state>
-	
+
 </CI>
