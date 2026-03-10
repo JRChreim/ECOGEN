@@ -140,7 +140,7 @@ void CellO2GhostCartesian::computeLocalSlopes(CellInterface& cellInterfaceRef,
   //----------------------------------------------------------
   int s(-1);
   int refIndex = -1;
-  double epsilon(1.e-08), scalarDiff(0.);
+  double epsilon(1.e-12), scalarDiff(0.);
   Coord coordBuffer(0.);
   scalarDiff = m_element->getPosition().scalar(cellInterfaceRef.getFace()->getNormal()) -
                cellInterfaceRef.getFace()->getPos().scalar(cellInterfaceRef.getFace()->getNormal());
