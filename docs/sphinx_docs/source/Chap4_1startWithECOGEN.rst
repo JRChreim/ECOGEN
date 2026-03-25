@@ -7,7 +7,7 @@
 Start with ECOGEN
 *****************
 
-Here is described your first use of ECOGEN: Running the *default test case*. This is what user should observe without any change in the downloaded ECOGEN package. 
+Here is described your first use of ECOGEN: Running the *default test case*. This is what user should observe without any change in the downloaded ECOGEN package.
 
 .. important::
 
@@ -17,7 +17,7 @@ Here is described your first use of ECOGEN: Running the *default test case*. Thi
 
 The main input file
 ===================
-ECOGEN is mainly controled thanks to the input file named *ECOGEN.xml*. This file looks like :
+ECOGEN is mainly controlled thanks to the input file named *ECOGEN.xml*. This file looks like :
 
 .. code-block:: xml
 
@@ -77,7 +77,7 @@ This test can be executed on a single core or on XX cores by one of the commands
   ./ECOGEN
   mpirun -np XX ECOGEN
 
-.. note:: 
+.. note::
 
   Information on available cores can be obtained under linux system using the command:
 
@@ -86,7 +86,7 @@ This test can be executed on a single core or on XX cores by one of the commands
     /usr/bin/nproc
 
 The code is running and at the top of the console output one can read:
- - The console logo of ECOGEN 
+ - The console logo of ECOGEN
  - The name of the test case including the full path of the test case : *./libTests/referenceTestCases/euler/1D/transport/positiveVelocity/*
  - Information concerning the number of iterations, the elapsed time, etc.
 
@@ -109,7 +109,7 @@ The run ends and the following information comes:
 
 A new folder *results* is created at the first run. This folder contains a folder named *euler1DTransportPositiveVelocity* containing output files of our test case:
 
- - *collectionParaview.pvd* and *collectionVisIt.visit* used in *Paraview* and *VisIt* softwares,
+ - *collectionParaview.pvd* and *collectionVisIt.visit* used in *Paraview* and *VisIt* software,
  - *datasets* folder containing the associated *vtu* files,
  - *infoCalcul.out*,
  - *infoMesh* folder,
@@ -135,7 +135,7 @@ Input files for this test case are located in the following folder: *./libTests/
 
 Computation parameters are easily modified according to the input file description of section :ref:`Chap:input`.
 
-For example, one can prefer to visualize results under *gnu* file format. For that, simply turn the *XML* option in the XML file *\libTests\referenceTestCases\euler\1D\transport\positiveVelocity\main.xml* into *gnu* and re-run the test case:
+For example, one can prefer to visualize results under *gnu* file format. For that, simply turn the *VTK* option in the XML file *\libTests\referenceTestCases\euler\1D\transport\positiveVelocity\main.xml* into *GNU* and re-run the test case:
 
 .. code-block:: xml
 

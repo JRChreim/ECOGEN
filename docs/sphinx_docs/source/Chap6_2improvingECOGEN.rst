@@ -8,7 +8,7 @@ API documentation
 =================
 An API_ documentation is available. It is generated thanks to Doxygen_ and special comments in the source code. Interested developers will find information on the different classes, methods and functions used in ECOGEN.
 
-When contributing to the project and to automatize the code documentation using Doxygen, comments should be inserted as follow in header files.
+When contributing to the project and to automate the code documentation using Doxygen, comments should be inserted as follow in header files.
 
 At the head of files
 --------------------
@@ -27,7 +27,7 @@ Before class definition
 .. code-block:: c++
 
 	//! \class     class name
-	//! \brief     brief descritption
+	//! \brief     brief description
 	//! \details    Detailed description
 	//!                  continue description
 
@@ -60,37 +60,37 @@ Variable and class names
 ------------------------
 
   1. Variable names should began with lowercase letter and be self-understandable. Each new word began with a uppercase letter.
-  
+
   .. code-block:: c++
 
   	int myInteger; vector<double *> vectorOfDoublePointer; etc.
 
-  2. Class attributes should began by "m\_". 
-    
+  2. Class attributes should began by "m\_".
+
   .. code-block:: c++
 
 		int m_myInteger; double * m_doublePointer; etc.
 
   3. Class names should began with an uppercase Letter.
-    
+
   .. code-block:: c++
 
 		class MyClass;
 
-Developer personnal comments - flags
+Developer personal comments - flags
 ------------------------------------
 
-Developer personnal comments should be included using the following template:	
+Developer personal comments should be included using the following template:
 
 //DeveloperInitials//KeyWord// comments
-  
+
 .. code-block:: c++
 
 	//FP//DEV// comment, description
 
 Here is the list of keyword to use :
 
-  
+
 .. code-block:: c++
 
 	//DEV//    in development

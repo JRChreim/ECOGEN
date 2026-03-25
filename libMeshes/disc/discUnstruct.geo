@@ -30,6 +30,6 @@ Circle(4) = {5, 1, 2};
 Line Loop(1) = {1,2,3,4};
 
 // Physical boundary/volume
-Plane Surface(1) = {1}; 
+Plane Surface(1) = {1};
 Physical Line(bcWall) = {1,2,3,4};
 Physical Surface(fluid) = {1};

@@ -9,12 +9,12 @@ Test cases presented in this section are dealing with multiphase compressible pr
 
 .. toctree::
 
-   ./Chap5_2PUEq.rst
    ./Chap5_2UEq.rst
    ./Chap5_2UEqTotE.rst
+   ./Chap5_2UEqSolid.rst
+   ./Chap5_2PUEq.rst
    ./Chap5_2PTUEq.rst
    ./Chap5_2eulerHomogeneous.rst
-
 
 Other tests cases
 =================
@@ -27,14 +27,13 @@ Other tests are provided with ECOGEN package and may be described in details lat
   <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/phaseChange/evapExpansionTubeEquilibrium/</testCase>
   <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/phaseChange/condensation/</testCase>
   <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/phaseChange/evaporation/</testCase>
-  <testCase>./libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/waterCylinderInAir/</testCase>
-  <testCase>./libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/waterDropletInAir/</testCase>
-  <testCase>./libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/waterDropletInAir_axisym/</testCase>
-  <testCase>./libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/dropletImpact_restart/</testCase>
-  <testCase>./libTests/referenceTestCases/PUEq/AddPhysicalEffects/gravity/</testCase>
-
+  <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/waterCylinderInAir/</testCase>
+  <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/waterDropletInAir/</testCase>
+  <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/waterDropletInAir_axisym/</testCase>
+  <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/dropletImpact_resume/</testCase>
+  <testCase>libTests/referenceTestCases/PUEq/AddPhysicalEffects/gravity/</testCase>
+  <testCase>libTests/referenceTestCases/UEq/3D/shockBubble/heliumAir/</testCase>
 
 
 .. _Paraview: https://www.paraview.org/
 .. _gnuplot: http://www.gnuplot.info/
-

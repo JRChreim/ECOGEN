@@ -7,7 +7,7 @@
 Gmsh example and extraction of mass-flow rate
 *********************************************
 
-One might needs to extract the mass-flow rate throught a specific surface/boundary. Some CFD tools such as OpenFOAM or SimFlow allows to select a specific boundary in the properties field of your dataset and work directly from there. 
+One might needs to extract the mass-flow rate through a specific surface/boundary. Some CFD tools such as OpenFOAM or SimFlow allows to select a specific boundary in the properties field of your dataset and work directly from there.
 However, in ECOGEN the output data is generated as a multi-block dataset: a block for each core. Thus, it is required to extract the boundary in `ParaView`_ as described below. By this example we will also show how to use `Gmsh`_.
 
 Generate .msh file
@@ -18,10 +18,10 @@ Generate .msh file
 .. figure:: ./_static/tutos/extractMassflowWithParaview1/gmsh1.png
     :scale: 30%
     :align: center
-	
+
     Screenshot of the geometry.
 
-* Now, as it is a 3D geometry, one has to click on 3D in the :xml:`Mesh` tab, and partition to select how many cores will be used, and then click on partition before closing this window. 
+* Now, as it is a 3D geometry, one has to click on 3D in the :xml:`Mesh` tab, and partition to select how many cores will be used, and then click on partition before closing this window.
 
 .. figure:: ./_static/tutos/extractMassflowWithParaview1/gmsh2.png
     :scale: 30%
@@ -60,7 +60,7 @@ The initial characteristics of the run are:
 ParaView
 ========
 
-* Once your data is loaded in **ParaView**, display your geometry with :xml:`Solid Color` and :xml:`Surface With Edges` to see the cells. 
+* Once your data is loaded in **ParaView**, display your geometry with :xml:`Solid Color` and :xml:`Surface With Edges` to see the cells.
 
 .. figure:: ./_static/tutos/extractMassflowWithParaview1/1.png
     :scale: 30%
@@ -106,7 +106,7 @@ ParaView
 
 *  Apply the filter :xml:`Cell Size` to obtain the area of each surface. Area of surface can be seen in spreadsheet view as below.
 
-.. important:: 
+.. important::
     There is a known bug of **ParaView** version 5.7 for the filter :xml:`Cell Size` which leads to a crash. To prevent this, use 5.8 or higher version.
 
 * Select surfaces of cells on the boundary and apply the :xml:`Extract Selection` filter to keep only those surfaces.
@@ -120,7 +120,7 @@ ParaView
 * Use the :xml:`Calculator` filter to compute the specific mass flow (kg/m/s²) given by the product of density and the normal velocity component (here z) of the boundary. The output result is named :xml:`massflow` and can be seen in the spreadsheet. Thus we have the specific mass flow of each surface of the boundary and now we need to take into account the surface area.
 
 .. important::
-    Obviously if the boundary normal and one of the velocity component are not colinear you can't reproduce directly the dot product and you will need to perform some additionnal steps not described here.
+    Obviously if the boundary normal and one of the velocity component are not colinear you can't reproduce directly the dot product and you will need to perform some additional steps not described here.
 
 
 .. figure:: ./_static/tutos/extractMassflowWithParaview1/7.png

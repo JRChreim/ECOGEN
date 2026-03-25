@@ -1,9 +1,9 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
 	<!-- LIST OF GEOMETRICAL DOMAINS  -->
-	<physicalDomains>	
+	<physicalDomains>
 		<domain name="base" state="init" type="entireDomain" physicalEntity="10"/>
-	</physicalDomains>	
+	</physicalDomains>
 
 	<!-- LIST OF BOUNDARY CONDITIONS -->
 	<boundaryConditions>
@@ -15,13 +15,13 @@
 
     <boundCond name="outlet" type="outletPressure" number="2">
       <dataOutletPressure p0="1.e5"/>
-    </boundCond>	
+    </boundCond>
 
     <!-- No flux used here boundary already taken into account with smooth 1D cross section flux -->
     <boundCond name="wall" type="nullFlux" number="3"/>
 
 	</boundaryConditions>
-	
+
 	<!--  LIST OF STATES  -->
 	<state name="init">
 		<material type="fluid" EOS="SG_water.xml">

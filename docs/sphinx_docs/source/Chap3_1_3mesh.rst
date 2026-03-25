@@ -18,7 +18,7 @@ Input file *mesh.xml* is necessary to specify the geometrical characteristics of
 	    <numberCells x="50" y ="25" z="1"/>
 	  </cartesianMesh>
 	</mesh>
- 
+
 The  :xml:`<type>` markup is mandatory and specifies via the attribute :xml:`structure` the type of mesh used in the current computation:
 
 - *cartesian*: ECOGEN automatically generates its own Cartesian mesh. See section :ref:`Sec:input:cartesian` for details.
@@ -46,7 +46,7 @@ Optional Stretching
 
 .. code-block:: xml
 
-	<meshStretching>    <!-- Optionnal node -->
+	<meshStretching>    <!-- Optional node -->
 	  <XStretching>
 	    <stretch startAt="0." endAt="0.5" factor="0.9" numberCells="20"/>
 	    <stretch startAt="0.5" endAt="1." factor="1.1" numberCells="10"/>
@@ -60,9 +60,9 @@ Stretching can be set optionally by adding the :xml:`<XStretching>` node to the 
 - :xml:`factor`: Real number for the stretch factor (lower than 1 for shrinking, greater than 1 for stretching).
 - :xml:`numberCells`: Integer for the cell number attributed to the stretched region.
 
-**Remarks:** 
+**Remarks:**
 
-1. Stretching can be set in each direction using :xml:`<XStretching>`, :xml:`<YStretching>` and :xml:`<ZStretching>`. 
+1. Stretching can be set in each direction using :xml:`<XStretching>`, :xml:`<YStretching>` and :xml:`<ZStretching>`.
 2. For each stretched direction, the sum of stretched regions should exactly recover the entire domain without overlapping, but the number of cells can differ those specified in the :xml:`<numberCells>` initial markup.
 3. A particular attention should be paid to the link between regions which can possibly present bad quality.
 
@@ -71,7 +71,7 @@ Optional AMR
 
 .. code-block:: xml
 
-	<AMR lvlMax="2" criteriaVar="0.2" varRho="true" varP="true" varU="false" varAlpha="false" xiSplit="0.11" xiJoin="0.11"/> <!-- Optionnal node -->
+	<AMR lvlMax="2" criteriaVar="0.2" varRho="true" varP="true" varU="false" varAlpha="false" xiSplit="0.11" xiJoin="0.11"/> <!-- Optional node -->
 
 An efficient Adaptive Mesh refinement (AMR) technology is embedded in ECOGEN :cite:`schmidmayer2019adaptive`. To use it, the *mesh.xml* file must contain the optional node :xml:`<AMR>` of the :xml:`<cartesianMesh>` markup and define the following attributes:
 
@@ -93,14 +93,14 @@ Unstructured mesh
 
 	<unstructuredMesh>
 	  <file name="libMeshes/unstructured2D/testUS.msh"/>
-	  <parallel GMSHPretraitement="true"/>  <!-- Optionnal node if multi-core -->
+	  <parallel GMSHPretraitement="true"/>  <!-- Optional node if multi-core -->
 	</unstructuredMesh>
 
 When dealing with unstructured meshes, the :xml:`<unstructuredMesh>` markup **must be** present in the *mesh.xml* input file and it contains the following nodes:
 
 - :xml:`<file>`: This **mandatory** node specifies the path of the mesh file via the attribute :xml:`name`. The file must be located in the folder **ECOGEN/libMeshes/**.
 - :xml:`<parallel>`: This node is required only if the mesh file is a multi-core file. The attribute :xml:`GMSHPretraitement` can take the following values:
-		
+
 	- *true*: ECOGEN automatically splits the given mesh file in as many as necessary files according to the number of available cores.
 	- *false*: Do not redo the split of the given mesh (which has already been split in a previous simulation).
 
@@ -113,7 +113,7 @@ Please refer to the section :ref:`Sec:tuto:generatingMeshes` to learn how to gen
 
 .. _Gmsh: http://gmsh.info/
 
-Optionnal restart with mesh mapping
+Optional restart with mesh mapping
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ECOGEN offers the possibility to initialize a simulation with the result of a previous simulation performed on a different mesh and/or a different number of CPU.
@@ -124,9 +124,9 @@ Assuming a previous simulation with a rough mesh under the name *euler2DHPUnstru
 
   <unstructuredMesh>
     <file name="libMeshes/square/squareRefined.msh"/>
-    <meshMappingRestart 
-      resultFolder="euler2DHPUnstructuredRough" 
-      restartFileNumber="200" 
+    <meshMappingRestart
+      resultFolder="euler2DHPUnstructuredRough"
+      restartFileNumber="200"
       meshFile="libMeshes/square/square.msh"
     />
   </unstructuredMesh>

@@ -4,7 +4,7 @@
 Test unstructured
 ==================
 
-This is a case with an unstructured mesh generated with the open-source Gmsh_ software. Initial conditions are shown in :numref:`Fig:testCases:PUEq:testUnstructuredIni`. This test is referenced in *./libTests/referenceTestCases/PUEq/2D/testUnstructured/*. The corresponding uncommented line in *ECOGEN.xml* is: 
+This is a case with an unstructured mesh generated with the open-source Gmsh_ software. Initial conditions are shown in :numref:`Fig:testCases:PUEq:testUnstructuredIni`. This test is referenced in *./libTests/referenceTestCases/PUEq/2D/testUnstructured/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml
 
@@ -19,7 +19,7 @@ This is a case with an unstructured mesh generated with the open-source Gmsh_ so
 
   Initial conditions. Visualization using Paraview_ software.
 
-The initial characteristics of the run are: 
+The initial characteristics of the run are:
 
 +-----------------------------+----------------------+
 | Characteristic              | Value                |
@@ -33,7 +33,7 @@ The initial characteristics of the run are:
 | Solution printing frequency | 4e-4 s               |
 +-----------------------------+----------------------+
 
-Results are shown in :numref:`Fig:testCases:PUEq:testUnstructuredAnim` and :numref:`Fig:testCases:PUEq:testUnstructuredAnim2`. There is a pressure gradient between the two regions, high pressure at t=0s is contained in red region. When the interface between the blue and the red regions disapears, a shock wave propagates, causing an increase in pressure in the blue region, and the red region relaxes.
+Results are shown in :numref:`Fig:testCases:PUEq:testUnstructuredAnim` and :numref:`Fig:testCases:PUEq:testUnstructuredAnim2`. There is a pressure gradient between the two regions, high pressure at t=0s is contained in red region. When the interface between the blue and the red regions disappears, a shock wave propagates, causing an increase in pressure in the blue region, and the red region relaxes.
 
 .. _Fig:testCases:PUEq:testUnstructuredAnim:
 

@@ -12,30 +12,30 @@ xG = 0.271; yG = 0.0488;
 xH = 1.233; yH = -0.00845;
 
 // Mesh parameters
-// 12k 
+// 12k
 // dsBig   = 0.008;
 // dsMid   = 0.003;
-// dsSmall = 0.003; 
-// 21k 
+// dsSmall = 0.003;
+// 21k
 // dsBig   = 0.005;
 // dsMid   = 0.0025;
-// dsSmall = 0.0025; 
-// 42k 
+// dsSmall = 0.0025;
+// 42k
 dsBig   = 0.005;
 dsMid   = 0.005;
-dsSmall = 0.001; 
+dsSmall = 0.001;
 // 95k
 // dsBig   = 0.0035;
 // dsMid   = 0.0035;
-// dsSmall = 0.00065; 
+// dsSmall = 0.00065;
 // 167k
 // dsBig   = 0.0025;
 // dsMid   = 0.0025;
-// dsSmall = 0.0005; 
+// dsSmall = 0.0005;
 // 387k
 // dsBig   = 0.002;
 // dsMid   = 0.002;
-// dsSmall = 0.0003; 
+// dsSmall = 0.0003;
 
 // Boundary conditions
 boundCondInflow = 1;
@@ -61,7 +61,7 @@ EndFor
 Line(newl) = {5, 8};
 Line(newl) = {8, 7};
 Line(newl) = {7, 6};
-Line(newl) = {6, 1}; 
+Line(newl) = {6, 1};
 
 Line Loop(1) = {1:8};
 Plane Surface(1) = {1};
@@ -71,4 +71,3 @@ Physical Line(boundCondInflow) = {8};
 Physical Line(boundCondOutflow) = {5};
 Physical Line(boundCondWalls) = {1:4, 6, 7};
 Physical Surface(10) = {1};
-

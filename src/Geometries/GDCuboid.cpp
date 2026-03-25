@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "GDCuboid.h"
@@ -34,8 +34,14 @@ using namespace tinyxml2;
 
 //***************************************************************
 
-GDCuboid::GDCuboid(std::string name, std::vector<Phase*> vecPhases, Mixture* mixture, std::vector<Transport> vecTransports, XMLElement* element, const int& physicalEntity, std::string fileName) :
-GeometricalDomain(name, vecPhases, mixture, vecTransports, physicalEntity)
+GDCuboid::GDCuboid(std::string name,
+                   std::vector<Phase*> vecPhases,
+                   Mixture* mixture,
+                   std::vector<Transport> vecTransports,
+                   XMLElement* element,
+                   const int& physicalEntity,
+                   std::string fileName) :
+  GeometricalDomain(name, vecPhases, mixture, vecTransports, physicalEntity)
 {
   XMLElement* sousElement(element->FirstChildElement("dataCuboid"));
   if (sousElement == NULL) throw ErrorXMLElement("dataCuboid", fileName, __FILE__, __LINE__);
@@ -63,17 +69,17 @@ GeometricalDomain(name, vecPhases, mixture, vecTransports, physicalEntity)
 
 //***************************************************************
 
-GDCuboid::~GDCuboid(){}
+GDCuboid::~GDCuboid() {}
 
 //***************************************************************
 
 bool GDCuboid::belong(Coord& posElement, const int& /*lvl*/) const
 {
-  if ((posElement.getX() - m_posXmYmZm.getX())<0) return false;
-  if ((posElement.getX() - m_posXmYmZm.getX())>m_lX) return false;
-  if ((posElement.getY() - m_posXmYmZm.getY())<0) return false;
-  if ((posElement.getY() - m_posXmYmZm.getY())>m_lY) return false;
-  if ((posElement.getZ() - m_posXmYmZm.getZ())<0) return false;
-  if ((posElement.getZ() - m_posXmYmZm.getZ())>m_lZ) return false;
+  if ((posElement.getX() - m_posXmYmZm.getX()) < 0) return false;
+  if ((posElement.getX() - m_posXmYmZm.getX()) > m_lX) return false;
+  if ((posElement.getY() - m_posXmYmZm.getY()) < 0) return false;
+  if ((posElement.getY() - m_posXmYmZm.getY()) > m_lY) return false;
+  if ((posElement.getZ() - m_posXmYmZm.getZ()) < 0) return false;
+  if ((posElement.getZ() - m_posXmYmZm.getZ()) > m_lZ) return false;
   return true;
 }

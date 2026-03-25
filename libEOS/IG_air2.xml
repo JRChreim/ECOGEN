@@ -3,12 +3,12 @@
 	<EOS type="IG"/>
 	<parameters
 		gamma="1.4"
-		cv="800" cv_save="717.46"
+		cv="717.46"
 		energyRef="0."
 		entropyRef="0.">
 	</parameters>
 	<physicalParameters
-		mu="1.85e-5"     
+		mu="1.85e-5"
 		lambda="0.0262">
-	</physicalParameters>	
+	</physicalParameters>
 </parametersEOS>

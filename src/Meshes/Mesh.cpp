@@ -1,41 +1,38 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Mesh.h"
 
 //***********************************************************************
 
-Mesh::Mesh() :
-  m_numFichier(0)
-{
-}
+Mesh::Mesh() : m_numFichier(0), m_problemDimension(0) {}
 
 //***********************************************************************
 
@@ -43,7 +40,7 @@ Mesh::~Mesh() {}
 
 //***********************************************************************
 
-void Mesh::writeResultsGnuplot(std::vector<Cell*>* cellsLvl, std::ofstream &fileStream, GeometricObject *objet, bool recordPsat) const
+void Mesh::writeResultsGnuplot(std::vector<Cell*>* cellsLvl, std::ofstream& fileStream, GeometricObject* objet, bool recordPsat) const
 {
   for (unsigned int c = 0; c < cellsLvl[0].size(); c++) {
     if (cellsLvl[0][c]->printGnuplotAMR(fileStream, m_problemDimension, objet, recordPsat)) break;
@@ -56,15 +53,15 @@ void Mesh::writeResultsGnuplot(std::vector<Cell*>* cellsLvl, std::ofstream &file
 
 void Mesh::initializePersistentCommunications(const TypeMeshContainer<Cell*>& cells, std::string ordreCalcul)
 {
-	int numberVariablesPhaseToSend(0);
+  int numberVariablesPhaseToSend(0);
   for (int k = 0; k < numberPhases; k++) {
     numberVariablesPhaseToSend += cells[0]->getPhase(k)->numberOfTransmittedVariables();
   }
   int numberVariablesMixtureToSend = cells[0]->getMixture()->numberOfTransmittedVariables();
-  int m_numberPrimitiveVariables = numberVariablesPhaseToSend + numberVariablesMixtureToSend + numberTransports;
+  int m_numberPrimitiveVariables   = numberVariablesPhaseToSend + numberVariablesMixtureToSend + numberTransports;
   int m_numberSlopeVariables(0);
   if (ordreCalcul == "SECONDORDER") {
-    
+
     int numberSlopesPhaseToSend(0);
     int numberSlopesMixtureToSend(0);
     int numberSlopesTransportToSend(0);
@@ -73,8 +70,8 @@ void Mesh::initializePersistentCommunications(const TypeMeshContainer<Cell*>& ce
       for (int k = 0; k < numberPhases; k++) {
         numberSlopesPhaseToSend += cells[0]->getPhase(k)->numberOfTransmittedSlopes();
       }
-      numberSlopesMixtureToSend = cells[0]->getMixture()->numberOfTransmittedSlopes();
-      m_numberSlopeVariables = 1 + 1; //+1 for the interface detection + 1 for slope index
+      numberSlopesMixtureToSend   = cells[0]->getMixture()->numberOfTransmittedSlopes();
+      m_numberSlopeVariables      = 1 + 1; //+1 for the interface detection + 1 for slope index
       numberSlopesTransportToSend = numberTransports;
     }
     else {
@@ -88,14 +85,11 @@ void Mesh::initializePersistentCommunications(const TypeMeshContainer<Cell*>& ce
     }
     m_numberSlopeVariables += numberSlopesPhaseToSend + numberSlopesMixtureToSend + numberSlopesTransportToSend;
   }
-	parallel.initializePersistentCommunications(m_numberPrimitiveVariables, m_numberSlopeVariables, numberTransports, m_problemDimension);
+  parallel.initializePersistentCommunications(m_numberPrimitiveVariables, m_numberSlopeVariables, numberTransports, m_problemDimension);
 }
 
 //***********************************************************************
 
-void Mesh::finalizeParallele(const int& lvlMax)
-{
-	parallel.finalize(lvlMax);
-}
+void Mesh::finalizeParallele(const int& lvlMax) { parallel.finalize(lvlMax); }
 
 //***********************************************************************

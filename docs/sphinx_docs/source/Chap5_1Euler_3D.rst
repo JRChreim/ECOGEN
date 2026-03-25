@@ -2,7 +2,7 @@
   :language: xml
 
 ***
-3D 
+3D
 ***
 
 3D tests are provided within the ECOGEN package and may be described in details later.

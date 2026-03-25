@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
 	<!-- LIST OF GEOMETRICAL DOMAINS  -->
-	<physicalDomains>	
+	<physicalDomains>
 		<domain name="base" state="init" type="entireDomain" physicalEntity="10"/>
 	</physicalDomains>
 
@@ -15,12 +15,12 @@
 
 		<boundCond name="outlet" type="outletPressure" number="2">
 			<dataOutletPressure p0="25284."/>
-		</boundCond>	    
-    
+		</boundCond>
+
 		<boundCond name="walls" type="wall" number="3"/>
 		<boundCond name="foil" type="wall" number="4"/>
 	</boundaryConditions>
-	
+
 	<!--  LIST OF STATES  -->
 	<state name="init">
 		<material type="fluid" EOS="SG_waterLiq_278_318K.xml">

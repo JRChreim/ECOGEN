@@ -5,16 +5,27 @@
 #Definitions
 EXECUTABLE = ECOGEN
 CXX = mpicxx
-CXXFLAGS = -O3 -std=c++11 -Wall -Wextra -Wpedantic #release
-#CXXFLAGS = -g -std=c++11 -Wall -Wextra -Wpedantic #debug
-#CXXFLAGS = -O3 -std=c++11 -Wall -Wextra -Wpedantic -fprofile-arcs -ftest-coverage #code coverage
-#CXXFLAGS = -O3 -std=c++11 -Wall -Wextra -Wpedantic -pg #code profile
 
-dirs = $(shell find . -type d)
-SOURCES = $(foreach dir,$(dirs),$(wildcard $(dir)/*.cpp))
+
+CXXFLAGS = -std=c++11 -Wall -Wextra -Wpedantic $(MYCXXFLAGS)
+
+release: CXXFLAGS += -O3
+
+debug: CXXFLAGS += -O0 -g
+
+coverage: CXXFLAGS += -O3 -fprofile-arcs -ftest-coverage
+
+profile: CXXFLAGS += -O3 -pg
+
+SOURCES = $(shell find ./src -type f -name "*.cpp")
 OBJETS = $(SOURCES:.cpp=.o)
+GCOV_OBJ = $(SOURCES:.cpp=.gcno) $(SOURCES:.cpp=.gcda)
 
-all: $(OBJETS)
+all: release # Default is release build
+
+all debug release coverage profile: exec
+
+exec: $(OBJETS)
 		$(CXX) $^ -o $(EXECUTABLE) $(CXXFLAGS)
 
 %o: %cpp
@@ -27,7 +38,7 @@ depend:
 		makedepend $(SOURCES)
 
 clean:
-		rm -rf $(OBJETS)
+		rm -rf $(OBJETS) $(GCOV_OBJ)
 
 cleanres:
 		rm -rf ./results/*

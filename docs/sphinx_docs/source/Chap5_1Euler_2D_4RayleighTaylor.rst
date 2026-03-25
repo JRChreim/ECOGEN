@@ -6,14 +6,14 @@ Rayleigh--Taylor
 ****************
 
 This is an interface instability between two fluids of different densities which occurs when the lighter fluid is pushing the heavier fluid. Initial conditions are described in :numref:`Fig:testCases:Euler:RayleighTaylor`.
-This case is a 2D Cartesian test case. The domain is only composed of gases called "light gas" and "heavy gas", with different densities. 
-This test is referenced in *./libTests/referenceTestCases/euler/2D/RayleighTaylor/*. The corresponding uncommented line in *ECOGEN.xml* is: 
+This case is a 2D Cartesian test case. The domain is only composed of gases called "light gas" and "heavy gas", with different densities.
+This test is referenced in *./libTests/referenceTestCases/euler/2D/RayleighTaylor/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml
 
   <testCase>./libTests/referenceTestCases/euler/2D/RayleighTaylor/</testCase>
 
-The initial characteristics of the run are: 
+The initial characteristics of the run are:
 
 +-----------------------------+----------------------+
 | Characteristic              | Value                |

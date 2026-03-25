@@ -5,7 +5,7 @@
 Square to circle using symmetry
 ===============================
 
-This case is a 2D Cartesian test case. A square domain composed of air, with inside another square domain composed of liquid (special for few surface-tension test cases). Initial conditions of this test are shown in :numref:`Fig:testCases:PUEq:squareToCircleSymmetryIni`. 
+This case is a 2D Cartesian test case. A square domain composed of air, with inside another square domain composed of liquid (special for few surface-tension test cases). Initial conditions of this test are shown in :numref:`Fig:testCases:PUEq:squareToCircleSymmetryIni`.
 Input files for this test are available in *./libTests/referenceTestCases/PUEq/AddPhysicalEffects/surfaceTension/squareToCircleSymmetry/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml
@@ -42,7 +42,7 @@ The initial characteristics of the run are:
 | precision                    | 2nd order (MC + Minmod + THINC) |
 +------------------------------+---------------------------------+
 
-Results are shown in :numref:`Fig:testCases:PUEq:squareToCircleSymmetryAnim`. When the interface between the blue and the white regions disapears, because of surface tension, the region that was initially square is deformed and tends to become circular with time. Note that it is necessary to have a stationary solution to obtain this circle and this requires a relatively long final solution time.
+Results are shown in :numref:`Fig:testCases:PUEq:squareToCircleSymmetryAnim`. When the interface between the blue and the white regions disappears, because of surface tension, the region that was initially square is deformed and tends to become circular with time. Note that it is necessary to have a stationary solution to obtain this circle and this requires a relatively long final solution time.
 
 One can observe the distribution of computation on the CPUs (here 12) divided into different regions, according to AMR evolution. When the density variations are low or non-existent, the mesh is as coarse as possible (within the conditions given in mesh.xml). On the contrary when the variations become significant, the mesh is refined. So, to distribute the work equally between the CPUs, highly refined regions are relatively small compared to coarse regions.
 
@@ -52,7 +52,7 @@ One can observe the distribution of computation on the CPUs (here 12) divided in
   :scale: 45%
   :align: center
 
-  CPU (upper half) and density (lower half) over time. Visualization using Paraview_ software. 
+  CPU (upper half) and density (lower half) over time. Visualization using Paraview_ software.
 
 .. figure:: ./_static/testCases/PUEq/squareToCircleSymmetry/squareToCircleToggle.*
   :scale: 70%

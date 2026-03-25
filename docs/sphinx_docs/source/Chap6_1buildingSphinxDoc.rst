@@ -3,9 +3,9 @@ Building Sphinx Doc
 
 Prerequisites
 -------------
-This documentation uses Sphinx third-party Python package. 
+This documentation uses Sphinx third-party Python package.
 To generate it locally from the **docs/sphinx_docs/** folder, you need to install additional components as described in the Section :ref:`Sec:dev:sphinx:system`.
-Alternatively you can use `Docker`_ to setup the required environment into a container to build the documentation, see Section :ref:`Sec:dev:sphinx:docker`. 
+Alternatively you can use `Docker`_ to setup the required environment into a container to build the documentation, see Section :ref:`Sec:dev:sphinx:docker`.
 
 .. _Sec:dev:sphinx:system:
 
@@ -14,7 +14,7 @@ System-wide configuration
 
 Install Python
 ~~~~~~~~~~~~~~
-To install python, you can install for example the `Anaconda package`_ or the `python offical package`_.
+To install python, you can install for example the `Anaconda package`_ or the `python official package`_.
 You can also install the packages directly from Ubuntu terminal:
 
 .. code-block:: console
@@ -69,13 +69,13 @@ Docker configuration
 --------------------
 
 .. code-block:: console
-  
+
   cd docs/sphinx-docs/
   # Build the container image using the Dockerfile
   docker image build -t sphinx-doc .
-  # To generate html ouput run
+  # To generate html output run
   docker container run --mount type=bind,source=${PWD},target=/home sphinx-doc html
-  # To generate PDF ouput run
+  # To generate PDF output run
   docker container run --mount type=bind,source=${PWD},target=/home sphinx-doc pdf
 
 Learning Sphinx
@@ -88,7 +88,7 @@ To learn how to develop a documentation using Sphinx, here are some useful links
 
 .. _`Docker`: https://www.docker.com/
 .. _`Anaconda package`: https://www.anaconda.com/distribution/
-.. _`python offical package` : https://www.python.org/
+.. _`python official package` : https://www.python.org/
 .. _`Sphinx documentation`: https://www.sphinx-doc.org/en/master/contents.html
 .. _`Read the docs website`: https://readthedocs.org/
 .. _ECOGEN: https://code-mphi.github.io/ECOGEN/docs/sphinx_docs/index.html

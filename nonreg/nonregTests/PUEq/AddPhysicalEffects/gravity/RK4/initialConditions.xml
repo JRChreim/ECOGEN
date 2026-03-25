@@ -3,18 +3,18 @@
   <!-- LIST OF GEOMETRICAL DOMAINS  -->
   <physicalDomains>
     <domain type="entireDomain" name="base" state="air"/>
-    <domain type="sphere" name="waterDroplet" state="waterDroplet">
-      <dataSphere radius="0.15">
-        <center x="0.375" z="0.375" y="0.375"/>
-      </dataSphere>
+    <domain type="disc" name="waterDroplet" state="waterDroplet">
+      <dataDisc radius="0.15"  axis1="x" axis2="y">
+        <center x="0.375" z="0.5" y="0.375"/>
+      </dataDisc>
     </domain>
   </physicalDomains>
   <!-- LIST OF BOUNDARY CONDITIONS -->
   <boundaryConditions>
-    <boundCond type="wall" name="CLXm" number="1"/>
-    <boundCond type="wall" name="CLXp" number="2"/>
-    <boundCond type="wall" name="CLYm" number="3"/>
-    <boundCond type="nonReflecting" name="CLYp" number="4"/>
+    <boundCond type="wall" name="BC_Xmin" number="1"/>
+    <boundCond type="wall" name="BC_Xmax" number="2"/>
+    <boundCond type="wall" name="BC_Ymin" number="3"/>
+    <boundCond type="nonReflecting" name="BC_Ymax" number="4"/>
   </boundaryConditions>
   <!--  LIST OF STATES  -->
   <state name="air">

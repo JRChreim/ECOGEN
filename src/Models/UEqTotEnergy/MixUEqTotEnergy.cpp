@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include <cmath>
@@ -62,24 +62,21 @@ MixUEqTotEnergy::MixUEqTotEnergy(XMLElement* state, std::string fileName) :
 
 //***************************************************************************
 
-MixUEqTotEnergy::~MixUEqTotEnergy(){}
+MixUEqTotEnergy::~MixUEqTotEnergy() {}
 
 //***************************************************************************
 
-void MixUEqTotEnergy::allocateAndCopyMixture(Mixture** mixture)
-{
-  *mixture = new MixUEqTotEnergy(*this);
-}
+void MixUEqTotEnergy::allocateAndCopyMixture(Mixture** mixture) { *mixture = new MixUEqTotEnergy(*this); }
 
 //***************************************************************************
 
-void MixUEqTotEnergy::copyMixture(Mixture &mixture)
+void MixUEqTotEnergy::copyMixture(Mixture& mixture)
 {
-  m_density = mixture.getDensity();
-  m_pressure = mixture.getPressure();
-  m_velocity = mixture.getVelocity();
+  m_density          = mixture.getDensity();
+  m_pressure         = mixture.getPressure();
+  m_velocity         = mixture.getVelocity();
   m_frozenSoundSpeed = mixture.getFrozenSoundSpeed();
-  m_woodSoundSpeed = mixture.getWoodSoundSpeed();
+  m_woodSoundSpeed   = mixture.getWoodSoundSpeed();
 }
 
 //***************************************************************************
@@ -87,9 +84,8 @@ void MixUEqTotEnergy::copyMixture(Mixture &mixture)
 double MixUEqTotEnergy::computeDensity(const double* alphak, const double* rhok)
 {
   double rho(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      rho += alphak[k]*rhok[k];
+  for (int k = 0; k < numberPhases; k++) {
+    rho += alphak[k] * rhok[k];
   }
   return rho;
 }
@@ -99,9 +95,8 @@ double MixUEqTotEnergy::computeDensity(const double* alphak, const double* rhok)
 double MixUEqTotEnergy::computePressure(const double* alphak, const double* pk)
 {
   double p(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      p += alphak[k]*pk[k];
+  for (int k = 0; k < numberPhases; k++) {
+    p += alphak[k] * pk[k];
   }
   return p;
 }
@@ -111,9 +106,8 @@ double MixUEqTotEnergy::computePressure(const double* alphak, const double* pk)
 double MixUEqTotEnergy::computeInternalEnergy(const double* Yk, const double* ek)
 {
   double e(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      e += Yk[k]*ek[k];
+  for (int k = 0; k < numberPhases; k++) {
+    e += Yk[k] * ek[k];
   }
   return e;
 }
@@ -123,9 +117,8 @@ double MixUEqTotEnergy::computeInternalEnergy(const double* Yk, const double* ek
 double MixUEqTotEnergy::computeFrozenSoundSpeed(const double* Yk, const double* ck)
 {
   double cF(0.);
-  for(int k=0;k<numberPhases;k++)
-  {
-      cF += Yk[k]*ck[k]*ck[k];
+  for (int k = 0; k < numberPhases; k++) {
+    cF += Yk[k] * ck[k] * ck[k];
   }
   return sqrt(cF);
 }
@@ -135,11 +128,11 @@ double MixUEqTotEnergy::computeFrozenSoundSpeed(const double* Yk, const double* 
 void MixUEqTotEnergy::computeMixtureVariables(Phase** vecPhase)
 {
   //mixture density and pressure
-  m_density = 0.;
+  m_density  = 0.;
   m_pressure = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    m_density += vecPhase[k]->getAlpha()*vecPhase[k]->getDensity();
-    m_pressure += vecPhase[k]->getAlpha()*vecPhase[k]->getPressure();
+    m_density  += vecPhase[k]->getAlpha() * vecPhase[k]->getDensity();
+    m_pressure += vecPhase[k]->getAlpha() * vecPhase[k]->getPressure();
   }
   //Mass fraction
   for (int k = 0; k < numberPhases; k++) {
@@ -147,13 +140,14 @@ void MixUEqTotEnergy::computeMixtureVariables(Phase** vecPhase)
   }
   //Speed of sounds
   m_frozenSoundSpeed = 0.;
-  m_woodSoundSpeed = 0.;
+  m_woodSoundSpeed   = 0.;
   for (int k = 0; k < numberPhases; k++) {
-    m_frozenSoundSpeed += vecPhase[k]->getY() * vecPhase[k]->getSoundSpeed()*vecPhase[k]->getSoundSpeed();
-    m_woodSoundSpeed += vecPhase[k]->getAlpha() / std::max((vecPhase[k]->getDensity()*vecPhase[k]->getSoundSpeed()*vecPhase[k]->getSoundSpeed()), epsilonAlphaNull);
+    m_frozenSoundSpeed += vecPhase[k]->getY() * vecPhase[k]->getSoundSpeed() * vecPhase[k]->getSoundSpeed();
+    m_woodSoundSpeed   += vecPhase[k]->getAlpha() /
+                        std::max((vecPhase[k]->getDensity() * vecPhase[k]->getSoundSpeed() * vecPhase[k]->getSoundSpeed()), epsilonAlphaNull);
   }
   m_frozenSoundSpeed = sqrt(m_frozenSoundSpeed);
-  m_woodSoundSpeed = 1. / sqrt(m_density*m_woodSoundSpeed);
+  m_woodSoundSpeed   = 1. / sqrt(m_density * m_woodSoundSpeed);
 }
 
 //***************************************************************************
@@ -176,14 +170,16 @@ void MixUEqTotEnergy::reverseProjection(const Coord& normal, const Coord& tangen
 
 double MixUEqTotEnergy::returnScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_density; break;
+    return m_density;
+    break;
   case 2:
-    return m_pressure; break;
+    return m_pressure;
+    break;
   default:
-    return 0.; break;
+    return 0.;
+    break;
   }
 }
 
@@ -191,12 +187,13 @@ double MixUEqTotEnergy::returnScalar(const int& numVar) const
 
 Coord MixUEqTotEnergy::returnVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_velocity; break;
+    return m_velocity;
+    break;
   default:
-    return 0; break;
+    return 0;
+    break;
   }
 }
 
@@ -204,14 +201,16 @@ Coord MixUEqTotEnergy::returnVector(const int& numVar) const
 
 std::string MixUEqTotEnergy::returnNameScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Density_Mixture"; break;
+    return "Density_Mixture";
+    break;
   case 2:
-    return "Pressure_Mixture"; break;
+    return "Pressure_Mixture";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -219,12 +218,13 @@ std::string MixUEqTotEnergy::returnNameScalar(const int& numVar) const
 
 std::string MixUEqTotEnergy::returnNameVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Velocity_Mixture"; break;
+    return "Velocity_Mixture";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -234,14 +234,16 @@ std::string MixUEqTotEnergy::returnNameVector(const int& numVar) const
 
 void MixUEqTotEnergy::setScalar(const int& numVar, const double& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_density = value; break;
+    m_density = value;
+    break;
   case 2:
-    m_pressure = value; break;
+    m_pressure = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in MixUEqTotEnergy::setScalar"); break;
+    Errors::errorMessage("numVar not found in MixUEqTotEnergy::setScalar");
+    break;
   }
 }
 
@@ -249,12 +251,13 @@ void MixUEqTotEnergy::setScalar(const int& numVar, const double& value)
 
 void MixUEqTotEnergy::setVector(const int& numVar, const Coord& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_velocity = value; break;
+    m_velocity = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in MixUEqTotEnergy::setVector"); break;
+    Errors::errorMessage("numVar not found in MixUEqTotEnergy::setVector");
+    break;
   }
 }
 
@@ -308,7 +311,7 @@ void MixUEqTotEnergy::getBuffer(std::vector<double>& dataToReceive, int& counter
 //******************************* ORDER 2 ************************************
 //****************************************************************************
 
-void MixUEqTotEnergy::computeSlopesMixture(const Mixture &sLeft, const Mixture &sRight, const double& distance)
+void MixUEqTotEnergy::computeSlopesMixture(const Mixture& sLeft, const Mixture& sRight, const double& distance)
 {
   m_velocity.setX((sRight.getVelocity().getX() - sLeft.getVelocity().getX()) / distance);
   m_velocity.setY((sRight.getVelocity().getY() - sLeft.getVelocity().getY()) / distance);
@@ -319,12 +322,14 @@ void MixUEqTotEnergy::computeSlopesMixture(const Mixture &sLeft, const Mixture &
 
 void MixUEqTotEnergy::setToZero()
 {
-  m_velocity.setX(0.); m_velocity.setY(0.); m_velocity.setZ(0.);
+  m_velocity.setX(0.);
+  m_velocity.setY(0.);
+  m_velocity.setZ(0.);
 }
 
 //***************************************************************************
 
-void MixUEqTotEnergy::extrapolate(const Mixture &slope, const double& distance)
+void MixUEqTotEnergy::extrapolate(const Mixture& slope, const double& distance)
 {
   m_velocity.setX(m_velocity.getX() + slope.getVelocity().getX() * distance);
   m_velocity.setY(m_velocity.getY() + slope.getVelocity().getY() * distance);
@@ -333,7 +338,7 @@ void MixUEqTotEnergy::extrapolate(const Mixture &slope, const double& distance)
 
 //***************************************************************************
 
-void MixUEqTotEnergy::limitSlopes(const Mixture &slopeGauche, const Mixture &slopeDroite, Limiter& globalLimiter)
+void MixUEqTotEnergy::limitSlopes(const Mixture& slopeGauche, const Mixture& slopeDroite, Limiter& globalLimiter)
 {
   m_velocity.setX(globalLimiter.limiteSlope(slopeGauche.getVelocity().getX(), slopeDroite.getVelocity().getX()));
   m_velocity.setY(globalLimiter.limiteSlope(slopeGauche.getVelocity().getY(), slopeDroite.getVelocity().getY()));
@@ -344,27 +349,24 @@ void MixUEqTotEnergy::limitSlopes(const Mixture &slopeGauche, const Mixture &slo
 //************************** ORDER 2 PARALLEL ********************************
 //****************************************************************************
 
-int MixUEqTotEnergy::numberOfTransmittedSlopes() const
-{
-	return 3;
-}
+int MixUEqTotEnergy::numberOfTransmittedSlopes() const { return 3; }
 
 //***************************************************************************
 
 void MixUEqTotEnergy::fillBufferSlopes(double* buffer, int& counter) const
 {
-	buffer[++counter] = m_velocity.getX();
-	buffer[++counter] = m_velocity.getY();
-	buffer[++counter] = m_velocity.getZ();
+  buffer[++counter] = m_velocity.getX();
+  buffer[++counter] = m_velocity.getY();
+  buffer[++counter] = m_velocity.getZ();
 }
 
 //***************************************************************************
 
 void MixUEqTotEnergy::getBufferSlopes(double* buffer, int& counter)
 {
-	m_velocity.setX(buffer[++counter]);
-	m_velocity.setY(buffer[++counter]);
-	m_velocity.setZ(buffer[++counter]);
+  m_velocity.setX(buffer[++counter]);
+  m_velocity.setY(buffer[++counter]);
+  m_velocity.setZ(buffer[++counter]);
 }
 
 //****************************************************************************
@@ -399,25 +401,25 @@ void MixUEqTotEnergy::setW(const double& w) { m_velocity.setZ(w); }
 
 void MixUEqTotEnergy::changeSign()
 {
-  m_density = -m_density;
+  m_density  = -m_density;
   m_pressure = -m_pressure;
-  m_velocity = m_velocity*-1.;
+  m_velocity = m_velocity * -1.;
 }
 
 //***************************************************************************
 
-void MixUEqTotEnergy::multiplyAndAdd(const Mixture &slopesMixtureTemp, const double& coeff)
+void MixUEqTotEnergy::multiplyAndAdd(const Mixture& slopesMixtureTemp, const double& coeff)
 {
-  m_density += slopesMixtureTemp.getDensity()*coeff;
-  m_pressure += slopesMixtureTemp.getPressure()*coeff;
-  m_velocity += slopesMixtureTemp.getVelocity()*coeff;
+  m_density  += slopesMixtureTemp.getDensity() * coeff;
+  m_pressure += slopesMixtureTemp.getPressure() * coeff;
+  m_velocity += slopesMixtureTemp.getVelocity() * coeff;
 }
 
 //***************************************************************************
 
 void MixUEqTotEnergy::divide(const double& coeff)
 {
-  m_density /= coeff;
+  m_density  /= coeff;
   m_pressure /= coeff;
   m_velocity /= coeff;
 }

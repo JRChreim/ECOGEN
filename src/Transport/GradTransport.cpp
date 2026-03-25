@@ -6,16 +6,11 @@ std::vector<std::vector<int>> numeratorTransports;
 
 //***************************************************************************
 
-GradTransport::GradTransport() : m_grads(1)
-{
-  m_grads[0] = 0.;
-}
+GradTransport::GradTransport() : m_grads(1) { m_grads[0] = 0.; }
 
 //***************************************************************************
 
-GradTransport::~GradTransport()
-{
-}
+GradTransport::~GradTransport() {}
 
 //***************************************************************************
 
@@ -42,10 +37,7 @@ void GradTransport::computeGradient(Cell* cell, const int& numTransport)
 
 //***************************************************************************
 
-void GradTransport::computeDistanceGradientScalarProduct(Coord const& distance, double &transport) const
-{
-  transport = distance.scalar(m_grads[0]);
-}
+void GradTransport::computeDistanceGradientScalarProduct(Coord const& distance, double& transport) const { transport = distance.scalar(m_grads[0]); }
 
 //****************************************************************************
 
@@ -60,14 +52,11 @@ void GradTransport::limitGradients(const double& gradientLimiter)
 //************************** ORDER 2 PARALLEL ********************************
 //****************************************************************************
 
-int GradTransport::numberOfTransmittedGradients() const
-{
-  return 3;
-}
+int GradTransport::numberOfTransmittedGradients() const { return 3; }
 
 //***************************************************************************
 
-void GradTransport::getBufferGradients(double * buffer, int& counter)
+void GradTransport::getBufferGradients(double* buffer, int& counter)
 {
   m_grads[0].setX(buffer[++counter]);
   m_grads[0].setY(buffer[++counter]);
@@ -76,7 +65,7 @@ void GradTransport::getBufferGradients(double * buffer, int& counter)
 
 //***************************************************************************
 
-void GradTransport::fillBufferGradients(double * buffer, int& counter)
+void GradTransport::fillBufferGradients(double* buffer, int& counter)
 {
   buffer[++counter] = m_grads[0].getX();
   buffer[++counter] = m_grads[0].getY();

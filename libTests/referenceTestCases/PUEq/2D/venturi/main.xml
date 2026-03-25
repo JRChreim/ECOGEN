@@ -1,13 +1,13 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <computationParam>
 	<run>pressureVelocityEq2Dventuri</run>
-	<outputMode format="XML" binary="false"/>
+	<outputMode format="VTK" binary="false"/>
 	<timeControlMode iterations="false">
 		<iterations number="1" iterFreq="1"/>
 		<physicalTime totalTime="2." timeFreq="0.0025"/>
 	</timeControlMode>
 	<computationControl CFL="0.4"/>
-	
+
   <gradient>
 		<method>green-gauss</method>
 	</gradient>

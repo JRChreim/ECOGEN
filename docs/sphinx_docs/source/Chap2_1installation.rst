@@ -33,7 +33,7 @@ Download the latest stable version of openMPI_ under compressed format. At the t
 
 ::
 
-	tar -xvf openmpi-4.0.1.tar.gz 
+	tar -xvf openmpi-4.0.1.tar.gz
 	cd openmpi-4.0.1/
 
 Prepare the environment to use your favorite compiler:
@@ -42,8 +42,8 @@ Prepare the environment to use your favorite compiler:
 
 ::
 
-	export CC=gcc 
-	export CXX=g++ 
+	export CC=gcc
+	export CXX=g++
 
 Configure and proceed to the installation (you can choose a different directory). The "make" step should take some time (coffee time?):
 
@@ -51,9 +51,9 @@ Configure and proceed to the installation (you can choose a different directory)
 
 ::
 
-	./configure --prefix=/opt/openmpi 
-	make 
-	sudo make install 
+	./configure --prefix=/opt/openmpi
+	make
+	sudo make install
 
 Cleaning
 
@@ -61,14 +61,14 @@ Cleaning
 
 ::
 
-	cd .. 
-	rm -rf openmpi-4.0.1/ 
+	cd ..
+	rm -rf openmpi-4.0.1/
 
 Add openMPI library to the environment variable PATH (might be required to be root):
 
 .. highlight:: console
 
-:: 
+::
 
 	sudo echo 'export PATH=/opt/openmpi/bin:$PATH' >> /etc/bash.bashrc
 
@@ -85,7 +85,7 @@ If the installation succeeds you should be able to use the "mpicxx" command in y
 Download
 ========
 
-The last ECOGEN version |version| can be downloaded from GitHub. The source files are available at the following address: https://github.com/code-mphi/ECOGEN/releases. 
+The last ECOGEN version |version| can be downloaded from GitHub. The source files are available at the following address: https://github.com/code-mphi/ECOGEN/releases.
 
 The package includes:
 
@@ -104,8 +104,8 @@ The package includes:
 
 .. _Sec:installation:compileAndExecute:
 
-Compilation/Execution on bash
-=============================
+Compilation/Execution on bash using the provided Makefile
+=========================================================
 
 Use the Makefile (can be adapted if necessary) to compile ECOGEN sources directly on bash (XX is the number of cores required for compilation):
 
@@ -123,21 +123,79 @@ Executing ECOGEN is really easy on bash (XX is the number of cores required for 
 
 	mpirun -np XX ECOGEN
 
-Testing
-=======
+Compilation/Execution on bash using CMake tool
+==============================================
 
-Once ECOGEN has been successfully compiled, the best way to test ECOGEN's installation is to run successively the two simple following commands:
+Alternatively, more advanced users can choose to use `CMake <https://cmake.org/>`_ to build the project.
+
+.. warning::
+
+  To avoid any confusion, do not mix compilation using the provided Makefile and compilation using CMake in the same worktree.
+
+Prerequisite
+------------
+
+Install CMake using your usual package manager. For example on Ubuntu:
 
 .. highlight:: console
 
 ::
 
-	./ECOGEN
+   apt install -y cmake
+
+Usage
+-----
+
+1. Generate the build files in the *build_dir* directory:
+
+  .. highlight:: console
+
+  ::
+
+     cmake -S . -B build_dir
+
+2. Build the project (XX is the number of cores required for compilation).
+
+  .. highlight:: console
+
+  ::
+
+     cmake --build build_dir -j XX
+
+ECOGEN executable is created inside the *build_dir* directory thus, to execute ECOGEN using XX cores:
+
+.. highlight:: console
+
+::
+
+  mpirun -np XX ./build_dir/ECOGEN
+
+Testing
+=======
+
+Once ECOGEN has been successfully compiled, the best way to test ECOGEN's installation is to run successively the two simple following commands:
+
+* if you built the project using the provided Makefile:
+
+  .. highlight:: console
+
+  ::
+
+    ./ECOGEN
 	mpirun -np 2 ECOGEN
+
+* if you built it using CMake:
+
+  .. highlight:: console
+
+  ::
+
+    ./build_dir/ECOGEN
+	mpirun -np 2 ./build_dir/ECOGEN
 
 These will run the default test case included in the package two times:
 
-* Once in sequential (single core). 
+* Once in sequential (single core).
 * Once in parallel using 2 cores.
 
 These should print information in the terminal on the running default test case. If no error message appears, then your installation should be OK and you should be able to use ECOGEN for your own applications.

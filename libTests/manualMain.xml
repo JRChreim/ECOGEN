@@ -5,7 +5,7 @@ Typical example for main input file
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <computationParam>
   <run>example</run>
-  <outputMode format="XML" binary="false" precision="10"/>
+  <outputMode format="VTK" binary="false" precision="10"/>
   <timeControlMode iterations="false">
     <iterations number="3" iterFreq="1"/>
     <physicalTime totalTime="8.e-3" timeFreq="8.e-4"/>
@@ -21,18 +21,18 @@ REQUIRED computational parameters
 ***********
 The run name correspond to the created folder name with results (in folder ECOGEN/results/)
 %%%%%%%%%%%%%%%%%% << copy between these lines
-<run>example</run>    
+<run>example</run>
 %%%%%%%%%%%%%%%%%% << copy between these lines
 
 2) Output mode
 **************
 Allow choice for output format
-Implemented format: XML ou GNU
+Implemented format: VTK ou GNU
 Binary mode: false (ASCII) or true (binary)
 Options: precision of output files (number of digits). If not precised, set as default.
          reduced number of output variables when possible (depends on the model). Only available for velocity and pressure-velocity equilibrium model. If not precised, default is false (complete output).
 %%%%%%%%%%%%%%%%%% << copy between these lines
-<outputMode format="XML" binary="false" precision="10" reducedOutput="true"/>
+<outputMode format="VTK" binary="false" precision="10" reducedOutput="true"/>
 %%%%%%%%%%%%%%%%%% << copy between these lines
 
 3) Time control mode
@@ -60,7 +60,7 @@ OPTIONNAL computationnal parameters
 
 *) Scheme precision order
 *************************
-Default (without this XML node), the scheme is first order in time and space. 
+Default (without this XML node), the scheme is first order in time and space.
 Possible using of a second-order scheme in time and space using MUSCL method with TVD limiters.
 a) Second order for Cartesian mesh with/without AMR
 ---------------------------------------------------
@@ -78,6 +78,17 @@ The choice of the limiters is divided into four parts:
   <interfaceVolumeFractionLimiter>thinc</interfaceVolumeFractionLimiter>   <!-- optionnal node -->
 </secondOrder>
 %%%%%%%%%%%%%%%%%% << copy between these lines
+b) Second order for unstructured mesh
+-------------------------------------
+For unstructured mesh the available limiters are: minmod, superbee.
+The chosen limiter is a global limiter applied everywhere and on all variables.
+Note that on unstructured mesh the MUSCL method relies on gradients computation.
+Therefore, the gradient method chosen should be compatible with unstructured mesh (see node <gradient>).
+%%%%%%%%%%%%%%%%%% << copy between these lines
+<secondOrder>
+  <globalLimiter>minmod</globalLimiter>
+</secondOrder>
+%%%%%%%%%%%%%%%%%% << copy between these lines
 
 *) Gradient method
 ******************
@@ -91,17 +102,17 @@ To define explicitly the gradient method or use the Green-Gauss one (<method>gre
 </gradient>
 %%%%%%%%%%%%%%%%%% << copy between these lines
 
-*) Restart a simulation
+*) Resume a simulation
 ***********************
-Restart a finished computation from the result file number. For AMR simulations, one also needs to specify the frequency at which restarts are saved (default is 0).
+Resume a finished computation from the result file number. For AMR simulations, one also needs to specify the frequency at which resumes are saved (default is 0).
 %%%%%%%%%%%%%%%%%% << copy between these lines
-<restartSimulation restartFileNumber="15" AMRsaveFreq="5"/>                <!-- optionnal node -->
+<resumeSimulation resumeFileNumber="15" AMRsaveFreq="5"/>                <!-- optionnal node -->
 %%%%%%%%%%%%%%%%%% << copy between these lines
 
 *) Record specific information
 ******************************
-Some specific recording methods are available below. 
-Note that all these methods can use a given precision (number of digits). 
+Some specific recording methods are available below.
+Note that all these methods can use a given precision (number of digits).
 The precision parameter must be added to the method such as:
 %%%%%%%%%%%%%%%%%% << copy between these lines
 <boundary record="flux" precision="10">
@@ -117,6 +128,7 @@ Cut results will be placed in the corresponding results folder under GNU format.
 <cut1D>
   <vertex x="0" y="0.0001" z="0.5"/>
   <vecDir x="1" y="1" z="0"/>
+  <timeControl acqFreq="-1."/>        <!-- if negative or nul, recording at each time step -->
 </cut1D>
 %%%%%%%%%%%%%%%%%% << copy between these lines
 
@@ -128,6 +140,7 @@ Cut results will be placed in the corresponding results folder under GNU format.
 <cut2D>
   <vertex x="0.51" y="0.51" z="0.51"/>
   <vecNormal x="1" y="0" z="0"/>
+  <timeControl acqFreq="-1."/>        <!-- if negative or nul, recording at each time step -->
 </cut2D>
 %%%%%%%%%%%%%%%%%% << copy between these lines
 
@@ -142,7 +155,7 @@ Adding probes at chosen location in the physical domain. Define a name, a vertex
 
 d) Boundaries
 -------------
-It is possible to extract data on a given boundary. 
+It is possible to extract data on a given boundary.
 It could be either a flux type (record="flux") or all quantities (record="all") following density, velocity components, pressure, surface, pressure force, shear stress and normal components.
 This feature is only available on Cartesian grids without AMR and on unstructured meshes.
 It is mandatory to define the name, boundary number and time recording parameters.

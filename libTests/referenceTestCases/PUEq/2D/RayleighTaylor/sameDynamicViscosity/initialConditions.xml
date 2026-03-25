@@ -7,12 +7,12 @@
 
     <!-- LIST OF BOUNDARY CONDITIONS -->
     <boundaryConditions>
-        <boundCond name="CLXm" type="symmetry" number="1"/>
-        <boundCond name="CLXp" type="symmetry" number="2"/>
-        <boundCond name="CLYm" type="wall" number="3"/>
-        <boundCond name="CLYp" type="wall" number="4"/>
+        <boundCond name="BC_Xmin" type="symmetry" number="1"/>
+        <boundCond name="BC_Xmax" type="symmetry" number="2"/>
+        <boundCond name="BC_Ymin" type="wall" number="3"/>
+        <boundCond name="BC_Ymax" type="wall" number="4"/>
     </boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <!-- At = 0.5 -->
     <!-- <state name="flow"> -->

@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PhasePUEq.h"
@@ -42,7 +42,7 @@ PhasePUEq::PhasePUEq() : PhaseUEq() {}
 PhasePUEq::PhasePUEq(XMLElement* material, Eos* eos, const double& pressure, std::string fileName) : PhaseUEq()
 {
   m_pressure = pressure;
-  m_eos = eos;
+  m_eos      = eos;
 
   XMLElement* sousElement(material->FirstChildElement("dataFluid"));
   if (sousElement == NULL) throw ErrorXMLElement("dataFluid", fileName, __FILE__, __LINE__);
@@ -59,26 +59,24 @@ PhasePUEq::PhasePUEq(XMLElement* material, Eos* eos, const double& pressure, std
   if (sousElement->QueryDoubleAttribute("temperature", &m_temperature) == XML_NO_ERROR) presenceTemperature = 1;
 
   //Attribute error gestion
-  if (presenceDensity + presenceTemperature == 2) throw ErrorXMLAttribut("only one of following is required : density, temperature", fileName, __FILE__, __LINE__);
+  if (presenceDensity + presenceTemperature == 2)
+    throw ErrorXMLAttribut("only one of following is required : density, temperature", fileName, __FILE__, __LINE__);
 
   //Thermodynamic reconstruction if needed
   if (presenceTemperature) m_density = m_eos->computeDensity(m_pressure, m_temperature);
-  if (presenceDensity) m_temperature = m_eos->computeTemperature(m_density,m_pressure);
+  if (presenceDensity) m_temperature = m_eos->computeTemperature(m_density, m_pressure);
 
-  m_energy = m_eos->computeEnergy(m_density, m_pressure);
+  m_energy     = m_eos->computeEnergy(m_density, m_pressure);
   m_soundSpeed = m_eos->computeSoundSpeed(m_density, m_pressure);
 }
 
 //***************************************************************************
 
-PhasePUEq::~PhasePUEq(){}
+PhasePUEq::~PhasePUEq() {}
 
 //***************************************************************************
 
-void PhasePUEq::allocateAndCopyPhase(Phase** vecPhase)
-{
-  *vecPhase = new PhasePUEq(*this);
-}
+void PhasePUEq::allocateAndCopyPhase(Phase** vecPhase) { *vecPhase = new PhasePUEq(*this); }
 
 //****************************************************************************
 //****************************** DATA PRINTING *******************************
@@ -86,26 +84,42 @@ void PhasePUEq::allocateAndCopyPhase(Phase** vecPhase)
 
 double PhasePUEq::returnScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    if (m_alpha < 1.e-20) { return 0.; }
-    else { return m_alpha; }
+    if (m_alpha < 1.e-20) {
+      return 0.;
+    }
+    else {
+      return m_alpha;
+    }
     break;
   case 2:
-    if (m_density < 1.e-20) { return 1.e-20; }
-    else { return m_density; }
+    if (m_density < 1.e-20) {
+      return 1.e-20;
+    }
+    else {
+      return m_density;
+    }
     break;
   case 3:
-    if (m_temperature < 1.e-20) { return 1.e-20; }
-    else { return m_temperature; }
+    if (m_temperature < 1.e-20) {
+      return 1.e-20;
+    }
+    else {
+      return m_temperature;
+    }
     break;
   case 4:
-    if (m_Y < 1.e-20) { return 0.; }
-    else { return m_Y; }
+    if (m_Y < 1.e-20) {
+      return 0.;
+    }
+    else {
+      return m_Y;
+    }
     break;
   default:
-    return 0.; break;
+    return 0.;
+    break;
   }
 }
 
@@ -113,18 +127,22 @@ double PhasePUEq::returnScalar(const int& numVar) const
 
 std::string PhasePUEq::returnNameScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Alpha"; break;
+    return "Alpha";
+    break;
   case 2:
-    return "Density"; break;
+    return "Density";
+    break;
   case 3:
-    return "Temperature"; break;
+    return "Temperature";
+    break;
   case 4:
-    return "Mass fraction"; break;
+    return "Mass fraction";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -134,18 +152,22 @@ std::string PhasePUEq::returnNameScalar(const int& numVar) const
 
 void PhasePUEq::setScalar(const int& numVar, const double& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_alpha = value; break;
+    m_alpha = value;
+    break;
   case 2:
-    m_density = value; break;
+    m_density = value;
+    break;
   case 3:
-    m_temperature = value; break;
+    m_temperature = value;
+    break;
   case 4:
-    m_Y = value; break;
+    m_Y = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in PhaseUEq::setScalar"); break;
+    Errors::errorMessage("numVar not found in PhaseUEq::setScalar");
+    break;
   }
 }
 

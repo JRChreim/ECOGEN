@@ -1,10 +1,10 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="HP" state="leftChamber" type="entireDomain"/>
         <domain name="LP" state="rightChamber" type="halfSpace">
-          <dataHalfSpace axis="z" origin="0.5" direction="positive"/>  
+          <dataHalfSpace axis="z" origin="0.5" direction="positive"/>
         </domain>
     </physicalDomains>
 
@@ -14,7 +14,7 @@
         <boundCond name="rightWall" type="wall" number="2"/>
         <boundCond name="tubeWall" type="wall" number="3"/>
     </boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="leftChamber">
         <material type="fluid" EOS="IG_air.xml">

@@ -1,3 +1,33 @@
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
+//      Official webSite: https://code-mphi.github.io/ECOGEN/
+//
+//  This file is part of ECOGEN.
+//
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
+//  distribution.
+//
+//  ECOGEN is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
+//  or (at your option) any later version.
+//
+//  ECOGEN is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with ECOGEN (file LICENSE).
+//  If not, see <http://www.gnu.org/licenses/>.
+
 #include "GradPhaseEuler.h"
 
 //***************************************************************************
@@ -12,9 +42,7 @@ GradPhaseEuler::GradPhaseEuler()
 
 //***************************************************************************
 
-GradPhaseEuler::~GradPhaseEuler()
-{
-}
+GradPhaseEuler::~GradPhaseEuler() {}
 
 //***************************************************************************
 
@@ -22,8 +50,8 @@ void GradPhaseEuler::initializeGradientVectors()
 {
   this->initializeGradsVariablesNamesNumerators();
 
-  variableNamesPhases[VarLocal::density] = Variable::density;
-  variableNamesPhases[VarLocal::pressure] = Variable::pressure;
+  variableNamesPhases[VarLocal::density]   = Variable::density;
+  variableNamesPhases[VarLocal::pressure]  = Variable::pressure;
   variableNamesPhases[VarLocal::velocityU] = Variable::velocityU;
   variableNamesPhases[VarLocal::velocityV] = Variable::velocityV;
   variableNamesPhases[VarLocal::velocityW] = Variable::velocityW;
@@ -33,11 +61,11 @@ void GradPhaseEuler::initializeGradientVectors()
 
 void GradPhaseEuler::computeDistanceGradientScalarProduct(Coord const& distance, Phase* phase) const
 {
-  static_cast<PhaseEuler*> (phase)->setDensity(distance.scalar(m_grads[VarLocal::density]));
-  static_cast<PhaseEuler*> (phase)->setPressure(distance.scalar(m_grads[VarLocal::pressure]));
-  static_cast<PhaseEuler*> (phase)->setVelocity(distance.scalar(m_grads[VarLocal::velocityU]),
-                                                distance.scalar(m_grads[VarLocal::velocityV]),
-                                                distance.scalar(m_grads[VarLocal::velocityW]));
+  static_cast<PhaseEuler*>(phase)->setDensity(distance.scalar(m_grads[VarLocal::density]));
+  static_cast<PhaseEuler*>(phase)->setPressure(distance.scalar(m_grads[VarLocal::pressure]));
+  static_cast<PhaseEuler*>(phase)->setVelocity(distance.scalar(m_grads[VarLocal::velocityU]),
+                                               distance.scalar(m_grads[VarLocal::velocityV]),
+                                               distance.scalar(m_grads[VarLocal::velocityW]));
 }
 
 //****************************************************************************
@@ -69,9 +97,6 @@ void GradPhaseEuler::limitGradients(const Phase& gradientLimiter)
 //************************** ORDER 2 PARALLEL ********************************
 //****************************************************************************
 
-int GradPhaseEuler::numberOfTransmittedGradients() const
-{
-  return 15;
-}
+int GradPhaseEuler::numberOfTransmittedGradients() const { return 15; }
 
 //****************************************************************************

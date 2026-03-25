@@ -2315,7 +2315,7 @@ void LSODA::_freevectors(void)
 void LSODA::lsoda_update(LSODA_ODE_SYSTEM_TYPE f, const size_t neq,
                          vector<double> &y, double *t,
                          const double tout, int *istate, void * _data,
-                         double rtol, double atol 
+                         double rtol, double atol
                         )
 {
     array<int, 7> iworks = {{0}};

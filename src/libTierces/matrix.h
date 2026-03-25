@@ -20,10 +20,10 @@ typedef struct _vector {
 } Vector;
 
 typedef struct _matrix {
-  int nr;                   
-  int nc;            
-  double *dat;       
-  double **p;               
+  int nr;
+  int nc;
+  double *dat;
+  double **p;
   Axis2 *ar, *ac;
 } Matrix;
 

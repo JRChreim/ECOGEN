@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef TENSOR_H
@@ -38,7 +38,18 @@ class Tensor;
 #include "Coord.h"
 
 //! \brief     Enumeration for the tensor elements
-enum TensorElement { XX, XY, XZ, YX, YY, YZ, ZX, ZY, ZZ };
+enum TensorElement
+{
+  XX,
+  XY,
+  XZ,
+  YX,
+  YY,
+  YZ,
+  ZX,
+  ZY,
+  ZZ
+};
 
 //! \class     Tensor
 //! \brief     Class for a matrix 3x3 system object
@@ -47,8 +58,16 @@ class Tensor
   public:
     Tensor();
     Tensor(const Tensor& tensor);
-    Tensor(const double &xx, const double &xy, const double &xz, const double &yx, const double &yy, const double &yz, const double &zx, const double &zy, const double &zz);
-    Tensor(const Coord &x, const Coord &y, const Coord &z);
+    Tensor(const double& xx,
+           const double& xy,
+           const double& xz,
+           const double& yx,
+           const double& yy,
+           const double& yz,
+           const double& zx,
+           const double& zy,
+           const double& zz);
+    Tensor(const Coord& x, const Coord& y, const Coord& z);
     ~Tensor();
 
     //! \brief     Default Tensor object (const version)
@@ -158,6 +177,11 @@ class Tensor
     //! \brief     Compute the inverse of the tensor
     //! \param     inverseTensor        inverse tensor (Tensor)
     void inverse(Tensor& inverseTensor) const;
+    //! \brief     Compute the infinity norm of the tensor
+    double infinityNorm() const;
+    //! \brief     Compute the exponential of the tensor using a Padé 6*6 algorithm
+    //! \param     tensorExpPade        resulting tensor (exponential Padé)
+    void exponentialPade(Tensor& tensorExpPade);
 
     //! \brief     Return true if equal to identity
     bool isIdentity() const;
@@ -170,18 +194,20 @@ class Tensor
     //Operator surcharges
     Tensor& operator=(const double& scalar);
     Tensor& operator=(const Tensor& a);
-    Tensor& operator*= (const double& scalar);
-    Tensor& operator/= (const double& scalar);
-    Tensor operator* (const double& scalar) const; 
-    Tensor operator/ (const double& scalar) const;
-    Tensor& operator+= (const Tensor& a);
-    Tensor& operator-= (const Tensor& a);
+    Tensor& operator*=(const double& scalar);
+    Tensor& operator/=(const double& scalar);
+    Tensor operator*(const double& scalar) const;
+    Tensor operator/(const double& scalar) const;
+    Tensor& operator+=(const Tensor& a);
+    Tensor& operator-=(const Tensor& a);
 
   protected:
-    std::array<double, 9> m_array;       //! Elements of the 3x3 matrix
+    std::array<double, 9> m_array; //! Elements of the 3x3 matrix
 };
 
+//KS//Clean up unused variables
 extern Tensor tensorBuff;
+extern Tensor tensorBuff2;
 extern Tensor tensorIdentity;
 extern Tensor tensorCobase;
 extern Tensor tensorNonConsCobase;
@@ -193,10 +219,18 @@ extern Tensor tensorEigenvalues;
 extern Tensor tensorP;
 extern Tensor tensorPinverse;
 extern Tensor tensorD;
+extern Tensor tensorDLogCobaseDt;
+extern Tensor tensorPade;
+extern Tensor tensorX2;
+extern Tensor tensorX4;
+extern Tensor tensorX6;
+extern Tensor tensorU;
+extern Tensor tensorV;
+extern Tensor tensorQ;
 
 //Extern operator surcharges of the class because they take two arguments
-Tensor operator* (const double& scalar, const Tensor& a);
-Tensor operator+ (const Tensor& a, const Tensor& b);
-Tensor operator- (const Tensor& a, const Tensor& b);
+Tensor operator*(const double& scalar, const Tensor& a);
+Tensor operator+(const Tensor& a, const Tensor& b);
+Tensor operator-(const Tensor& a, const Tensor& b);
 
 #endif // TENSOR_H

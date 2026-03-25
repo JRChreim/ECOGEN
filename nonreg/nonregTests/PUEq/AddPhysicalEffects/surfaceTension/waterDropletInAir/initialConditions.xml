@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="base" state="air" type="entireDomain"/>
         <domain name="waterDroplet"  state="waterDroplet" type="Sphere">
             <dataSphere radius="0.15">
@@ -12,26 +12,26 @@
 
     <!-- LIST OF BOUNDARY CONDITIONS -->
     <boundaryConditions>
-        <boundCond name="CLXm" type="symmetry" number="1"/>
-        <boundCond name="CLXp" type="outletPressure" number="2">
+        <boundCond name="BC_Xmin" type="symmetry" number="1"/>
+        <boundCond name="BC_Xmax" type="outletPressure" number="2">
             <dataOutletPressure p0="1.e5">
                 <transport name="color" value="1.e-6"/>
             </dataOutletPressure>
         </boundCond>
-        <boundCond name="CLYm" type="symmetry" number="3"/>
-        <boundCond name="CLYp" type="outletPressure" number="4">
+        <boundCond name="BC_Ymin" type="symmetry" number="3"/>
+        <boundCond name="BC_Ymax" type="outletPressure" number="4">
             <dataOutletPressure p0="1.e5">
                 <transport name="color" value="1.e-6"/>
             </dataOutletPressure>
         </boundCond>
-        <boundCond name="CLZm" type="symmetry" number="5"/>
-        <boundCond name="CLZp" type="outletPressure" number="6">
+        <boundCond name="BC_Zmin" type="symmetry" number="5"/>
+        <boundCond name="BC_Zmax" type="outletPressure" number="6">
             <dataOutletPressure p0="1.e5">
                 <transport name="color" value="1.e-6"/>
             </dataOutletPressure>
         </boundCond>
     </boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="air">
         <material type="fluid" EOS="IG_air.xml">

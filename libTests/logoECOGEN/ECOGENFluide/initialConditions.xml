@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="base" state="air" type="entireDomain"/>
 <!--         <domain name="HP"  state="chamberHP" type="halfSpace">
             <dataHalfSpace axis="x" origin="1." direction="negative"/>
@@ -18,7 +18,7 @@
     <boundaryConditions>
         <boundCond name="walls" type="wall" number="1"/> -->
     </boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="air">
         <material type="fluid" EOS="IG_air.xml">

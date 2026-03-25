@@ -8,20 +8,20 @@ Restart a simulation with mesh mapping
 **************************************
 
 In ECOGEN it is possible to initialize a simulation with the result of a previous simulation performed on a different mesh and/or a different number of cores.
-The main use case is to accelerate the convergence to the steady state by using a previous simulation performed on a coarse mesh, but it can also be used to restart a simulation on a different number of cores. 
+The main use case is to accelerate the convergence to the steady state by using a previous simulation performed on a coarse mesh, but it can also be used to restart a simulation on a different number of cores.
 
 Overview
 ========
 
-In this tutorial, this mesh mapping method is used to fasten convergence towards steady state of a subsonic flow in a convergent-divergent nozzle. 
+In this tutorial, this mesh mapping method is used to fasten convergence towards steady state of a subsonic flow in a convergent-divergent nozzle.
 To build our test case, we consider the following reference test case in the *ECOGEN.xml* file:
 
 .. code-block:: xml
 
   <testCase>libTests/referenceTestCases/euler/2D/nozzles/lowMachSmoothCrossSection/</testCase>
 
-In this test case, originally from :cite:`lemartelot2013lowmach`, a subsonic flow of liquid water is injected into the nozzle as shown in :numref:`Fig:tutos:restartMeshMapping:nozzle`. 
-At the inlet, the mass flow rate is imposed as well as the total stagnation enthalpy using the pressure and density. 
+In this test case, originally from :cite:`lemartelot2013lowmach`, a subsonic flow of liquid water is injected into the nozzle as shown in :numref:`Fig:tutos:restartMeshMapping:nozzle`.
+At the inlet, the mass flow rate is imposed as well as the total stagnation enthalpy using the pressure and density.
 At the outlet, the pressure is fixed. These boundary conditions lead to a subsonic flow in the whole nozzle.
 
 .. _Fig:tutos:restartMeshMapping:nozzle:
@@ -47,17 +47,17 @@ Since the same effect can be obtained with a very fine mesh and our goal is to p
 
   <lowMach state="false"/>
 
-In this tutorial, we will first run a simulation on a coarse mesh until the steady state is reached. 
-Then, this simulation will be used to initialize another simulation on a finer mesh. 
+In this tutorial, we will first run a simulation on a coarse mesh until the steady state is reached.
+Then, this simulation will be used to initialize another simulation on a finer mesh.
 The proper behavior of the mesh mapping will be checked and a discussion of the time saved with the mapping is provided.
 
 Run a simulation on a coarse mesh
 =================================
 
-.. note:: 
+.. note::
 
-  In the following, in order to demonstrate that steady state solution obtained with the mesh mapping method corresponds to the exact solution, a coarse mesh of *Nx = 1 000* and a fine one of *Nx = 10 000* cells are used. 
-  Simulations with these meshes can be quite long, therefore for testing purpose the reader is advised to test with *Nx = 100* and *Nx = 1 000* cells. 
+  In the following, in order to demonstrate that steady state solution obtained with the mesh mapping method corresponds to the exact solution, a coarse mesh of *Nx = 1 000* and a fine one of *Nx = 10 000* cells are used.
+  Simulations with these meshes can be quite long, therefore for testing purpose the reader is advised to test with *Nx = 100* and *Nx = 1 000* cells.
 
 To run the simulation on two cores, use:
 
@@ -66,14 +66,14 @@ To run the simulation on two cores, use:
   mpirun -np 2 ECOGEN
 
 To check that steady state is reached, flow quantities can be checked using a visualization software such as Paraview.
-Note that it might be useful to compare the massflow between the inlet and outlet of the nozzle to make sure steady state is reached. 
+Note that it might be useful to compare the massflow between the inlet and outlet of the nozzle to make sure steady state is reached.
 Massflow rate can be recorded with the :xml:`<recordBoundaryFlux>` node in the *main.xml* file, for more information about this, see the tutorial :ref:`Sec:tuto:extractMassflow`.
 
 Setup the restart with mesh mapping
 ===================================
 
 Now that we have a steady state result obtained on a coarse mesh, we will use it to initialize our simulation on a fine mesh of about *Nx = 10 000* cells.
-First, make sure to change the name of the result folder to avoid erasing the simulation on the coarse mesh. 
+First, make sure to change the name of the result folder to avoid erasing the simulation on the coarse mesh.
 This can be done by changing the following line in *main.xml*:
 
 .. code-block:: xml
@@ -89,21 +89,21 @@ Taking into consideration these remarks, the *mesh.xml* file is modified as foll
   <?xml version="1.0" encoding="UTF-8"?>
   <mesh>
   <type structure="unStructured"/>
-    
+
     <unstructuredMesh>
       <file name="libMeshes/nozzles/smoothNozzle2DforLowMach_Nx10000_10cpu.msh"/>
       <parallel GMSHPretraitement="true"/>
 
-      <meshMappingRestart 
-        resultFolder="euler2DnozzleLowMachSmoothCrossSection_coarse" 
-        restartFileNumber="1000" 
+      <meshMappingRestart
+        resultFolder="euler2DnozzleLowMachSmoothCrossSection_coarse"
+        restartFileNumber="1000"
         meshFile="libMeshes/nozzles/smoothNozzle2DforLowMach_Nx1000_2cpu.msh"
-      /> 
+      />
 
     </unstructuredMesh>
   </mesh>
 
-The simulation is ready to be run, in this case the mesh is partitionned on 10 cores.
+The simulation is ready to be run, in this case the mesh is partitioned on 10 cores.
 Therefore ECOGEN must be executed using:
 
 .. code-block:: console

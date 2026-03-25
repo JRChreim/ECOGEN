@@ -1,21 +1,21 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains>	
+    <physicalDomains>
       <domain name="base" state="leftChamber" type="entireDomain"/>
       <domain name="LP" state="rightChamber" type="halfSpace">
         <dataHalfSpace axis="x" origin="0.5" direction="positive"/>
       </domain>
-	  </physicalDomains>	
+	  </physicalDomains>
 
     <!-- LIST OF BOUNDARY CONDITIONS -->
     <boundaryConditions>
-      <boundCond name="CLXm" type="wall" number="1" />
-      <boundCond name="CLXp" type="wall" number="2" />
-      <boundCond name="CLYm" type="nonReflecting" number="3" />
-      <boundCond name="CLYp" type="nonReflecting" number="4" />
+      <boundCond name="BC_Xmin" type="wall" number="1" />
+      <boundCond name="BC_Xmax" type="wall" number="2" />
+      <boundCond name="BC_Ymin" type="nonReflecting" number="3" />
+      <boundCond name="BC_Ymax" type="nonReflecting" number="4" />
 	</boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="leftChamber">
         <material type="fluid" EOS="IG_air.xml">

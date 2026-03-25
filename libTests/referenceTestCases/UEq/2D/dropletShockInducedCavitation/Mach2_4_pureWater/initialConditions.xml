@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LISTE DES DOMAINES GEOMETRIQUES  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="base" state="air" type="entireDomain"/>
         <domain name="shock"  state="shockedstate" type="halfSpace">
             <dataHalfSpace axis="x" origin="20.e-3" direction="negative"/>
@@ -15,12 +15,12 @@
 
     <!-- LISTE DES CONDITIONS AUX LIMITES -->
     <boundaryConditions>
-        <boundCond name="CLXm" type="nonReflecting" number="1"/>
-        <boundCond name="CLXp" type="nonReflecting" number="2"/>
-        <boundCond name="CLYm" type="symmetry" number="3"/>
-        <boundCond name="CLYp" type="nonReflecting" number="4"/>
+        <boundCond name="BC_Xmin" type="nonReflecting" number="1"/>
+        <boundCond name="BC_Xmax" type="nonReflecting" number="2"/>
+        <boundCond name="BC_Ymin" type="symmetry" number="3"/>
+        <boundCond name="BC_Ymax" type="nonReflecting" number="4"/>
     </boundaryConditions>
-    
+
     <!--  LISTE DES ETATS UTILISES  -->
     <state name="air">
         <material type="fluid" EOS="SG_water_cavitation.xml">

@@ -8,19 +8,21 @@
     </domain>
     <domain type="sphere" name="bubble" state="heliumBubble">
       <dataSphere radius="0.02">
-        <center x="0.23" z="0." y="0."/>
+        <center x="0.23" y="0." z="0."/>
       </dataSphere>
     </domain>
   </physicalDomains>
+
   <!-- LIST OF BOUNDARY CONDITIONS -->
   <boundaryConditions>
-    <boundCond type="nonReflecting" name="CLXm" number="1"/>
-    <boundCond type="nonReflecting" name="CLXp" number="2"/>
-    <boundCond type="symmetry" name="CLYm" number="3"/>
-    <boundCond type="symmetry" name="CLYp" number="4"/>
-    <boundCond type="symmetry" name="CLZm" number="5"/>
-    <boundCond type="symmetry" name="CLZp" number="6"/>
+    <boundCond type="nonReflecting" name="BC_Xmin" number="1"/>
+    <boundCond type="nonReflecting" name="BC_Xmax" number="2"/>
+    <boundCond type="symmetry" name="BC_Ymin" number="3"/>
+    <boundCond type="nonReflecting" name="BC_Ymax" number="4"/>
+    <boundCond type="symmetry" name="BC_Zmin" number="5"/>
+    <boundCond type="nonReflecting" name="BC_Zmax" number="6"/>
   </boundaryConditions>
+
   <!--  LIST OF STATES  -->
   <state name="chamberLP">
     <material type="fluid" EOS="IG_air.xml">

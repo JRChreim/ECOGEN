@@ -55,7 +55,7 @@ The AMR technique of :cite:`schmidmayer2019adaptive` is used with 4 refinement l
 Epoxy--Spinel shock tube
 ------------------------
 
-This test deals with shocks in mixture of materials. Epoxy and spinel are supposed mixed such that caracteristic times for wave propagation and drag effects are very small, allowing to consider the mixture as evolving in mechanical equilibrium. Input files for this test are available in *./libTests/referenceTestCases/PUEq/1D/shockTubes/epoxySpinel/*. The corresponding uncommented line in *ECOGEN.xml* is: 
+This test deals with shocks in mixture of materials. Epoxy and spinel are supposed mixed such that characteristic times for wave propagation and drag effects are very small, allowing to consider the mixture as evolving in mechanical equilibrium. Input files for this test are available in *./libTests/referenceTestCases/PUEq/1D/shockTubes/epoxySpinel/*. The corresponding uncommented line in *ECOGEN.xml* is:
 
 .. code-block:: xml
 
@@ -99,7 +99,7 @@ The initial characteristics of the run are:
 
   Mixture shock tube with expoxy and spinel. Visualization using Paraview_ software.
 
-Other shock-tube test case 
+Other shock-tube test case
 --------------------------
 
 Another 1D shock-tube test is provided within the ECOGEN package and may be described in details later.

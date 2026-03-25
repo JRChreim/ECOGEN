@@ -1,38 +1,38 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "OutputBoundaryFluxGNU.h"
 
 //***************************************************************
 
-OutputBoundaryFluxGNU::OutputBoundaryFluxGNU(std::string casTest, std::string run, tinyxml2::XMLElement* element, std::string fileName, Input* entree) : 
+OutputBoundaryFluxGNU::OutputBoundaryFluxGNU(std::string casTest, std::string run, tinyxml2::XMLElement* element, std::string fileName, Input* entree) :
   OutputBoundaryGNU(casTest, run, element, fileName, entree), m_flux(0.)
 {
   try {
@@ -40,20 +40,24 @@ OutputBoundaryFluxGNU::OutputBoundaryFluxGNU(std::string casTest, std::string ru
     tinyxml2::XMLElement* subElement;
     subElement = element->FirstChildElement("flux");
     std::string type(subElement->Attribute("type"));
-    if (type == "") { throw ErrorXMLAttribut("type", fileName, __FILE__, __LINE__); }
+    if (type == "") {
+      throw ErrorXMLAttribut("type", fileName, __FILE__, __LINE__);
+    }
     Tools::uppercase(type);
     if (type == "MASSFLOW") m_fluxType = FluxType::MASSFLOW;
     else if (type == "POWERFLUX") m_fluxType = FluxType::POWERFLUX;
-    else { throw ErrorXMLAttribut("type", fileName, __FILE__, __LINE__); }
+    else {
+      throw ErrorXMLAttribut("type", fileName, __FILE__, __LINE__);
+    }
   }
-  catch (ErrorECOGEN&) { throw; }
+  catch (ErrorECOGEN&) {
+    throw;
+  }
 }
 
 //***************************************************************
 
-OutputBoundaryFluxGNU::~OutputBoundaryFluxGNU()
-{
-}
+OutputBoundaryFluxGNU::~OutputBoundaryFluxGNU() {}
 
 //***************************************************************
 
@@ -63,19 +67,23 @@ void OutputBoundaryFluxGNU::initializeSpecificOutputBound()
     // Create output file
     std::ofstream fs;
     std::string file = m_folderOutput + createFilenameGNU(m_fileNameResults.c_str());
-    if (m_run->m_restartSimulation > 0) {
-      fs.open(file.c_str(), std::ios_base::app);  
+    if (m_run->m_resumeSimulation > 0) {
+      fs.open(file.c_str(), std::ios_base::app);
     }
     else {
       fs.open(file.c_str());
     }
-    if (!fs) { throw ErrorECOGEN("Cannot open the file " + file, __FILE__, __LINE__); }
+    if (!fs) {
+      throw ErrorECOGEN("Cannot open the file " + file, __FILE__, __LINE__);
+    }
     fs.close();
 
     // Gnuplot script printing for visualization
     writeScriptGnuplot(m_fileNameResults);
   }
-  catch (ErrorECOGEN&) { throw; }
+  catch (ErrorECOGEN&) {
+    throw;
+  }
 }
 
 //***************************************************************
@@ -99,10 +107,10 @@ double OutputBoundaryFluxGNU::extractMassflow(std::vector<CellInterface*>* cellI
 {
   m_flux = 0.;
 
-  for (unsigned int c = 0; c < m_cellInterfaceIndexes.size(); c++) {   
+  for (unsigned int c = 0; c < m_cellInterfaceIndexes.size(); c++) {
     m_flux += this->computeMassflowFace(cellInterfacesLvl[0][m_cellInterfaceIndexes[c]]);
   }
-  
+
   if (Ncpu > 1) {
     parallel.computeSum(m_flux);
   }
@@ -120,15 +128,14 @@ double OutputBoundaryFluxGNU::extractEnthalpyFlux(std::vector<CellInterface*>* c
   if (m_run->m_MRF != -1) {
     for (unsigned int c = 0; c < m_cellInterfaceIndexes.size(); c++) {
       // Absolute velocity is built on the specific region rotating or when whole geometry is rotating.
-      if (m_run->m_sources[m_run->m_MRF]->getPhysicalEntity() 
-        == cellInterfacesLvl[0][m_cellInterfaceIndexes[c]]->getCellLeft()->getElement()->getAppartenancePhysique()
-        || m_run->m_sources[m_run->m_MRF]->getPhysicalEntity() == 0)
-      {
+      if (m_run->m_sources[m_run->m_MRF]->getPhysicalEntity() ==
+            cellInterfacesLvl[0][m_cellInterfaceIndexes[c]]->getCellLeft()->getElement()->getAppartenancePhysique() ||
+          m_run->m_sources[m_run->m_MRF]->getPhysicalEntity() == 0) {
         m_flux += this->computeTotalEnthalpyFluxFaceMRF(cellInterfacesLvl[0][m_cellInterfaceIndexes[c]]);
       }
       // If the region is not rotating absolute velocity = relative velocity
-      else { 
-        m_flux += this->computeTotalEnthalpyFluxFace(cellInterfacesLvl[0][m_cellInterfaceIndexes[c]]); 
+      else {
+        m_flux += this->computeTotalEnthalpyFluxFace(cellInterfacesLvl[0][m_cellInterfaceIndexes[c]]);
       }
     }
   }
@@ -137,7 +144,7 @@ double OutputBoundaryFluxGNU::extractEnthalpyFlux(std::vector<CellInterface*>* c
     for (unsigned int c = 0; c < m_cellInterfaceIndexes.size(); c++) {
       m_flux += this->computeTotalEnthalpyFluxFace(cellInterfacesLvl[0][m_cellInterfaceIndexes[c]]);
     }
-  }  
+  }
 
   if (Ncpu > 1) {
     parallel.computeSum(m_flux);
@@ -148,12 +155,12 @@ double OutputBoundaryFluxGNU::extractEnthalpyFlux(std::vector<CellInterface*>* c
 
 //***************************************************************
 
-double OutputBoundaryFluxGNU::computeMassflowFace(CellInterface *bound)
+double OutputBoundaryFluxGNU::computeMassflowFace(CellInterface* bound)
 {
   double buff(0.);
   // Since velocity is extracted in the Riemann solver, velocityU corresponds to the
   // velocity component in the normal direction
-  buff = bound->getBoundData(VarBoundary::rho);
+  buff  = bound->getBoundData(VarBoundary::rho);
   buff *= bound->getBoundData(VarBoundary::velU);
   buff *= bound->getFace()->getSurface();
   return buff;
@@ -161,21 +168,21 @@ double OutputBoundaryFluxGNU::computeMassflowFace(CellInterface *bound)
 
 //***************************************************************
 
-double OutputBoundaryFluxGNU::computeTotalEnthalpyFluxFace(CellInterface *bound)
+double OutputBoundaryFluxGNU::computeTotalEnthalpyFluxFace(CellInterface* bound)
 {
   double buff(0.);
-  buff = this->computeMassflowFace(bound);
-  buff *= TB->eos[0]->computeTotalEnthalpy(bound->getBoundData(VarBoundary::rho), 
-        bound->getBoundData(VarBoundary::p), 
-        bound->getBoundData(VarBoundary::velU), 
-        bound->getBoundData(VarBoundary::velV), 
-        bound->getBoundData(VarBoundary::velW));
+  buff  = this->computeMassflowFace(bound);
+  buff *= TB->eos[0]->computeTotalEnthalpy(bound->getBoundData(VarBoundary::rho),
+                                           bound->getBoundData(VarBoundary::p),
+                                           bound->getBoundData(VarBoundary::velU),
+                                           bound->getBoundData(VarBoundary::velV),
+                                           bound->getBoundData(VarBoundary::velW));
   return buff;
 }
 
 //***************************************************************
 
-double OutputBoundaryFluxGNU::computeTotalEnthalpyFluxFaceMRF(CellInterface *bound)
+double OutputBoundaryFluxGNU::computeTotalEnthalpyFluxFaceMRF(CellInterface* bound)
 {
   double buff(0.);
   buff = this->computeMassflowFace(bound);
@@ -184,19 +191,13 @@ double OutputBoundaryFluxGNU::computeTotalEnthalpyFluxFaceMRF(CellInterface *bou
   // and corresponds to the relative velocity in case of MRF.
   // The relative velocity is projected in the global frame to allow the reconstruction
   // of the absolute velocity with the rotationnal velocity.
-  Coord absVel(bound->getBoundData(VarBoundary::velU), 
-    bound->getBoundData(VarBoundary::velV), 
-    bound->getBoundData(VarBoundary::velW));
+  Coord absVel(bound->getBoundData(VarBoundary::velU), bound->getBoundData(VarBoundary::velV), bound->getBoundData(VarBoundary::velW));
 
-  absVel.reverseProjection(bound->getFace()->getNormal(), 
-    bound->getFace()->getTangent(), 
-    bound->getFace()->getBinormal());
+  absVel.reverseProjection(bound->getFace()->getNormal(), bound->getFace()->getTangent(), bound->getFace()->getBinormal());
 
   absVel = m_run->m_sources[m_run->m_MRF]->computeAbsVelocity(absVel, bound->getCellLeft()->getPosition());
 
-  buff *= TB->eos[0]->computeTotalEnthalpy(bound->getBoundData(VarBoundary::rho), 
-        bound->getBoundData(VarBoundary::p), 
-        absVel);
+  buff *= TB->eos[0]->computeTotalEnthalpy(bound->getBoundData(VarBoundary::rho), bound->getBoundData(VarBoundary::p), absVel);
   return buff;
 }
 
@@ -205,7 +206,7 @@ double OutputBoundaryFluxGNU::computeTotalEnthalpyFluxFaceMRF(CellInterface *bou
 void OutputBoundaryFluxGNU::writeResults(std::vector<CellInterface*>* cellInterfacesLvl)
 {
   double flux = this->getFlux(cellInterfacesLvl);
-  
+
   try {
     if (rankCpu == 0) {
       std::ofstream fs;
@@ -216,7 +217,9 @@ void OutputBoundaryFluxGNU::writeResults(std::vector<CellInterface*>* cellInterf
       fs.close();
     }
   }
-  catch (ErrorECOGEN&) { throw; }
+  catch (ErrorECOGEN&) {
+    throw;
+  }
 
   m_nextAcq += m_acqFreq;
 }

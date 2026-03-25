@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "OutputCutGNU.h"
@@ -35,22 +35,28 @@ using namespace tinyxml2;
 
 //***************************************************************
 
-OutputCutGNU::OutputCutGNU(std::string casTest, std::string run, XMLElement* element, std::string fileName, TypeGO type, Input *entree) : 
+OutputCutGNU::OutputCutGNU(std::string casTest, std::string run, XMLElement* element, std::string fileName, TypeGO type, Input* entree) :
   OutputGNU(element)
 {
   try {
     //Modification des attributs
-    m_writeBinary = false;
+    m_writeBinary    = false;
     m_simulationName = casTest;
-    if (type == LINE) { m_fileNameResults = "cut1D"; }
-    else if (type == PLAN) { m_fileNameResults = "cut2D"; }
-    else { throw ErrorECOGEN("OutputCutGNU::OutputCutGNU : type de cut unknown", __FILE__, __LINE__); }
+    if (type == LINE) {
+      m_fileNameResults = "cut1D";
+    }
+    else if (type == PLAN) {
+      m_fileNameResults = "cut2D";
+    }
+    else {
+      throw ErrorECOGEN("OutputCutGNU::OutputCutGNU : type de cut unknown", __FILE__, __LINE__);
+    }
     m_fileNameVisu = "plot_" + m_fileNameResults + ".gnu";
     m_folderOutput = config.getWorkFolder() + "results/" + run + "/cuts/";
-    m_splitData = 0;
-    m_numFichier = 0;
-    m_input = entree;
-    m_run = m_input->getRun();
+    m_splitData    = 0;
+    m_numFichier   = 0;
+    m_input        = entree;
+    m_run          = m_input->getRun();
 
     XMLElement* sousElement;
     XMLError error;
@@ -61,41 +67,68 @@ OutputCutGNU::OutputCutGNU(std::string casTest, std::string run, XMLElement* ele
     //Get data of 1D cut
     sousElement = element->FirstChildElement("vertex");
     if (sousElement == NULL) throw ErrorXMLElement("vertex", fileName, __FILE__, __LINE__);
-    error = sousElement->QueryDoubleAttribute("x", &donnee); vertex.setX(donnee);
+    error = sousElement->QueryDoubleAttribute("x", &donnee);
+    vertex.setX(donnee);
     if (error != XML_NO_ERROR) throw ErrorXMLAttribut("x", fileName, __FILE__, __LINE__);
-    error = sousElement->QueryDoubleAttribute("y", &donnee); vertex.setY(donnee);
+    error = sousElement->QueryDoubleAttribute("y", &donnee);
+    vertex.setY(donnee);
     if (error != XML_NO_ERROR) throw ErrorXMLAttribut("y", fileName, __FILE__, __LINE__);
-    error = sousElement->QueryDoubleAttribute("z", &donnee); vertex.setZ(donnee);
+    error = sousElement->QueryDoubleAttribute("z", &donnee);
+    vertex.setZ(donnee);
     if (error != XML_NO_ERROR) throw ErrorXMLAttribut("z", fileName, __FILE__, __LINE__);
     if (type == LINE) sousElement = element->FirstChildElement("vecDir");
-    else if (type == PLAN) { sousElement = element->FirstChildElement("vecNormal"); }
-    else { throw ErrorECOGEN("OutputCutGNU::OutputCutGNU : type de cut unknown", __FILE__, __LINE__); }
+    else if (type == PLAN) {
+      sousElement = element->FirstChildElement("vecNormal");
+    }
+    else {
+      throw ErrorECOGEN("OutputCutGNU::OutputCutGNU : type de cut unknown", __FILE__, __LINE__);
+    }
     if (sousElement == NULL) throw ErrorXMLElement("vecDir ou vecNormal", fileName, __FILE__, __LINE__);
-    error = sousElement->QueryDoubleAttribute("x", &donnee); vector.setX(donnee);
+    error = sousElement->QueryDoubleAttribute("x", &donnee);
+    vector.setX(donnee);
     if (error != XML_NO_ERROR) throw ErrorXMLAttribut("x", fileName, __FILE__, __LINE__);
-    error = sousElement->QueryDoubleAttribute("y", &donnee); vector.setY(donnee);
+    error = sousElement->QueryDoubleAttribute("y", &donnee);
+    vector.setY(donnee);
     if (error != XML_NO_ERROR) throw ErrorXMLAttribut("y", fileName, __FILE__, __LINE__);
-    error = sousElement->QueryDoubleAttribute("z", &donnee); vector.setZ(donnee);
+    error = sousElement->QueryDoubleAttribute("z", &donnee);
+    vector.setZ(donnee);
     if (error != XML_NO_ERROR) throw ErrorXMLAttribut("z", fileName, __FILE__, __LINE__);
 
-    if (type == LINE) { m_objet = new GOLine(vertex, vector); }
-    else if (type == PLAN) { m_objet = new GOPlan(vertex, vector); }
-    else { throw ErrorECOGEN("OutputCutGNU::OutputCutGNU : type de cut unknown", __FILE__, __LINE__); }
+    if (type == LINE) {
+      m_objet = new GOLine(vertex, vector);
+    }
+    else if (type == PLAN) {
+      m_objet = new GOPlan(vertex, vector);
+    }
+    else {
+      throw ErrorECOGEN("OutputCutGNU::OutputCutGNU : type de cut unknown", __FILE__, __LINE__);
+    }
 
+    sousElement = element->FirstChildElement("timeControl");
+    if (sousElement == NULL) throw ErrorXMLElement("timeControl", fileName, __FILE__, __LINE__);
+    error = sousElement->QueryDoubleAttribute("acqFreq", &m_acqFreq);
+    if (error != XML_NO_ERROR) throw ErrorXMLAttribut("acqFreq", fileName, __FILE__, __LINE__);
   }
-  catch (ErrorECOGEN &) { throw; }
+  catch (ErrorECOGEN&) {
+    throw;
+  }
 }
 
 //***************************************************************
 
-OutputCutGNU::~OutputCutGNU()
+OutputCutGNU::~OutputCutGNU() { delete m_objet; }
+
+//***********************************************************************
+
+void OutputCutGNU::initializeSpecificOutput()
 {
-  delete m_objet;
+  //settings
+  m_nextAcq = m_run->m_physicalTime;
 }
 
 //***********************************************************************
 
-void OutputCutGNU::writeResults(Mesh *mesh, std::vector<Cell*>* cellsLvl)
+void OutputCutGNU::writeResults(Mesh* mesh, std::vector<Cell*>* cellsLvl)
 {
   std::ofstream fileStream;
   std::string file = m_folderOutput + createFilenameGNU(m_fileNameResults.c_str(), -1, rankCpu, m_numFichier);
@@ -108,13 +141,22 @@ void OutputCutGNU::writeResults(Mesh *mesh, std::vector<Cell*>* cellsLvl)
   try {
     //Create Gnuplot file to plot results
     if (rankCpu == 0) {
-      if (m_objet->getType() == LINE) { writeScriptGnuplot(1); }
-      else if (m_objet->getType() == PLAN) { writeScriptGnuplot(2); }
-      else { throw ErrorECOGEN("OutputCutGNU::writeResultsSpecifique : type de cut unknown", __FILE__, __LINE__); }
+      if (m_objet->getType() == LINE) {
+        writeScriptGnuplot(1);
+      }
+      else if (m_objet->getType() == PLAN) {
+        writeScriptGnuplot(2);
+      }
+      else {
+        throw ErrorECOGEN("OutputCutGNU::writeResultsSpecifique : type de cut unknown", __FILE__, __LINE__);
+      }
     }
   }
-  catch (ErrorECOGEN &) { throw; }
+  catch (ErrorECOGEN&) {
+    throw;
+  }
   m_numFichier++;
+  m_nextAcq += m_acqFreq;
 }
 
 //***************************************************************

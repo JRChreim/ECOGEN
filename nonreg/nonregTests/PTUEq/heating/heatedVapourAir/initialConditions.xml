@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="base" state="pipe" type="entireDomain"/>
     </physicalDomains>
 
@@ -16,9 +16,9 @@
 		</boundCond>
 		<boundCond name="outlet" type="outletPressure" number="4">
 			<dataOutletPressure p0="1.e5"/>
-		</boundCond>	
+		</boundCond>
 	</boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="pipe">
         <material type="fluid" EOS="IG_waterVap.xml">

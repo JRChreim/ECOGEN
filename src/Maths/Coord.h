@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef COORD_H
@@ -56,12 +56,12 @@ class Coord
     //! \brief     Default Coord object (non-const version)
     //! \details   Used when returning a const Coord&
     static Coord defaultCoordNonConst;
-    
+
     //! \brief     Set the values of the Coord object
     //! \param     x                    value of the x-direction coordinate
     //! \param     y                    value of the y-direction coordinate
     //! \param     z                    value of the z-direction coordinate
-    void setXYZ(const double& x, const double&  y, const double& z);
+    void setXYZ(const double& x, const double& y, const double& z);
     //! \brief     Set the value in the x-direction of the Coord object
     //! \param     x                    value of the x-direction coordinate
     void setX(const double& x);
@@ -128,7 +128,7 @@ class Coord
     //! \param     v2                   vector (Coord)
     //! \param     v3                   vector (Coord)
     static double determinant(const Coord& v1, const Coord& v2, const Coord& v3);
-    
+
     //! \brief     Compute some sort of cosinus between two vectors
     //! \param     v1                   vector (Coord)
     //! \param     v2                   vector (Coord)
@@ -143,23 +143,23 @@ class Coord
     //! \param     tangent           face tangent
     //! \param     binormal          face binormal
     //! \param     position          face position
-    void buildRelativeVelForRiemannMRF(const Coord &omega, const Coord& normal, const Coord& tangent, const Coord& binormal, const Coord& position);
+    void buildRelativeVelForRiemannMRF(const Coord& omega, const Coord& normal, const Coord& tangent, const Coord& binormal, const Coord& position);
 
     //Operator surcharges
     Coord& operator=(const double& scalar);
-    Coord& operator+= (const double& scalar);
-    Coord& operator-= (const double& scalar);
-    Coord& operator*= (const double& scalar);
-    Coord& operator/= (const double& scalar);
-    Coord operator* (const double& scalar) const;
-    Coord operator/ (const double& scalar) const;
-    Coord& operator+= (const Coord& a);
-    Coord& operator-= (const Coord& a);
+    Coord& operator+=(const double& scalar);
+    Coord& operator-=(const double& scalar);
+    Coord& operator*=(const double& scalar);
+    Coord& operator/=(const double& scalar);
+    Coord operator*(const double& scalar) const;
+    Coord operator/(const double& scalar) const;
+    Coord& operator+=(const Coord& a);
+    Coord& operator-=(const Coord& a);
 
   protected:
-    double m_x;          //! Value in the x-direction
-    double m_y;          //! Value in the y-direction
-    double m_z;          //! Value in the z-direction
+    double m_x; //! Value in the x-direction
+    double m_y; //! Value in the y-direction
+    double m_z; //! Value in the z-direction
 };
 
 extern Coord coordBuff;
@@ -167,8 +167,8 @@ extern Coord velocity;
 extern Coord vFaceToElt;
 
 //Extern operator surcharges of the class because they take two arguments
-Coord operator* (const double& scalar, const Coord& a);
-Coord operator+ (const Coord& a, const Coord& b);
-Coord operator- (const Coord& a, const Coord& b);
+Coord operator*(const double& scalar, const Coord& a);
+Coord operator+(const Coord& a, const Coord& b);
+Coord operator-(const Coord& a, const Coord& b);
 
 #endif // COORD_H

@@ -2,7 +2,7 @@
   :language: xml
 
 ***
-1D 
+1D
 ***
 
 
@@ -10,7 +10,7 @@
 
    ./Chap5_1Euler_1D_HPLeft.rst
 
-Other 1D test cases 
+Other 1D test cases
 ********************
 
 Other 1D tests are provided within the ECOGEN package and may be described in details later.

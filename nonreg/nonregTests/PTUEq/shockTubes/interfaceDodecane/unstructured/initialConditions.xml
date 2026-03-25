@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="left" state="liquid" type="entireDomain" physicalEntity="10"/>
         <domain name="right"  state="vapour" type="entireDomain" physicalEntity="11"/>
     </physicalDomains>
@@ -11,7 +11,7 @@
         <boundCond name="leftRight" type="nonReflecting" number="1"/>
         <boundCond name="topBottom" type="wall" number="2"/>
     </boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="liquid">
         <material type="fluid" EOS="SG_dodLiq.xml">

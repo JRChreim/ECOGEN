@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="left" state="water" type="entireDomain"/>
         <domain name="right"  state="air" type="halfSpace">
             <dataHalfSpace axis="o" origin="0.3" direction="positive"/>
@@ -10,10 +10,10 @@
 
     <!-- LIST OF BOUNDARY CONDITIONS -->
     <boundaryConditions>
-        <boundCond name="CLXm" type="nonReflecting" number="1"/>
-        <boundCond name="CLXp" type="nonReflecting" number="2"/>
+        <boundCond name="BC_Xmin" type="nonReflecting" number="1"/>
+        <boundCond name="BC_Xmax" type="nonReflecting" number="2"/>
     </boundaryConditions>
-    
+
     <!--  LIST OF STATES  -->
     <state name="air">
         <material type="fluid" EOS="IG_air.xml">

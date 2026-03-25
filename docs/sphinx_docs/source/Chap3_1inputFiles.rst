@@ -50,5 +50,3 @@ In this section, the structure of each input file is detailed. This information 
    Chap3_1_2model
    Chap3_1_3mesh
    Chap3_1_4initialConditions
-
-

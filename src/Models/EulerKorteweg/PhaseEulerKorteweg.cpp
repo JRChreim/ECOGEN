@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PhaseEulerKorteweg.h"
@@ -43,7 +43,8 @@ PhaseEulerKorteweg::PhaseEulerKorteweg() : m_density(0.), m_omega(0.), m_eta(0.)
 
 //***************************************************************************
 
-PhaseEulerKorteweg::PhaseEulerKorteweg(XMLElement* material, Eos* eos, std::string fileName) : m_density(0.), m_omega(0.), m_eta(0.), m_pressure(0.), m_velocity(0), m_vectorP(0), m_eos(eos)
+PhaseEulerKorteweg::PhaseEulerKorteweg(XMLElement* material, Eos* eos, std::string fileName) :
+  m_density(0.), m_omega(0.), m_eta(0.), m_pressure(0.), m_velocity(0), m_vectorP(0), m_eos(eos)
 {
   XMLElement* sousElement(material->FirstChildElement("dataFluid"));
   if (sousElement == NULL) throw ErrorXMLElement("dataFluid", fileName, __FILE__, __LINE__);
@@ -69,25 +70,22 @@ PhaseEulerKorteweg::PhaseEulerKorteweg(XMLElement* material, Eos* eos, std::stri
 
 //***************************************************************************
 
-PhaseEulerKorteweg::~PhaseEulerKorteweg(){}
+PhaseEulerKorteweg::~PhaseEulerKorteweg() {}
 
 //***************************************************************************
 
-void PhaseEulerKorteweg::allocateAndCopyPhase(Phase** vecPhase)
-{
-  *vecPhase = new PhaseEulerKorteweg(*this);
-}
+void PhaseEulerKorteweg::allocateAndCopyPhase(Phase** vecPhase) { *vecPhase = new PhaseEulerKorteweg(*this); }
 
 //***************************************************************************
 
-void PhaseEulerKorteweg::copyPhase(Phase &phase)
+void PhaseEulerKorteweg::copyPhase(Phase& phase)
 {
-  m_density = phase.getDensity();
-  m_omega = phase.getOmega();
-  m_eta = phase.getEta();
+  m_density  = phase.getDensity();
+  m_omega    = phase.getOmega();
+  m_eta      = phase.getEta();
   m_velocity = phase.getVelocity();
-  m_vectorP = phase.getVectorP();
-  m_eos = phase.getEos();
+  m_vectorP  = phase.getVectorP();
+  m_eos      = phase.getEos();
 }
 
 //***************************************************************************
@@ -112,18 +110,22 @@ void PhaseEulerKorteweg::reverseProjection(const Coord& normal, const Coord& tan
 
 double PhaseEulerKorteweg::returnScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_density; break;
+    return m_density;
+    break;
   case 2:
-    return m_omega; break;
+    return m_omega;
+    break;
   case 3:
-    return m_eta; break;
+    return m_eta;
+    break;
   case 4:
-    return m_pressure; break;
+    return m_pressure;
+    break;
   default:
-    return 0.; break;
+    return 0.;
+    break;
   }
 }
 
@@ -131,14 +133,16 @@ double PhaseEulerKorteweg::returnScalar(const int& numVar) const
 
 Coord PhaseEulerKorteweg::returnVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_velocity; break;
+    return m_velocity;
+    break;
   case 2:
-    return m_vectorP; break;
+    return m_vectorP;
+    break;
   default:
-    return 0; break;
+    return 0;
+    break;
   }
 }
 
@@ -146,18 +150,22 @@ Coord PhaseEulerKorteweg::returnVector(const int& numVar) const
 
 std::string PhaseEulerKorteweg::returnNameScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Density"; break;
+    return "Density";
+    break;
   case 2:
-    return "Omega"; break;
+    return "Omega";
+    break;
   case 3:
-    return "Eta"; break;
+    return "Eta";
+    break;
   case 4:
-    return "Pressure"; break;
+    return "Pressure";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -165,14 +173,16 @@ std::string PhaseEulerKorteweg::returnNameScalar(const int& numVar) const
 
 std::string PhaseEulerKorteweg::returnNameVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Velocity"; break;
+    return "Velocity";
+    break;
   case 2:
-    return "VectorP"; break;
+    return "VectorP";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -182,18 +192,22 @@ std::string PhaseEulerKorteweg::returnNameVector(const int& numVar) const
 
 void PhaseEulerKorteweg::setScalar(const int& numVar, const double& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_density = value; break;
+    m_density = value;
+    break;
   case 2:
-    m_omega = value; break;
+    m_omega = value;
+    break;
   case 3:
-    m_eta = value; break;
+    m_eta = value;
+    break;
   case 4:
-    m_pressure = value; break;
+    m_pressure = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in PhaseEulerKorteweg::setScalar"); break;
+    Errors::errorMessage("numVar not found in PhaseEulerKorteweg::setScalar");
+    break;
   }
 }
 
@@ -201,14 +215,16 @@ void PhaseEulerKorteweg::setScalar(const int& numVar, const double& value)
 
 void PhaseEulerKorteweg::setVector(const int& numVar, const Coord& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_velocity = value; break;
+    m_velocity = value;
+    break;
   case 2:
-    m_vectorP = value; break;
+    m_vectorP = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in PhaseEulerKorteweg::setVector"); break;
+    Errors::errorMessage("numVar not found in PhaseEulerKorteweg::setVector");
+    break;
   }
 }
 
@@ -248,11 +264,11 @@ void PhaseEulerKorteweg::fillBuffer(std::vector<double>& dataToSend) const
   dataToSend.push_back(m_density);
   dataToSend.push_back(m_omega);
   dataToSend.push_back(m_eta);
-  
+
   dataToSend.push_back(m_velocity.getX());
   dataToSend.push_back(m_velocity.getY());
   dataToSend.push_back(m_velocity.getZ());
-    
+
   dataToSend.push_back(m_vectorP.getX());
   dataToSend.push_back(m_vectorP.getY());
   dataToSend.push_back(m_vectorP.getZ());
@@ -265,9 +281,9 @@ void PhaseEulerKorteweg::fillBuffer(std::vector<double>& dataToSend) const
 void PhaseEulerKorteweg::getBuffer(double* buffer, int& counter, Eos** eos)
 {
   m_density = buffer[++counter];
-  m_omega = buffer[++counter];
-  m_eta = buffer[++counter];
-  
+  m_omega   = buffer[++counter];
+  m_eta     = buffer[++counter];
+
   m_velocity.setX(buffer[++counter]);
   m_velocity.setY(buffer[++counter]);
   m_velocity.setZ(buffer[++counter]);
@@ -284,8 +300,8 @@ void PhaseEulerKorteweg::getBuffer(double* buffer, int& counter, Eos** eos)
 void PhaseEulerKorteweg::getBuffer(std::vector<double>& dataToReceive, int& counter, Eos** eos)
 {
   m_density = dataToReceive[counter++];
-  m_omega = dataToReceive[counter++];
-  m_eta = dataToReceive[counter++];
+  m_omega   = dataToReceive[counter++];
+  m_eta     = dataToReceive[counter++];
 
   m_velocity.setX(dataToReceive[counter++]);
   m_velocity.setY(dataToReceive[counter++]);
@@ -302,11 +318,11 @@ void PhaseEulerKorteweg::getBuffer(std::vector<double>& dataToReceive, int& coun
 //******************************* ORDER 2 ************************************
 //****************************************************************************
 
-void PhaseEulerKorteweg::computeSlopesPhase(const Phase &sLeft, const Phase &sRight, const double& distance)
+void PhaseEulerKorteweg::computeSlopesPhase(const Phase& sLeft, const Phase& sRight, const double& distance)
 {
   m_density = (sRight.getDensity() - sLeft.getDensity()) / distance;
-  m_omega = (sRight.getOmega() - sLeft.getOmega()) / distance;
-  m_eta =   (sRight.getEta() -   sLeft.getEta()) / distance;
+  m_omega   = (sRight.getOmega() - sLeft.getOmega()) / distance;
+  m_eta     = (sRight.getEta() - sLeft.getEta()) / distance;
 
   m_velocity.setX((sRight.getVelocity().getX() - sLeft.getVelocity().getX()) / distance);
   m_velocity.setY((sRight.getVelocity().getY() - sLeft.getVelocity().getY()) / distance);
@@ -321,19 +337,25 @@ void PhaseEulerKorteweg::computeSlopesPhase(const Phase &sLeft, const Phase &sRi
 
 void PhaseEulerKorteweg::setToZero()
 {
-  m_density = 0.;  m_omega = 0.; m_eta = 0.;
-  m_velocity.setX(0.); m_velocity.setY(0.); m_velocity.setZ(0.);
-  m_vectorP.setX(0.); m_vectorP.setY(0.); m_vectorP.setZ(0.);
+  m_density = 0.;
+  m_omega   = 0.;
+  m_eta     = 0.;
+  m_velocity.setX(0.);
+  m_velocity.setY(0.);
+  m_velocity.setZ(0.);
+  m_vectorP.setX(0.);
+  m_vectorP.setY(0.);
+  m_vectorP.setZ(0.);
 }
 
 //***************************************************************************
 
-void PhaseEulerKorteweg::extrapolate(const Phase &slope, const double& distance)
+void PhaseEulerKorteweg::extrapolate(const Phase& slope, const double& distance)
 {
   m_density += slope.getDensity() * distance;
-  m_omega += slope.getOmega() * distance;
-  m_eta += slope.getEta() * distance;
-  
+  m_omega   += slope.getOmega() * distance;
+  m_eta     += slope.getEta() * distance;
+
   m_velocity.setX(m_velocity.getX() + slope.getVelocity().getX() * distance);
   m_velocity.setY(m_velocity.getY() + slope.getVelocity().getY() * distance);
   m_velocity.setZ(m_velocity.getZ() + slope.getVelocity().getZ() * distance);
@@ -348,9 +370,9 @@ void PhaseEulerKorteweg::extrapolate(const Phase &slope, const double& distance)
 void PhaseEulerKorteweg::limitSlopes(const Phase& slopeGauche, const Phase& slopeDroite, Limiter& globalLimiter, Limiter& /*volumeFractionLimiter*/)
 {
   m_density = globalLimiter.limiteSlope(slopeGauche.getDensity(), slopeDroite.getDensity());
-  m_omega = globalLimiter.limiteSlope(slopeGauche.getOmega(), slopeDroite.getOmega());
-  m_eta = globalLimiter.limiteSlope(slopeGauche.getEta(), slopeDroite.getEta());
-  
+  m_omega   = globalLimiter.limiteSlope(slopeGauche.getOmega(), slopeDroite.getOmega());
+  m_eta     = globalLimiter.limiteSlope(slopeGauche.getEta(), slopeDroite.getEta());
+
   m_velocity.setX(globalLimiter.limiteSlope(slopeGauche.getVelocity().getX(), slopeDroite.getVelocity().getX()));
   m_velocity.setY(globalLimiter.limiteSlope(slopeGauche.getVelocity().getY(), slopeDroite.getVelocity().getY()));
   m_velocity.setZ(globalLimiter.limiteSlope(slopeGauche.getVelocity().getZ(), slopeDroite.getVelocity().getZ()));
@@ -364,40 +386,37 @@ void PhaseEulerKorteweg::limitSlopes(const Phase& slopeGauche, const Phase& slop
 //************************** ORDER 2 PARALLEL ********************************
 //****************************************************************************
 
-int PhaseEulerKorteweg::numberOfTransmittedSlopes() const
-{
-  return 9;
-}
+int PhaseEulerKorteweg::numberOfTransmittedSlopes() const { return 9; }
 
 //***************************************************************************
 
 void PhaseEulerKorteweg::fillBufferSlopes(double* buffer, int& counter) const
 {
-	buffer[++counter] = m_density;
-	buffer[++counter] = m_omega;
+  buffer[++counter] = m_density;
+  buffer[++counter] = m_omega;
   buffer[++counter] = m_eta;
-  
+
   buffer[++counter] = m_velocity.getX();
-	buffer[++counter] = m_velocity.getY();
-	buffer[++counter] = m_velocity.getZ();
-	
+  buffer[++counter] = m_velocity.getY();
+  buffer[++counter] = m_velocity.getZ();
+
   buffer[++counter] = m_vectorP.getX();
-	buffer[++counter] = m_vectorP.getY();
-	buffer[++counter] = m_vectorP.getZ();
+  buffer[++counter] = m_vectorP.getY();
+  buffer[++counter] = m_vectorP.getZ();
 }
 
 //***************************************************************************
 
 void PhaseEulerKorteweg::getBufferSlopes(double* buffer, int& counter)
 {
-	m_density = buffer[++counter];
-  m_omega = buffer[++counter];
-  m_eta = buffer[++counter];
-  
+  m_density = buffer[++counter];
+  m_omega   = buffer[++counter];
+  m_eta     = buffer[++counter];
+
   m_velocity.setX(buffer[++counter]);
   m_velocity.setY(buffer[++counter]);
   m_velocity.setZ(buffer[++counter]);
-  
+
   m_vectorP.setX(buffer[++counter]);
   m_vectorP.setY(buffer[++counter]);
   m_vectorP.setZ(buffer[++counter]);
@@ -421,10 +440,7 @@ void PhaseEulerKorteweg::verifyAndCorrectPhase()
 
 //***************************************************************************
 
-void PhaseEulerKorteweg::verifyAndCorrectDensityMax()
-{
-  m_eos->verifyAndCorrectDensityMax(m_density);
-}
+void PhaseEulerKorteweg::verifyAndCorrectDensityMax() { m_eos->verifyAndCorrectDensityMax(m_density); }
 
 //****************************************************************************
 //**************************** DATA ACCESSORS ********************************
@@ -494,33 +510,33 @@ void PhaseEulerKorteweg::setEos(Eos* eos) { m_eos = eos; }
 
 void PhaseEulerKorteweg::changeSign()
 {
-  m_density = -m_density;
-  m_omega = -m_omega;
-  m_eta = -m_eta;
-  m_velocity = m_velocity*-1.;
-  m_vectorP = m_vectorP*-1;
+  m_density  = -m_density;
+  m_omega    = -m_omega;
+  m_eta      = -m_eta;
+  m_velocity = m_velocity * -1.;
+  m_vectorP  = m_vectorP * -1;
 }
 
 //***************************************************************************
 
-void PhaseEulerKorteweg::multiplyAndAdd(const Phase &slopesPhasesTemp, const double& coeff)
+void PhaseEulerKorteweg::multiplyAndAdd(const Phase& slopesPhasesTemp, const double& coeff)
 {
-  m_density += slopesPhasesTemp.getDensity()*coeff;
-  m_omega += slopesPhasesTemp.getOmega()*coeff;
-  m_eta +=   slopesPhasesTemp.getEta()*coeff;
-  m_velocity += slopesPhasesTemp.getVelocity()*coeff;
-  m_vectorP +=  slopesPhasesTemp.getVectorP()*coeff;
+  m_density  += slopesPhasesTemp.getDensity() * coeff;
+  m_omega    += slopesPhasesTemp.getOmega() * coeff;
+  m_eta      += slopesPhasesTemp.getEta() * coeff;
+  m_velocity += slopesPhasesTemp.getVelocity() * coeff;
+  m_vectorP  += slopesPhasesTemp.getVectorP() * coeff;
 }
 
 //***************************************************************************
 
 void PhaseEulerKorteweg::divide(const double& coeff)
 {
-  m_density /= coeff;
-  m_omega /= coeff;
-  m_eta /= coeff;
+  m_density  /= coeff;
+  m_omega    /= coeff;
+  m_eta      /= coeff;
   m_velocity /= coeff;
-  m_vectorP /= coeff;
+  m_vectorP  /= coeff;
 }
 
 //***************************************************************************

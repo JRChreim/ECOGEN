@@ -15,7 +15,7 @@ Possible actions are:
 	* Create new test cases.
 	* Generate the main input file *ECOGEN.xml* to prepare runs.
 	* Edit essential settings for one or several test cases: Output format, flow model, fluid models, mesh dimensions (or mesh file choice), initial conditions and boundary conditions.
-	* Visualize equation-of-state parameter library (editing these parameters is possible directely through the interface).
+	* Visualize equation-of-state parameter library (editing these parameters is possible directly through the interface).
 
 .. admonition:: Limitations
 
@@ -66,9 +66,9 @@ The first time you run ECOGEN_GUI, the configuration window appears (:numref:`Fi
 
   Configuration window of the ECOGEN_GUI application.
 
-Before being able to use ECOGEN_GUI, it is necessary to specify the directory in which the ECOGEN code is located, in order to make the association between the application and the code input files. 
+Before being able to use ECOGEN_GUI, it is necessary to specify the directory in which the ECOGEN code is located, in order to make the association between the application and the code input files.
 
-.. Caution:: 
+.. Caution::
 
 	The ECOGEN simulation tool must be installed independently. Please refer to the corresponding section :ref:`Chap:Start` for detailed instructions on ECOGEN installation.
 
@@ -77,7 +77,7 @@ The other fields (*Mesh software*, *Text editor software*, etc.) can be filled i
 Main window
 ===========
 
-The main window of ECOGEN_GUI is presented, as visible at the launch of the application, in :numref:`Fig:GUI:mainWindow`. 
+The main window of ECOGEN_GUI is presented, as visible at the launch of the application, in :numref:`Fig:GUI:mainWindow`.
 
 .. _Fig:GUI:mainWindow:
 
@@ -135,9 +135,9 @@ Reloading a test case
 ---------------------
 At any time, the input files can be reloaded again within the ECOGEN_GUI interface via the menu command (*View* :math:`\rightarrow` *Refresh* or Ctrl+R). This command is particularly useful to cancel unsaved modifications of the parameters of a test case or during a "manual" modification of the input files.
 
-*******************
-Desription of docks
-*******************
+********************
+Description of docks
+********************
 
 The main window of ECOGEN_GUI consists of docks that can be arranged according to the user's preferences. These different docks gather the settings of a test case by "family". A help on each parameter can be obtained via the appearance of a tooltip on mouse over.
 

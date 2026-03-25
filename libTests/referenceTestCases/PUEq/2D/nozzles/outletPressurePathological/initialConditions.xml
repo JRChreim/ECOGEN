@@ -1,9 +1,9 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
 	<!-- LIST OF GEOMETRICAL DOMAINS  -->
-	<physicalDomains>	
+	<physicalDomains>
 		<domain name="base" state="around" type="entireDomain"/>
-	</physicalDomains>	
+	</physicalDomains>
 
 	<!-- LIST OF BOUNDARY CONDITIONS -->
 	<boundaryConditions>
@@ -18,10 +18,10 @@
 		</boundCond>
 		<boundCond name="outlet" type="outletPressure" number="4">
 			<dataOutletPressure p0="1.e5"/>
-		</boundCond>	
+		</boundCond>
 	</boundaryConditions>
 
-	
+
 	<!--  LIST OF STATES  -->
 	<state name="around">
 		<material type="fluid" EOS="IG_air.xml">

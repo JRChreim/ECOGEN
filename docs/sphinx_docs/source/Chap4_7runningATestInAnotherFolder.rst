@@ -18,7 +18,7 @@ First, make sure that you still have the main **ECOGEN** folder, or this will no
 - *libTests* containing the test cases.
 - *libEOS* containing the fluids you want to use.
 
-.. note:: 
+.. note::
 
   In the presented test case, the type of mesh used is Cartesian. However, if you want to use an unstructured mesh, you must have the *libMeshes* folder in the *test* folder.
 

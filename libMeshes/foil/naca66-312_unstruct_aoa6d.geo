@@ -39,7 +39,7 @@ fluidSurface = 10;
 // --- Geometry ---
 
 // Set angle in the flow direction and convert to radian
-aoa = - aoa * Pi / 180; 
+aoa = - aoa * Pi / 180;
 
 lx_lead_edge = 0.3 * lx;
 ly_lead_edge = 0.5 * ly;
@@ -168,7 +168,7 @@ p_extra_b = newp;
 
 For i In {0:#x_pos_extra[]-1}
   Point(p_extra_b + i) = {Cos(aoa) * x_pos_extra[i] * chord - Sin(aoa) * y_pos_extra[i] * chord + lx_lead_edge,
-    Sin(aoa) * x_pos_extra[i] * chord + Cos(aoa) * y_pos_extra[i] * chord + ly_lead_edge, 
+    Sin(aoa) * x_pos_extra[i] * chord + Cos(aoa) * y_pos_extra[i] * chord + ly_lead_edge,
     0.,
     dx1
   };
@@ -284,7 +284,7 @@ p_intra_b = newp;
 
 For i In {0:#x_pos_intra[]-1}
   Point(p_intra_b + i) = {Cos(aoa) * x_pos_intra[i] * chord - Sin(aoa) * y_pos_intra[i] * chord + lx_lead_edge,
-    Sin(aoa) * x_pos_intra[i] * chord + Cos(aoa) * y_pos_intra[i] * chord + ly_lead_edge, 
+    Sin(aoa) * x_pos_intra[i] * chord + Cos(aoa) * y_pos_intra[i] * chord + ly_lead_edge,
     0.,
     dx1
   };

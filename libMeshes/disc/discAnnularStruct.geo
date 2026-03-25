@@ -48,7 +48,7 @@ Transfinite Line{5:8} = Ntheta; // Nb of cells for each circle azimuth
 Transfinite Line{9:12} = Nr;    // Nb of cells along the radius
 
 // Surface definition
-Line Loop(1) = {1, 10, -5, -9}; Plane Surface(1) = {1}; 
+Line Loop(1) = {1, 10, -5, -9}; Plane Surface(1) = {1};
 Line Loop(2) = {2, 11, -6, -10}; Plane Surface(2) = {2};
 Line Loop(3) = {3, 12, -7, -11}; Plane Surface(3) = {3};
 Line Loop(4) = {4, 9, -8, -12}; Plane Surface(4) = {4};

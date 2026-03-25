@@ -18,4 +18,3 @@ Plane Surface(1)={1};
 Extrude {0,0,-1}{Surface{1};Layers{nbPointExtrude};Recombine;}
 Physical Surface(1) = {11, 15, 19, 20, 1};
 Physical Volume(22) = {1};
-

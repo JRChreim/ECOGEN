@@ -28,7 +28,7 @@ The initial characteristics of the run are:
 +==============================+======================+
 | dimension                    | 3 m x 0.5 m          |
 +------------------------------+----------------------+
-| Initial mesh size            | 20 x 20              |
+| Initial mesh size            | 240 x 40             |
 +------------------------------+----------------------+
 | AMR max level                | 2                    |
 +------------------------------+----------------------+
@@ -54,12 +54,12 @@ On the contrary when the variations become significant, the mesh will become ref
 
   Visualization of RM instabilities using Paraview_ software.
 
-With the velocity u = -200m/s, the fluid impacts the left wall and a shock wave therefore propagates towards the right. This shock wave reacts with the interface and the instability takes place. 
+With the velocity u = -200m/s, the fluid impacts the left wall and a shock wave therefore propagates towards the right. This shock wave reacts with the interface and the instability takes place.
 
 On the other hand (lower half), the second part of :numref:`Fig:testCases:PUEq:richtmyerMeshkovAnim` represents the density variation (Schlieren visualization).
 A right-moving shock wave is created and then the Richtmyer--Meshkov instability gradually appears, with its very recognizable "mushroom" head during its non-linear phase.
 
-One can note the distribution of computation on the CPUs (here 15) divided into different regions. The load between the regions migrates between all the CPUs during the simulation. This is shown in :numref:`Fig:testCases:PUEq:richtmyerMeshkovCPU`. 
+One can note the distribution of computation on the CPUs (here 15) divided into different regions. The load between the regions migrates between all the CPUs during the simulation. This is shown in :numref:`Fig:testCases:PUEq:richtmyerMeshkovCPU`.
 
 .. _Fig:testCases:PUEq:richtmyerMeshkovCPU:
 

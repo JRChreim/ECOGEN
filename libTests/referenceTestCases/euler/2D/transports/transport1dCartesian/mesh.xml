@@ -2,7 +2,7 @@
 <mesh>
 	<type structure="cartesian"/>
 	<cartesianMesh>
-		<dimensions x="1.0" y="1." z="0.1"/>
+		<dimensions x="1.0" y="1." z="1."/>
 		<numberCells x="50" y="50" z="1"/>
     <!-- <numberCells x="100" y="100" z="1"/> -->
     <!-- <numberCells x="200" y="200" z="1"/> -->

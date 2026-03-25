@@ -1,47 +1,47 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "BoundCond.h"
 
 //***********************************************************************
 
-BoundCond::BoundCond(){}
+BoundCond::BoundCond() {}
 
 //***********************************************************************
 
-BoundCond::BoundCond(int numPhysique) : m_numPhysique(numPhysique), m_boundData(std::vector<double>(5,0))
-{}
+BoundCond::BoundCond(int numPhysique) : m_numPhysique(numPhysique), m_boundData(std::vector<double>(5, 0)) {}
 
 //***********************************************************************
 
-BoundCond::BoundCond(const BoundCond &Source, const int& lvl) : CellInterface(lvl), m_numPhysique(Source.m_numPhysique), m_boundData(std::vector<double>(5,0))
+BoundCond::BoundCond(const BoundCond& Source, const int& lvl) :
+  CellInterface(lvl), m_numPhysique(Source.m_numPhysique), m_boundData(std::vector<double>(5, 0))
 {}
 
 //***********************************************************************
@@ -52,14 +52,18 @@ BoundCond::~BoundCond() {}
 
 void BoundCond::initialize(Cell* cellLeft, Cell* /*cellRight*/)
 {
-  m_cellLeft = cellLeft;
+  m_cellLeft  = cellLeft;
   m_cellRight = NULL;
 }
 
 //***********************************************************************
 
-void BoundCond::computeFlux(double& dtMax, Limiter& globalLimiter, Limiter& interfaceLimiter,
-  Limiter& globalVolumeFractionLimiter, Limiter& interfaceVolumeFractionLimiter, Prim type)
+void BoundCond::computeFlux(double& dtMax,
+                            Limiter& globalLimiter,
+                            Limiter& interfaceLimiter,
+                            Limiter& globalVolumeFractionLimiter,
+                            Limiter& interfaceVolumeFractionLimiter,
+                            Prim type)
 {
   this->solveRiemann(dtMax, globalLimiter, interfaceLimiter, globalVolumeFractionLimiter, interfaceVolumeFractionLimiter, type);
   this->subtractFlux(1.); //Substract flux on left cell
@@ -67,14 +71,16 @@ void BoundCond::computeFlux(double& dtMax, Limiter& globalLimiter, Limiter& inte
 
 //***********************************************************************
 
-void BoundCond::computeFluxAddPhys(AddPhys &addPhys)
-{
-  addPhys.computeFluxAddPhysBoundary(this);
-}
+void BoundCond::computeFluxAddPhys(AddPhys& addPhys) { addPhys.computeFluxAddPhysBoundary(this); }
 
 //***********************************************************************
 
-void BoundCond::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, Limiter& /*interfaceLimiter*/, Limiter& /*globalVolumeFractionLimiter*/, Limiter& /*interfaceVolumeFractionLimiter*/, Prim type)
+void BoundCond::solveRiemann(double& dtMax,
+                             Limiter& /*globalLimiter*/,
+                             Limiter& /*interfaceLimiter*/,
+                             Limiter& /*globalVolumeFractionLimiter*/,
+                             Limiter& /*interfaceVolumeFractionLimiter*/,
+                             Prim type)
 {
   bufferCellLeft->copyVec(m_cellLeft->getPhases(type), m_cellLeft->getMixture(type), m_cellLeft->getTransports(type));
   //Computation of extended variables (Phases, Mixture, AddPhys)
@@ -85,11 +91,13 @@ void BoundCond::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, Limiter&
 
   //Riemann problem
   double dxLeft(m_cellLeft->getElement()->getLCFL());
-  dxLeft = dxLeft*std::pow(2., (double)m_lvl);
+  dxLeft = dxLeft * std::pow(2., (double)m_lvl);
   this->solveRiemannBoundary(*bufferCellLeft, dxLeft, dtMax);
 
   //Handling of transport functions (m_Sm known: need to be called after Riemann solver)
-  if (numberTransports > 0) { this->solveRiemannTransportBoundary(*bufferCellLeft); }
+  if (numberTransports > 0) {
+    this->solveRiemannTransportBoundary(*bufferCellLeft);
+  }
 
   //Flux projection on absolute reference frame
   model->reverseProjection(m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
@@ -97,10 +105,7 @@ void BoundCond::solveRiemann(double& dtMax, Limiter& /*globalLimiter*/, Limiter&
 
 //***********************************************************************
 
-double BoundCond::getBoundData(VarBoundary var) const
-{
-  return m_boundData[var];
-}
+double BoundCond::getBoundData(VarBoundary var) const { return m_boundData[var]; }
 
 //***************************************************************************
 //******************************AMR Method***********************************
@@ -115,11 +120,12 @@ void BoundCond::computeFluxXi()
 
 //****************************************************************************
 
-void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCellsZ, const double& dXParent, const double& dYParent,
-  const double& dZParent, Cell* cellRef, const int& dim)
+void BoundCond::raffineCellInterfaceExterne(
+  const int& nbCellsY, const int& nbCellsZ, const double& dXParent, const double& dYParent, const double& dZParent, Cell* cellRef, const int& dim)
 {
   //Le cell interface est une CL -> Creation des children cell interfaces
-  double surfaceChild(std::pow(0.5, dim - 1.)*m_face->getSurface());
+  //AF//TODO// Remove pow
+  double surfaceChild(std::pow(0.5, dim - 1.) * m_face->getSurface());
   double epsilon(1.e-6);
   int allocateSlopeLocal = 1;
 
@@ -169,17 +175,21 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
           for (int i = 0; i < 2; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                             m_face->getPos().getY() - 0.25 * dYParent,
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(0));
               cellRef->getCellChild(0)->addCellInterface(m_cellInterfacesChildren[i]);
             }
             //Second face
             else {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                             m_face->getPos().getY() + 0.25 * dYParent,
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(2));
               cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
             }
-            m_cellInterfacesChildren[i]->getFace()->setSize(0., 0.5*m_face->getSizeY(), m_face->getSizeZ());
+            m_cellInterfacesChildren[i]->getFace()->setSize(0., 0.5 * m_face->getSizeY(), m_face->getSizeZ());
           }
         }
         //Cote droite
@@ -187,17 +197,21 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
           for (int i = 0; i < 2; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                             m_face->getPos().getY() - 0.25 * dYParent,
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(1));
               cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
             }
             //Second face
             else {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                             m_face->getPos().getY() + 0.25 * dYParent,
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
               cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
             }
-            m_cellInterfacesChildren[i]->getFace()->setSize(0., 0.5*m_face->getSizeY(), m_face->getSizeZ());
+            m_cellInterfacesChildren[i]->getFace()->setSize(0., 0.5 * m_face->getSizeY(), m_face->getSizeZ());
           }
         }
       }
@@ -210,17 +224,21 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
           for (int i = 0; i < 2; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                             m_face->getPos().getY(),
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(0));
               cellRef->getCellChild(0)->addCellInterface(m_cellInterfacesChildren[i]);
             }
             //Second face
             else {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                             m_face->getPos().getY(),
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(1));
               cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
             }
-            m_cellInterfacesChildren[i]->getFace()->setSize(0.5*m_face->getSizeX(), 0., m_face->getSizeZ());
+            m_cellInterfacesChildren[i]->getFace()->setSize(0.5 * m_face->getSizeX(), 0., m_face->getSizeZ());
           }
         }
         //Cote haut
@@ -228,17 +246,21 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
           for (int i = 0; i < 2; i++) {
             //First face
             if (i == 0) {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                             m_face->getPos().getY(),
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(2));
               cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
             }
             //Second face
             else {
-              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ());
+              m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                             m_face->getPos().getY(),
+                                                             m_face->getPos().getZ());
               m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
               cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
             }
-            m_cellInterfacesChildren[i]->getFace()->setSize(0.5*m_face->getSizeX(), 0., m_face->getSizeZ());
+            m_cellInterfacesChildren[i]->getFace()->setSize(0.5 * m_face->getSizeX(), 0., m_face->getSizeZ());
           }
         }
       }
@@ -248,7 +270,6 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
       for (int i = 0; i < 2; i++) {
         m_cellInterfacesChildren[i]->allocateSlopes(allocateSlopeLocal);
       }
-
     }
   }
   else {
@@ -263,7 +284,7 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
       this->creerCellInterfaceChild();
       m_cellInterfacesChildren[i]->creerFaceChild(this);
       m_cellInterfacesChildren[i]->getFace()->initializeOthers(surfaceChild, m_face->getNormal(), m_face->getTangent(), m_face->getBinormal());
-      m_cellInterfacesChildren[i]->getFace()->setSize(0.5*m_face->getSize());
+      m_cellInterfacesChildren[i]->getFace()->setSize(0.5 * m_face->getSize());
     }
 
     //Face selon X
@@ -274,25 +295,33 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
         for (int i = 0; i < 4; i++) {
           //First face
           if (i == 0) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(0));
             cellRef->getCellChild(0)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Second face
           else if (i == 1) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(4));
             cellRef->getCellChild(4)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Third face
           else if (i == 2) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(2));
             cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Fourth face
           else {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(6));
             cellRef->getCellChild(6)->addCellInterface(m_cellInterfacesChildren[i]);
           }
@@ -303,25 +332,33 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
         for (int i = 0; i < 4; i++) {
           //First face
           if (i == 0) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(1));
             cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Second face
           else if (i == 1) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(5));
             cellRef->getCellChild(5)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Third face
           else if (i == 2) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
             cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Fourth face
           else {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(), m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX(),
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(7));
             cellRef->getCellChild(7)->addCellInterface(m_cellInterfacesChildren[i]);
           }
@@ -337,25 +374,33 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
         for (int i = 0; i < 4; i++) {
           //First face
           if (i == 0) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(0));
             cellRef->getCellChild(0)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Second face
           else if (i == 1) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(1));
             cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Third face
           else if (i == 2) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(4));
             cellRef->getCellChild(4)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Fourth face
           else {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(5));
             cellRef->getCellChild(5)->addCellInterface(m_cellInterfacesChildren[i]);
           }
@@ -366,25 +411,33 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
         for (int i = 0; i < 4; i++) {
           //First face
           if (i == 0) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(2));
             cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Second face
           else if (i == 1) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() - 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() - 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
             cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Third face
           else if (i == 2) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(6));
             cellRef->getCellChild(6)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Fourth face
           else {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY(), m_face->getPos().getZ() + 0.25*dZParent);
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY(),
+                                                           m_face->getPos().getZ() + 0.25 * dZParent);
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(7));
             cellRef->getCellChild(7)->addCellInterface(m_cellInterfacesChildren[i]);
           }
@@ -400,25 +453,33 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
         for (int i = 0; i < 4; i++) {
           //First face
           if (i == 0) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(0));
             cellRef->getCellChild(0)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Second face
           else if (i == 1) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(1));
             cellRef->getCellChild(1)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Third face
           else if (i == 2) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(2));
             cellRef->getCellChild(2)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Fourth face
           else {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(3));
             cellRef->getCellChild(3)->addCellInterface(m_cellInterfacesChildren[i]);
           }
@@ -429,25 +490,33 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
         for (int i = 0; i < 4; i++) {
           //First face
           if (i == 0) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(4));
             cellRef->getCellChild(4)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Second face
           else if (i == 1) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() - 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY() - 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(5));
             cellRef->getCellChild(5)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Third face
           else if (i == 2) {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() - 0.25 * dXParent,
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(6));
             cellRef->getCellChild(6)->addCellInterface(m_cellInterfacesChildren[i]);
           }
           //Fourth face
           else {
-            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25*dXParent, m_face->getPos().getY() + 0.25*dYParent, m_face->getPos().getZ());
+            m_cellInterfacesChildren[i]->getFace()->setPos(m_face->getPos().getX() + 0.25 * dXParent,
+                                                           m_face->getPos().getY() + 0.25 * dYParent,
+                                                           m_face->getPos().getZ());
             m_cellInterfacesChildren[i]->initializeGauche(cellRef->getCellChild(7));
             cellRef->getCellChild(7)->addCellInterface(m_cellInterfacesChildren[i]);
           }
@@ -460,7 +529,6 @@ void BoundCond::raffineCellInterfaceExterne(const int& nbCellsY, const int& nbCe
     for (int i = 0; i < 4; i++) {
       m_cellInterfacesChildren[i]->allocateSlopes(allocateSlopeLocal);
     }
-
   }
 }
 

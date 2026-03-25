@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PhaseEuler.h"
@@ -56,12 +56,14 @@ PhaseEuler::PhaseEuler(XMLElement* material, Eos* eos, std::string fileName) : m
   if (sousElement->QueryDoubleAttribute("temperature", &m_temperature) == XML_NO_ERROR) presenceTemperature = 1;
 
   //Attribute error gestion
-  if (presenceDensity + presencePressure + presenceTemperature != 2) throw ErrorXMLAttribut("only two of following is required : density, pressure, temperature", fileName, __FILE__, __LINE__);
+  if (presenceDensity + presencePressure + presenceTemperature != 2)
+    throw ErrorXMLAttribut("only two of following is required : density, pressure, temperature", fileName, __FILE__, __LINE__);
 
   //Thermodynamic reconstruction if needed
-  if (presencePressure&&presenceTemperature) m_density = m_eos->computeDensity(m_pressure, m_temperature);
-  if (presencePressure&&presenceDensity) m_temperature = m_eos->computeTemperature(m_density,m_pressure);
-  if (presenceDensity&&presenceTemperature) throw ErrorXMLAttribut("impossible to initialize Euler phase with density and temperature", fileName, __FILE__, __LINE__);
+  if (presencePressure && presenceTemperature) m_density = m_eos->computeDensity(m_pressure, m_temperature);
+  if (presencePressure && presenceDensity) m_temperature = m_eos->computeTemperature(m_density, m_pressure);
+  if (presenceDensity && presenceTemperature)
+    throw ErrorXMLAttribut("impossible to initialize Euler phase with density and temperature", fileName, __FILE__, __LINE__);
 
   //velocity
   XMLElement* velocity(sousElement->FirstChildElement("velocity"));
@@ -78,25 +80,22 @@ PhaseEuler::PhaseEuler(XMLElement* material, Eos* eos, std::string fileName) : m
 
 //***************************************************************************
 
-PhaseEuler::~PhaseEuler(){}
+PhaseEuler::~PhaseEuler() {}
 
 //***************************************************************************
 
-void PhaseEuler::allocateAndCopyPhase(Phase** vecPhase)
-{
-  *vecPhase = new PhaseEuler(*this);
-}
+void PhaseEuler::allocateAndCopyPhase(Phase** vecPhase) { *vecPhase = new PhaseEuler(*this); }
 
 //***************************************************************************
 
-void PhaseEuler::copyPhase(Phase &phase)
+void PhaseEuler::copyPhase(Phase& phase)
 {
-  m_density = phase.getDensity();
-  m_pressure = phase.getPressure();
-  m_velocity = phase.getVelocity();
-  m_eos = phase.getEos();
-  m_energy = phase.getEnergy();
-  m_soundSpeed = phase.getSoundSpeed();
+  m_density     = phase.getDensity();
+  m_pressure    = phase.getPressure();
+  m_velocity    = phase.getVelocity();
+  m_eos         = phase.getEos();
+  m_energy      = phase.getEnergy();
+  m_soundSpeed  = phase.getSoundSpeed();
   m_totalEnergy = phase.getTotalEnergy();
 }
 
@@ -104,9 +103,9 @@ void PhaseEuler::copyPhase(Phase &phase)
 
 void PhaseEuler::extendedCalculusPhase(const Coord& /*velocity*/)
 {
-  m_energy = m_eos->computeEnergy(m_density, m_pressure);
-  m_soundSpeed = m_eos->computeSoundSpeed(m_density, m_pressure);
-  m_totalEnergy = m_energy + 0.5*m_velocity.squaredNorm();
+  m_energy      = m_eos->computeEnergy(m_density, m_pressure);
+  m_soundSpeed  = m_eos->computeSoundSpeed(m_density, m_pressure);
+  m_totalEnergy = m_energy + 0.5 * m_velocity.squaredNorm();
   m_temperature = m_eos->computeTemperature(m_density, m_pressure);
 }
 
@@ -130,16 +129,22 @@ void PhaseEuler::reverseProjection(const Coord& normal, const Coord& tangent, co
 
 double PhaseEuler::returnScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_density; break;
+    return m_density;
+    break;
   case 2:
-    return m_pressure; break;
+    return m_pressure;
+    break;
   case 3:
-    return m_temperature; break;
+    return m_temperature;
+    break;
+  case 4:
+    return m_velocity.getX();
+    break;
   default:
-    return 0.; break;
+    return 0.;
+    break;
   }
 }
 
@@ -147,12 +152,13 @@ double PhaseEuler::returnScalar(const int& numVar) const
 
 Coord PhaseEuler::returnVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return m_velocity; break;
+    return m_velocity;
+    break;
   default:
-    return 0; break;
+    return 0;
+    break;
   }
 }
 
@@ -160,16 +166,22 @@ Coord PhaseEuler::returnVector(const int& numVar) const
 
 std::string PhaseEuler::returnNameScalar(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Density"; break;
+    return "Density";
+    break;
   case 2:
-    return "Pressure"; break;
+    return "Pressure";
+    break;
   case 3:
-    return "Temperature"; break;
+    return "Temperature";
+    break;
+  case 4:
+    return "Velocity_x";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -177,12 +189,13 @@ std::string PhaseEuler::returnNameScalar(const int& numVar) const
 
 std::string PhaseEuler::returnNameVector(const int& numVar) const
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    return "Velocity"; break;
+    return "Velocity";
+    break;
   default:
-    return "NoName"; break;
+    return "NoName";
+    break;
   }
 }
 
@@ -192,16 +205,19 @@ std::string PhaseEuler::returnNameVector(const int& numVar) const
 
 void PhaseEuler::setScalar(const int& numVar, const double& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_density = value; break;
+    m_density = value;
+    break;
   case 2:
-    m_pressure = value; break;
+    m_pressure = value;
+    break;
   case 3:
-    m_temperature = value; break;
+    m_temperature = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in PhaseEuler::setScalar"); break;
+    Errors::errorMessage("numVar not found in PhaseEuler::setScalar");
+    break;
   }
 }
 
@@ -209,12 +225,13 @@ void PhaseEuler::setScalar(const int& numVar, const double& value)
 
 void PhaseEuler::setVector(const int& numVar, const Coord& value)
 {
-  switch (numVar)
-  {
+  switch (numVar) {
   case 1:
-    m_velocity = value; break;
+    m_velocity = value;
+    break;
   default:
-    Errors::errorMessage("numVar not found in PhaseEuler::setVector"); break;
+    Errors::errorMessage("numVar not found in PhaseEuler::setVector");
+    break;
   }
 }
 
@@ -261,7 +278,7 @@ void PhaseEuler::getBuffer(double* buffer, int& counter, Eos** eos)
   m_velocity.setY(buffer[++counter]);
   m_velocity.setZ(buffer[++counter]);
   m_pressure = buffer[++counter];
-  m_eos = eos[static_cast<int>(buffer[++counter])];
+  m_eos      = eos[static_cast<int>(buffer[++counter])];
 }
 
 //***************************************************************************
@@ -273,16 +290,16 @@ void PhaseEuler::getBuffer(std::vector<double>& dataToReceive, int& counter, Eos
   m_velocity.setY(dataToReceive[counter++]);
   m_velocity.setZ(dataToReceive[counter++]);
   m_pressure = dataToReceive[counter++];
-  m_eos = eos[static_cast<int>(dataToReceive[counter++])];
+  m_eos      = eos[static_cast<int>(dataToReceive[counter++])];
 }
 
 //****************************************************************************
 //******************************* ORDER 2 ************************************
 //****************************************************************************
 
-void PhaseEuler::computeSlopesPhase(const Phase &sLeft, const Phase &sRight, const double& distance)
+void PhaseEuler::computeSlopesPhase(const Phase& sLeft, const Phase& sRight, const double& distance)
 {
-  m_density = (sRight.getDensity() - sLeft.getDensity()) / distance;
+  m_density  = (sRight.getDensity() - sLeft.getDensity()) / distance;
   m_pressure = (sRight.getPressure() - sLeft.getPressure()) / distance;
   m_velocity.setX((sRight.getVelocity().getX() - sLeft.getVelocity().getX()) / distance);
   m_velocity.setY((sRight.getVelocity().getY() - sLeft.getVelocity().getY()) / distance);
@@ -293,23 +310,29 @@ void PhaseEuler::computeSlopesPhase(const Phase &sLeft, const Phase &sRight, con
 
 void PhaseEuler::setToZero()
 {
-  m_density = 0.; m_pressure = 0.;
-  m_velocity.setX(0.); m_velocity.setY(0.); m_velocity.setZ(0.);
+  m_density  = 0.;
+  m_pressure = 0.;
+  m_velocity.setX(0.);
+  m_velocity.setY(0.);
+  m_velocity.setZ(0.);
 }
 
 //***************************************************************************
 
 void PhaseEuler::setToMax()
 {
-  m_density = 1.e15; m_pressure = 1.e15;
-  m_velocity.setX(1.e15); m_velocity.setY(1.e15); m_velocity.setZ(1.e15);
+  m_density  = 1.e15;
+  m_pressure = 1.e15;
+  m_velocity.setX(1.e15);
+  m_velocity.setY(1.e15);
+  m_velocity.setZ(1.e15);
 }
 
 //***************************************************************************
 
-void PhaseEuler::extrapolate(const Phase &slope, const double& distance)
+void PhaseEuler::extrapolate(const Phase& slope, const double& distance)
 {
-  m_density += slope.getDensity() * distance;
+  m_density  += slope.getDensity() * distance;
   m_pressure += slope.getPressure() * distance;
   m_velocity.setX(m_velocity.getX() + slope.getVelocity().getX() * distance);
   m_velocity.setY(m_velocity.getY() + slope.getVelocity().getY() * distance);
@@ -320,7 +343,7 @@ void PhaseEuler::extrapolate(const Phase &slope, const double& distance)
 
 void PhaseEuler::limitSlopes(const Phase& slopeGauche, const Phase& slopeDroite, Limiter& globalLimiter, Limiter& /*volumeFractionLimiter*/)
 {
-  m_density = globalLimiter.limiteSlope(slopeGauche.getDensity(), slopeDroite.getDensity());
+  m_density  = globalLimiter.limiteSlope(slopeGauche.getDensity(), slopeDroite.getDensity());
   m_pressure = globalLimiter.limiteSlope(slopeGauche.getPressure(), slopeDroite.getPressure());
   m_velocity.setX(globalLimiter.limiteSlope(slopeGauche.getVelocity().getX(), slopeDroite.getVelocity().getX()));
   m_velocity.setY(globalLimiter.limiteSlope(slopeGauche.getVelocity().getY(), slopeDroite.getVelocity().getY()));
@@ -331,9 +354,9 @@ void PhaseEuler::limitSlopes(const Phase& slopeGauche, const Phase& slopeDroite,
 
 void PhaseEuler::setMin(const Phase& phase1, const Phase& phase2)
 {
-  m_density = std::min(phase1.getDensity(), phase2.getDensity());
+  m_density  = std::min(phase1.getDensity(), phase2.getDensity());
   m_pressure = std::min(phase1.getPressure(), phase2.getPressure());
-  
+
   m_velocity.setX(std::min(phase1.getVelocity().getX(), phase2.getVelocity().getX()));
   m_velocity.setY(std::min(phase1.getVelocity().getY(), phase2.getVelocity().getY()));
   m_velocity.setZ(std::min(phase1.getVelocity().getZ(), phase2.getVelocity().getZ()));
@@ -343,9 +366,9 @@ void PhaseEuler::setMin(const Phase& phase1, const Phase& phase2)
 
 void PhaseEuler::setMax(const Phase& phase1, const Phase& phase2)
 {
-  m_density = std::max(phase1.getDensity(), phase2.getDensity());
+  m_density  = std::max(phase1.getDensity(), phase2.getDensity());
   m_pressure = std::max(phase1.getPressure(), phase2.getPressure());
-  
+
   m_velocity.setX(std::max(phase1.getVelocity().getX(), phase2.getVelocity().getX()));
   m_velocity.setY(std::max(phase1.getVelocity().getY(), phase2.getVelocity().getY()));
   m_velocity.setZ(std::max(phase1.getVelocity().getZ(), phase2.getVelocity().getZ()));
@@ -353,47 +376,52 @@ void PhaseEuler::setMax(const Phase& phase1, const Phase& phase2)
 
 //****************************************************************************
 
-void PhaseEuler::computeGradientLimiter(const Limiter& globalLimiter, const Phase& phase, const Phase& phaseMin, const Phase& phaseMax, const Phase& slope)
+void PhaseEuler::computeGradientLimiter(
+  const Limiter& globalLimiter, const Phase& phase, const Phase& phaseMin, const Phase& phaseMax, const Phase& slope)
 {
-  m_density = std::min(m_density, globalLimiter.computeGradientLimiter(phase.getDensity(), phaseMin.getDensity(), phaseMax.getDensity(), slope.getDensity()));
-  m_pressure = std::min(m_pressure, globalLimiter.computeGradientLimiter(phase.getPressure(), phaseMin.getPressure(), phaseMax.getPressure(), slope.getPressure()));
+  m_density  = std::min(m_density,
+                       globalLimiter.computeGradientLimiter(phase.getDensity(), phaseMin.getDensity(), phaseMax.getDensity(), slope.getDensity()));
+  m_pressure = std::min(
+    m_pressure, globalLimiter.computeGradientLimiter(phase.getPressure(), phaseMin.getPressure(), phaseMax.getPressure(), slope.getPressure()));
 
-  m_velocity.setX(std::min(m_velocity.getX(), globalLimiter.computeGradientLimiter(phase.getVelocity().getX(), phaseMin.getVelocity().getX(), phaseMax.getVelocity().getX(), slope.getVelocity().getX())));
-  m_velocity.setY(std::min(m_velocity.getY(), globalLimiter.computeGradientLimiter(phase.getVelocity().getY(), phaseMin.getVelocity().getY(), phaseMax.getVelocity().getY(), slope.getVelocity().getY())));
-  m_velocity.setZ(std::min(m_velocity.getZ(), globalLimiter.computeGradientLimiter(phase.getVelocity().getZ(), phaseMin.getVelocity().getZ(), phaseMax.getVelocity().getZ(), slope.getVelocity().getZ())));
+  m_velocity.setX(std::min(m_velocity.getX(),
+                           globalLimiter.computeGradientLimiter(
+                             phase.getVelocity().getX(), phaseMin.getVelocity().getX(), phaseMax.getVelocity().getX(), slope.getVelocity().getX())));
+  m_velocity.setY(std::min(m_velocity.getY(),
+                           globalLimiter.computeGradientLimiter(
+                             phase.getVelocity().getY(), phaseMin.getVelocity().getY(), phaseMax.getVelocity().getY(), slope.getVelocity().getY())));
+  m_velocity.setZ(std::min(m_velocity.getZ(),
+                           globalLimiter.computeGradientLimiter(
+                             phase.getVelocity().getZ(), phaseMin.getVelocity().getZ(), phaseMax.getVelocity().getZ(), slope.getVelocity().getZ())));
 }
 
 //****************************************************************************
 //************************** ORDER 2 PARALLEL ********************************
 //****************************************************************************
 
-int PhaseEuler::numberOfTransmittedSlopes() const
-{
-	return 5;
-}
+int PhaseEuler::numberOfTransmittedSlopes() const { return 5; }
 
 //***************************************************************************
 
 void PhaseEuler::fillBufferSlopes(double* buffer, int& counter) const
 {
-	buffer[++counter] = m_density;
-	buffer[++counter] = m_velocity.getX();
-	buffer[++counter] = m_velocity.getY();
-	buffer[++counter] = m_velocity.getZ();
-	buffer[++counter] = m_pressure;
+  buffer[++counter] = m_density;
+  buffer[++counter] = m_velocity.getX();
+  buffer[++counter] = m_velocity.getY();
+  buffer[++counter] = m_velocity.getZ();
+  buffer[++counter] = m_pressure;
 }
 
 //***************************************************************************
 
 void PhaseEuler::getBufferSlopes(double* buffer, int& counter)
 {
-	m_density = buffer[++counter];
-	m_velocity.setX(buffer[++counter]);
-	m_velocity.setY(buffer[++counter]);
-	m_velocity.setZ(buffer[++counter]);
-	m_pressure = buffer[++counter];
+  m_density = buffer[++counter];
+  m_velocity.setX(buffer[++counter]);
+  m_velocity.setY(buffer[++counter]);
+  m_velocity.setZ(buffer[++counter]);
+  m_pressure = buffer[++counter];
 }
-
 
 //****************************************************************************
 //**************************** VERIFICATION **********************************
@@ -415,17 +443,11 @@ void PhaseEuler::verifyAndCorrectPhase()
 
 //***************************************************************************
 
-void PhaseEuler::verifyAndCorrectDensityMax(const double& /*mass*/)
-{
-  m_eos->verifyAndCorrectDensityMax(m_density);
-}
+void PhaseEuler::verifyAndCorrectDensityMax(const double& /*mass*/) { m_eos->verifyAndCorrectDensityMax(m_density); }
 
 //***************************************************************************
 
-void PhaseEuler::verifyAndCorrectDensityMax()
-{
-  m_eos->verifyAndCorrectDensityMax(m_density);
-}
+void PhaseEuler::verifyAndCorrectDensityMax() { m_eos->verifyAndCorrectDensityMax(m_density); }
 
 //****************************************************************************
 //**************************** DATA ACCESSORS ********************************
@@ -483,25 +505,25 @@ void PhaseEuler::setTemperature(double temperature) { m_temperature = temperatur
 
 void PhaseEuler::changeSign()
 {
-  m_density = -m_density;
+  m_density  = -m_density;
   m_pressure = -m_pressure;
-  m_velocity = m_velocity*-1.;
+  m_velocity = m_velocity * -1.;
 }
 
 //***************************************************************************
 
-void PhaseEuler::multiplyAndAdd(const Phase &slopesPhasesTemp, const double& coeff)
+void PhaseEuler::multiplyAndAdd(const Phase& slopesPhasesTemp, const double& coeff)
 {
-  m_density += slopesPhasesTemp.getDensity()*coeff;
-  m_pressure += slopesPhasesTemp.getPressure()*coeff;
-  m_velocity += slopesPhasesTemp.getVelocity()*coeff;
+  m_density  += slopesPhasesTemp.getDensity() * coeff;
+  m_pressure += slopesPhasesTemp.getPressure() * coeff;
+  m_velocity += slopesPhasesTemp.getVelocity() * coeff;
 }
 
 //***************************************************************************
 
 void PhaseEuler::divide(const double& coeff)
 {
-  m_density /= coeff;
+  m_density  /= coeff;
   m_pressure /= coeff;
   m_velocity /= coeff;
 }

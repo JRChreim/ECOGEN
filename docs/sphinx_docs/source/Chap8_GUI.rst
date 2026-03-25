@@ -10,5 +10,3 @@ A beta version of Graphical User Interface (GUI) is available on demand for edit
    :caption: Contents:
 
    Chap8_1Overview
-
-   

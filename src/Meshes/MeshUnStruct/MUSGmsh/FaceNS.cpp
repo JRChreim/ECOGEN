@@ -1,81 +1,68 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #include "FaceNS.h"
 
 //***********************************************************************
 
-FaceNS::FaceNS(){}
+FaceNS::FaceNS() {}
 
 //***********************************************************************
 
-FaceNS::FaceNS(const int& numberNodes) :
-Face(),
-m_numberNodes(numberNodes),
-m_limite(false),
-m_comm(false),
-m_elementGauche(0),
-m_elementDroite(0)
+FaceNS::FaceNS(const int& numberNodes) : Face(), m_numberNodes(numberNodes), m_limite(false), m_comm(false), m_elementGauche(0), m_elementDroite(0)
 {
   m_numNodes = new int[numberNodes];
 }
 
 //***********************************************************************
 
-FaceNS::~FaceNS()
-{
-  delete[] m_numNodes;
-}
+FaceNS::~FaceNS() { delete[] m_numNodes; }
 
 //***********************************************************************
 
-ElementNS *FaceNS::getElementGauche() const
-{
-  return m_elementGauche;
-}
+ElementNS* FaceNS::getElementGauche() const { return m_elementGauche; }
 
 //***********************************************************************
 
-ElementNS *FaceNS::getElementDroite() const
-{
-  return m_elementDroite;
-}
+ElementNS* FaceNS::getElementDroite() const { return m_elementDroite; }
 
 //***********************************************************************
 
-void FaceNS::construitFace(const Coord* nodes, const int& numNodeOther, ElementNS *elementNeighbor)
+void FaceNS::construitFace(const Coord* nodes, const int& numNodeOther, ElementNS* elementNeighbor)
 {
 
   //Calcul position du center de face
   m_position = 0.;
-  for (int i = 0; i < m_numberNodes; i++){ m_position += nodes[m_numNodes[i]]; }
+  for (int i = 0; i < m_numberNodes; i++) {
+    m_position += nodes[m_numNodes[i]];
+  }
   m_position /= static_cast<double>(m_numberNodes);
   //Calculs des proprietes de la face
   this->computeSurface(nodes);
@@ -86,22 +73,24 @@ void FaceNS::construitFace(const Coord* nodes, const int& numNodeOther, ElementN
 
 bool FaceNS::faceExists(FaceNS** faces, const int& indexMaxFaces, int& indexFaceExiste)
 {
-  int faceTrouvee(1);
   //for (int i = 0; i < indexMaxFaces; i++)
-  for (int i = indexMaxFaces-1; i>=0; i--)
-  {
+  for (int i = indexMaxFaces - 1; i >= 0; i--) {
     //1) Sans passer par operateur de comparaison
     //-------------------------------------------
-    if (faces[i]->m_sumNumNodes != m_sumNumNodes){continue;};
+    if (faces[i]->m_sumNumNodes != m_sumNumNodes) {
+      continue;
+    };
     //Verification node par node
-    faceTrouvee = 1;
-    for (int n = 0; n < m_numberNodes; n++)
-    {
-      if (m_numNodes[n] != faces[i]->getNumNode(n)){ faceTrouvee = 0; break; }
+    int faceTrouvee = 1;
+    for (int n = 0; n < m_numberNodes; n++) {
+      if (m_numNodes[n] != faces[i]->getNumNode(n)) {
+        faceTrouvee = 0;
+        break;
+      }
     }
-    if(faceTrouvee)
-    {
-      indexFaceExiste = i; return true;
+    if (faceTrouvee) {
+      indexFaceExiste = i;
+      return true;
     }
 
     // //2) Avec operateur de comparaison
@@ -114,53 +103,43 @@ bool FaceNS::faceExists(FaceNS** faces, const int& indexMaxFaces, int& indexFace
 
 //***********************************************************************
 
-void FaceNS::addElementNeighbor(ElementNS *elementNeighbor)
+void FaceNS::addElementNeighbor(ElementNS* elementNeighbor)
 {
-  if (m_elementGauche == 0)
-  {
+  if (m_elementGauche == 0) {
     m_elementGauche = elementNeighbor;
   }
-  else
-  {
+  else {
     m_elementDroite = elementNeighbor;
   }
 }
 
 //***********************************************************************
 
-void FaceNS::addElementNeighborLimite(ElementNS *elementNeighbor)
+void FaceNS::addElementNeighborLimite(ElementNS* elementNeighbor)
 {
-  if (m_elementGauche == 0)
-  {
+  if (m_elementGauche == 0) {
     //On inverse pour avoir l element de compute a Gauche (Necessaire pour les limites)
     m_elementGauche = m_elementDroite;
     m_normal.changeSign();
     m_binormal = Coord::crossProduct(m_normal, m_tangent);
   }
   m_elementDroite = elementNeighbor;
-  m_limite = true;
+  m_limite        = true;
 }
 
 //***********************************************************************
 
-void FaceNS::setEstLimite(const bool &estLimite)
-{
-  m_limite = estLimite;
-}
+void FaceNS::setEstLimite(const bool& estLimite) { m_limite = estLimite; }
 
 //***********************************************************************
 
-void FaceNS::setEstComm(const bool &estComm)
-{
-  m_comm = estComm;
-}
+void FaceNS::setEstComm(const bool& estComm) { m_comm = estComm; }
 
 //***********************************************************************
 
 void FaceNS::getInfoNodes(int* numNodes, int& sumNumNodes) const
 {
-  for(int i=0; i<m_numberNodes; i++)
-  {
+  for (int i = 0; i < m_numberNodes; i++) {
     numNodes[i] = m_numNodes[i];
   }
   sumNumNodes = m_sumNumNodes;
@@ -199,8 +178,7 @@ void FaceNS::printInfo() const
 void FaceNS::printNodes() const
 {
   std::cout << "Face" << " Nodes : ";
-  for (int i = 0; i < m_numberNodes; i++)
-  {
+  for (int i = 0; i < m_numberNodes; i++) {
     std::cout << m_numNodes[i] << " ";
   }
   std::cout << std::endl;
@@ -210,54 +188,65 @@ void FaceNS::printNodes() const
 
 int FaceNS::searchFace(int* face, int& sumNodes, int** arrayFaces, int* arraySumNodes, int numberNodes, int& indexMaxFaces)
 {
-    for (int i = indexMaxFaces-1; i>=0; i--)
-    {
-      int existe = 1;
-      //On utilise la sum des number des nodes pour faire un premier tri : permet d accelerer la recherche
-      if (arraySumNodes[i] != sumNodes){ continue; };
-      //Verification node par node
-      for (int n=0; n<numberNodes; n++)
-      {
-        if (face[n] != arrayFaces[i][n]){ existe = 0; break; }
+  for (int i = indexMaxFaces - 1; i >= 0; i--) {
+    int existe = 1;
+    //On utilise la sum des number des nodes pour faire un premier tri : permet d accelerer la recherche
+    if (arraySumNodes[i] != sumNodes) {
+      continue;
+    };
+    //Verification node par node
+    for (int n = 0; n < numberNodes; n++) {
+      if (face[n] != arrayFaces[i][n]) {
+        existe = 0;
+        break;
       }
-      if (existe) return i; //Face trouvee, on renvoi son number
     }
-    return -1;  //Face non trouvee
+    if (existe) return i; //Face trouvee, on renvoi son number
+  }
+  return -1; //Face non trouvee
 }
 
 //*********************************************************************
 
 int FaceNS::searchFace(int* face, int& sumNodes, std::vector<int*> arrayFaces, std::vector<int> arraySumNodes, int numberNodes, int& indexMaxFaces)
 {
-    for (int i = indexMaxFaces-1; i>=0; i--)
-    {
-      int existe = 1;
-      //On utilise la sum des number des nodes pour faire un premier tri : permet d accelerer la recherche
-      if (arraySumNodes[i] != sumNodes){ continue; };
-      //Verification node par node
-      for (int n=0; n<numberNodes; n++)
-      {
-        if (face[n] != arrayFaces[i][n]){ existe = 0; break; }
+  for (int i = indexMaxFaces - 1; i >= 0; i--) {
+    int existe = 1;
+    //On utilise la sum des number des nodes pour faire un premier tri : permet d accelerer la recherche
+    if (arraySumNodes[i] != sumNodes) {
+      continue;
+    };
+    //Verification node par node
+    for (int n = 0; n < numberNodes; n++) {
+      if (face[n] != arrayFaces[i][n]) {
+        existe = 0;
+        break;
       }
-      if (existe) return i; //Face trouvee, on renvoi son number
     }
-        // cout << "AHAHAHAHAHA nouveau" << endl;
-    return -1;  //Face non trouvee
+    if (existe) return i; //Face trouvee, on renvoi son number
+  }
+  // cout << "AHAHAHAHAHA nouveau" << endl;
+  return -1; //Face non trouvee
 }
 
 //*********************************************************************
 //Surcharge operateur externe a la classe car prends deux arguments
 
-bool operator==(const FaceNS &a, const FaceNS &b)
+bool operator==(const FaceNS& a, const FaceNS& b)
 {
   //Sortie directe si m_sumNumNodes differents
-  if (a.getSumNumNodes() != b.getSumNumNodes()){ return false; }
+  if (a.getSumNumNodes() != b.getSumNumNodes()) {
+    return false;
+  }
   //Sortie directe si number nodes differents
-  if (a.getNumberNodes() != b.getNumberNodes()){ return false; }
+  if (a.getNumberNodes() != b.getNumberNodes()) {
+    return false;
+  }
   //Verification node par node
-  for (int i = 0; i < a.getNumberNodes(); i++)
-  {
-    if (a.getNumNode(i) != b.getNumNode(i)){ return false; }
+  for (int i = 0; i < a.getNumberNodes(); i++) {
+    if (a.getNumNode(i) != b.getNumNode(i)) {
+      return false;
+    }
   }
   //Par defaut : il sont identiques
   return true;
@@ -265,9 +254,6 @@ bool operator==(const FaceNS &a, const FaceNS &b)
 
 //*********************************************************************
 
-bool operator!=(const FaceNS &a, const FaceNS &b)
-{
-  return !(a == b);
-}
+bool operator!=(const FaceNS& a, const FaceNS& b) { return !(a == b); }
 
 //*********************************************************************

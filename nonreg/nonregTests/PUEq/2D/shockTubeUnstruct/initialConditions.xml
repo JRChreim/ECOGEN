@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>
 <CI>
     <!-- LIST OF GEOMETRICAL DOMAINS  -->
-    <physicalDomains> 
+    <physicalDomains>
         <domain name="base" state="leftChamber" type="entireDomain" physicalEntity="10"/>
         <domain name="LP" state="rightChamber" type="entireDomain" physicalEntity="11"/>
     </physicalDomains>

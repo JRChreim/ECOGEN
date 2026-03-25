@@ -13,13 +13,13 @@ Typical example for model input file
 REQUIRED computational parameters
 ---------------------------------
 
-1) Hydrodynamic flow model
-**************************
+1) Fluid-flow model
+*******************
 Contains model name and phase number for multiphase models.
-For the pressure-velocity- (Kapila's) and velocity-equilibrium models, the volume fraction can either be null or not and this choice is determined by the parameter alphaNull.
-For single phase model (example: Euler), numberPhases is optionnal and is 1 as default.
-Attribute numberTransports is optionnal and is set to 0 as default.
-Available models are: Euler, PressureVelocityEq (Kapila), VelocityEq, VelocityEqTotEnergy, TemperaturePressureVelocityEq, EulerHomogeneous, EulerKorteweg, NonLinearSchrodinger.
+Available models are: Euler, VelocityEq, VelocityEqTotEnergy, PressureVelocityEq (Kapila), TemperaturePressureVelocityEq, EulerHomogeneous, EulerKorteweg, NonLinearSchrodinger.
+For the pressure-velocity- (Kapila's) and velocity-equilibrium models, the volume fraction can either be null or not and this choice is determined by the parameter `alphaNull`.
+For single phase model (example: Euler), `numberPhases` is optionnal and is 1 as default.
+Attribute `numberTransports` is optionnal and is set to 0 as default.
 %%%%%%%%%%%%%%%%%% << copy between these lines
 <flowModel name="PressureVelocityEq" numberPhases="2" numberTransports="1" alphaNull="false"/>
 %%%%%%%%%%%%%%%%%% << copy between these lines
@@ -67,7 +67,7 @@ Currently this option is compatible with the flow models: Euler, UEq and PUEq.
 
 *) 1D geometry with smooth cross section variation
 **************************************************
-In case of a 2D geometry with smooth cross section variation, it is possible to use a 1D geometry and reproduce 2D effects with this attribute. 
+In case of a 2D geometry with smooth cross section variation, it is possible to use a 1D geometry and reproduce 2D effects with this attribute.
 Only compatible with unstructured mesh defined with flow direction along the X-axis.
 Boundary condition contributions in other directions than the X-axis should use nullFlux boundary condition (see initialConditions.xml).
 Note that this option is available for the flow models: Euler, UEq, PUEq and EulerHomogeneous.
@@ -153,6 +153,31 @@ d) Specific location for source term
   <dataHeating volumeHeatPower="1.e6"/>
 </sourceTerms>
 %%%%%%%%%%%%%%%%%% << copy between these lines
+e) Acoustic waves
+-----------------
+Acoustic waves can be modelled with sinusoidal or Gaussian profils.
+Plane sinusoidal pulses:
+%%%%%%%%%%%%%%%%%% << copy between these lines
+<sourceTerms type="acousticWave" order="EULER">
+  <typeAcousticWave type="planeSinusoidalPulse">
+    <dataPlaneSinusoidalPulse pressureAmplitude="10000." delayedTime="5.e-7" numberOfPulse ="4." frequency="3.e5">
+      <sourceLocation x="10.e-3" y="10.e-3" z="0.5"/>
+      <pulseDirection x="1." y="0." z="0."/>
+    </dataPlaneSinusoidalPulse>
+  </typeAcousticWave>
+</sourceTerms>
+%%%%%%%%%%%%%%%%%% << copy between these lines
+Plane Gaussian pulses:
+%%%%%%%%%%%%%%%%%% << copy between these lines
+<sourceTerms type="acousticWave" order="EULER">
+  <typeAcousticWave type="planeGaussianPulse">
+    <dataPlaneGaussianPulse pressureAmplitude="10." delayedTime="20.e-6" pulseWidth="5.e-6">
+      <sourceLocation x="10.03e-3" y="0." z="0."/> <!-- Must be placed at: cell_center + 1/4 * cell_size_in_wanted_direction -->
+      <pulseDirection x="1." y="0." z="0."/>
+    </dataPlaneGaussianPulse>
+  </typeAcousticWave>
+</sourceTerms>
+%%%%%%%%%%%%%%%%%% << copy between these lines
 
 *) Relaxation terms
 *******************
@@ -178,4 +203,8 @@ c) Pressures, temperatures and chemical potentials
   <dataPTMu liquid="SG_waterLiq.xml" vapor="IG_waterVap.xml"/>
 </relaxation>
 %%%%%%%%%%%%%%%%%% << copy between these lines
-c) Others: In dev...
+d) Velocities
+-------------
+%%%%%%%%%%%%%%%%%% << copy between these lines
+<relaxation type="U" speed="infinite"/>
+%%%%%%%%%%%%%%%%%% << copy between these lines

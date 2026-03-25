@@ -33,7 +33,7 @@ Consider the geometry file of a simple nozzle depicted below:
 
 	Example of geometrical data file -- nozzle2D_example.geo –- for generating a mesh file with *.msh* format using Gmsh software and usable with ECOGEN.
 
-This correponds to the geometry file available in `ECOGEN/libMeshes/nozzles/nozzle2D_example.geo`_.
+This corresponds to the geometry file available in `ECOGEN/libMeshes/nozzles/nozzle2D_example.geo`_.
 
 The computational domain is a nozzle, the mesh is unstructured with quadrangles. In that case, one should take care that the fluid surface is defined by the value *10* and that 4 boundary conditions are set with the following numbering:
 
@@ -55,10 +55,10 @@ The corresponding *initialCondition.xml* file should then contains for example t
 		</boundCond>
 		<boundCond name="outlet" type="outletPressure" number="4">
 			<dataOutletPressure p0="1.e5"/>
-		</boundCond>	
+		</boundCond>
 	</boundaryConditions>
 
-This correponds to initialization of a nozzle connected to a tank on the left and to an outflow at imposed pressure to the right.
+This corresponds to initialization of a nozzle connected to a tank on the left and to an outflow at imposed pressure to the right.
 
 .. _Gmsh: http://gmsh.info/
 .. _`MSH file format version 2`: http://gmsh.info/doc/texinfo/gmsh.html#MSH-file-format-version-2-_0028Legacy_0029

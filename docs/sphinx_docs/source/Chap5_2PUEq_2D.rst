@@ -15,6 +15,7 @@
    ./Chap5_2PUEq_2D_6dropletImpact.rst
    ./Chap5_2PUEq_2D_7squareToCircleSymmetry.rst
    ./Chap5_2PUEq_2D_8sphericalCollapse.rst
+   ./Chap5_2PUEq_2D_9acousticWaves.rst
 
 
 .. _Paraview: https://www.paraview.org/

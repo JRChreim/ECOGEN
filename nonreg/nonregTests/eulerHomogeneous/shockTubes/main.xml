@@ -10,5 +10,5 @@
 <!-- 	<secondOrder>
 		<globalLimiter>minmod</globalLimiter>
 	</secondOrder> -->
-	<restartSimulation restartFileNumber="0" AMRsaveFreq="1"/>
+	<resumeSimulation resumeFileNumber="0" AMRsaveFreq="1"/>
 </computationParam>

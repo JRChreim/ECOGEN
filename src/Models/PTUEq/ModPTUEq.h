@@ -1,31 +1,31 @@
-//  
-//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-. 
-//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| | 
-//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | | 
-//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  | 
-//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)| 
-//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_) 
-//      (__)              (_)      (__)     (__)     (__)     
+//
+//       ,---.     ,--,    .---.     ,--,    ,---.    .-. .-.
+//       | .-'   .' .')   / .-. )  .' .'     | .-'    |  \| |
+//       | `-.   |  |(_)  | | |(_) |  |  __  | `-.    |   | |
+//       | .-'   \  \     | | | |  \  \ ( _) | .-'    | |\  |
+//       |  `--.  \  `-.  \ `-' /   \  `-) ) |  `--.  | | |)|
+//       /( __.'   \____\  )---'    )\____/  /( __.'  /(  (_)
+//      (__)              (_)      (__)     (__)     (__)
 //      Official webSite: https://code-mphi.github.io/ECOGEN/
 //
 //  This file is part of ECOGEN.
 //
-//  ECOGEN is the legal property of its developers, whose names 
-//  are listed in the copyright file included with this source 
+//  ECOGEN is the legal property of its developers, whose names
+//  are listed in the copyright file included with this source
 //  distribution.
 //
 //  ECOGEN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published 
-//  by the Free Software Foundation, either version 3 of the License, 
+//  it under the terms of the GNU General Public License as published
+//  by the Free Software Foundation, either version 3 of the License,
 //  or (at your option) any later version.
-//  
+//
 //  ECOGEN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //  GNU General Public License for more details.
-//  
+//
 //  You should have received a copy of the GNU General Public License
-//  along with ECOGEN (file LICENSE).  
+//  along with ECOGEN (file LICENSE).
 //  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef MODPTUEQ_H
@@ -45,30 +45,49 @@ class ModPTUEq : public Model
     //! \param     numbTransports    number of additional transport equations
     //! \param     numbPhases        number of phases
     ModPTUEq(const int& numbTransports, const int& numbPhases);
-    virtual ~ModPTUEq();
+    ~ModPTUEq() override;
 
-    virtual void allocateCons(Flux** cons);
-    virtual void allocatePhase(Phase** phase);
-    virtual void allocateMixture(Mixture** mixture);
-    virtual void allocatePhaseGradient(GradPhase** phase);
-    virtual void allocateMixtureGradient(GradMixture** mixture);
+    void allocateCons(Flux** cons) override;
+    void allocatePhase(Phase** phase) override;
+    void allocateMixture(Mixture** mixture) override;
+    void allocatePhaseGradient(GradPhase** phase) override;
+    void allocateMixtureGradient(GradMixture** mixture) override;
 
-    virtual void fulfillState(Phase** phases, Mixture* mixture);
-
-    //! \details    Does nothing for this model
-    virtual void fulfillStateRestart(Phase** /*phases*/, Mixture* /*mixture*/) {};
+    void fulfillState(Phase** phases, Mixture* mixture) override;
 
     //! \details    Does nothing for this model
-    virtual void initializeAugmentedVariables(Cell* /*cell*/) {};
+    void fulfillStateResume(Phase** /*phases*/, Mixture* /*mixture*/) override {};
 
-    //Hydrodynamic Riemann solvers
-    //----------------------------
-    virtual void solveRiemannIntern(Cell& cellLeft, Cell& cellRight, const double& dxLeft, const double& dxRight, double& dtMax, std::vector<double> &boundData = DEFAULT_VEC_INTERFACE_DATA) const; // Riemann between two computed cells
-    virtual void solveRiemannWall(Cell& cellLeft, const double& dxLeft, double& dtMax, std::vector<double>& boundData) const; // Riemann between left cell and wall
-    virtual void solveRiemannInletTank(Cell& cellLeft, const double& dxLeft, double& dtMax, const double* ak0, const double* rhok0, const double& p0, const double& T0, std::vector<double> &boundData) const; // Riemann for tank
-    virtual void solveRiemannOutletPressure(Cell& cellLeft, const double& dxLeft, double& dtMax, const double p0, std::vector<double> &boundData) const; // Riemann for outflow with imposed pressure
+    //! \details    Does nothing for this model
+    void initializeAugmentedVariables(Cell* /*cell*/) override {};
 
-    virtual void reverseProjection(const Coord normal, const Coord tangent, const Coord binormal) const;
+    //Fluid-flow Riemann solvers
+    //--------------------------
+    void solveRiemannIntern(Cell& cellLeft,
+                            Cell& cellRight,
+                            const double& dxLeft,
+                            const double& dxRight,
+                            double& dtMax,
+                            std::vector<double>& boundData = DEFAULT_VEC_INTERFACE_DATA) const override; // Riemann between two computed cells
+    void solveRiemannWall(Cell& cellLeft,
+                          const double& dxLeft,
+                          double& dtMax,
+                          std::vector<double>& boundData) const override; // Riemann between left cell and wall
+    void solveRiemannInletTank(Cell& cellLeft,
+                               const double& dxLeft,
+                               double& dtMax,
+                               const double* ak0,
+                               const double* rhok0,
+                               const double& p0,
+                               const double& T0,
+                               std::vector<double>& boundData) const override; // Riemann for tank
+    void solveRiemannOutletPressure(Cell& cellLeft,
+                                    const double& dxLeft,
+                                    double& dtMax,
+                                    const double p0,
+                                    std::vector<double>& boundData) const override; // Riemann for outflow with imposed pressure
+
+    void reverseProjection(const Coord normal, const Coord tangent, const Coord binormal) const override;
 
     //Accessors
     //---------
@@ -78,12 +97,12 @@ class ModPTUEq : public Model
     //! \param  vecTransports  vector of transport variables
     //! \param  nameVariables  Name of the variable to select
     //! \param  numPhases      Phases number's
-    virtual double selectScalar(Phase** phases, Mixture* mixture, Transport* transports, Variable nameVariable, int num = 0) const;
-    virtual const double& getSM();
-    virtual const Coord& getVelocity(const Cell* cell) const { return cell->getMixture()->getVelocity(); };
-    virtual Coord& getVelocity(Cell* cell) { return cell->getMixture()->getVelocity(); };
+    double selectScalar(Phase** phases, Mixture* mixture, Transport* transports, Variable nameVariable, int num = 0) const override;
+    const double& getSM() override;
+    const Coord& getVelocity(const Cell* cell) const override { return cell->getMixture()->getVelocity(); };
+    Coord& getVelocity(Cell* cell) override { return cell->getMixture()->getVelocity(); };
 
-    virtual const std::string& whoAmI() const { return m_name; };
+    const std::string& whoAmI() const override { return m_name; };
 
   private:
     static const std::string NAME;

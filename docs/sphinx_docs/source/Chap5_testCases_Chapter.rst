@@ -6,7 +6,7 @@ Test cases
 ECOGEN is provided with several test cases. Major part of these tests can be found in companion papers. The complete list of available test cases in the package are listed in the main input file *ECOGEN.xml*. Description of few provided test cases is presented in this section. We will refer to the test case following the line format to uncomment in *ECOGEN.xml* input file.
 
 .. admonition:: Example
-  
+
   For example, the following line in *ECOGEN.xml* input file corresponds to the default test:
 
   .. code-block:: xml

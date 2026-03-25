@@ -28,9 +28,9 @@ Flow model
 
 The :xml:`<flowModel>` markup is **mandatory** to specify the mathematical model to solve during the computation. This markup may contain the following attributes:
 
-- :xml:`name`: Name of the mathematical flow model. This attribute can take the values: *Euler* :cite:`euler1757principes`, *PressureVelocityEq* (previously named *Kapila*) :cite:`relaxjcp`:cite:`kapila2001`, *VelocityEq* (previously named *multiP*) :cite:`schmidmayer2021UEq`, *VelocityEqTotEnergy*, *TemperaturePressureVelocityEq* (previously named *ThermalEq*) :cite:`martelotboiling`, *EulerHomogeneous*, *EulerKorteweg* or *NonLinearSchrodinger* :cite:`dhaouadi2020phd`.
+- :xml:`name`: Name of the mathematical flow model. This attribute can take the values: *Euler* :cite:`euler1757principes`, *PressureVelocityEq* (previously named *Kapila*) :cite:`relaxjcp`:cite:`kapila2001`, *VelocityEq* (previously named *multiP*) :cite:`schmidmayer2023UEq`, *VelocityEqTotEnergy*, *TemperaturePressureVelocityEq* (previously named *ThermalEq*) :cite:`martelotboiling`, *EulerHomogeneous*, *EulerKorteweg* or *NonLinearSchrodinger* :cite:`dhaouadi2020phd`.
 - :xml:`numberPhases`: Integer number corresponding to the number of phases present in the simulation. The total amount of equations is related to this number. This attribute is not necessary when the values of :xml:`name` are *Euler* or *EulerHomogeneous*.
-- :xml:`numberTransports`: This attribute is optionnal and is set to 0 as default. It can be used to add specific variables advected in the flow (color functions).
+- :xml:`numberTransports`: This attribute is optional and is set to 0 as default. It can be used to add specific variables advected in the flow (color functions).
 - :xml:`alphaNull`: For *PressureVelocityEq*, *VelocityEq* and *VelocityEqTotEnergy* models, the volume fraction can either be null (*true*) or not (*false*) and this choice is determined by this parameter. Default value is *false*.
 
 **Remark:**
@@ -54,6 +54,7 @@ If *EulerKorteweg* or *NonLinearSchrodinger* models are chosen, other attributes
 
 	<flowModel name="NonLinearSchrodinger" alpha="3.33e-3" beta="2.e-5"/>
 
+
 Equations of state (EOS)
 ------------------------
 
@@ -72,18 +73,20 @@ Advected additional variables
 
 	<transport name="color"/>
 
-The *model.xml* input fle **must contain** as many :xml:`<transport>` markups as number of transports specified in the :ref:`Sec:input:FlowModel` markup. Each transported variable is described by its name. The default number of advected variable is 0.
+The *model.xml* input file **must contain** as many :xml:`<transport>` markups as number of transports specified in the :ref:`Sec:input:FlowModel` markup. Each transported variable is described by its name. The default number of advected variable is 0.
 
 Relaxation procedures
 ---------------------
 
-.. code-block:: xml
-
-	<relaxation type="PT"/>
-
 An additional markup :xml:`<relaxation>` may be used to impose some specific equilibrium between the phases depending on the flow model used. The attribute :xml:`type` specifies the type of equilibrium:
 
-- *P*: A pressure equilibrium is imposed at every location of the flow. The attribute :xml:`speed` can be added to specify the speed at which the relaxation operates (*infinite* or *finite*). Default is *infinite*. If a finite relaxation is chosen, the :xml:`rate` and :xml:`solver` have to be specified. The rate is a real number while the solver can either be *Euler* :cite:`schmidmayer2021UEq` or *LSODA* :cite:`hindmarsh1983odepack, petzold1983LSODA`.
+- *U*: A velocity equilibrium is imposed at every location of the flow. The attribute :xml:`speed` can be added to specify the speed at which the relaxation operates (only *infinite* :cite:`sab99` for now). Default is *infinite*.
+
+.. code-block:: xml
+
+	<relaxation type="U" speed="infinite"/>
+
+- *P*: A pressure equilibrium is imposed at every location of the flow. The attribute :xml:`speed` can be added to specify the speed at which the relaxation operates (*infinite* :cite:`relaxjcp` or *finite* :cite:`schmidmayer2023UEq, biasiori2023phenomenological`). Default is *infinite*. If a finite relaxation is chosen, the :xml:`rate` and :xml:`solver` have to be specified. The rate is a real number while the solver can either be *Euler* :cite:`schmidmayer2023UEq` or *LSODA* :cite:`hindmarsh1983odepack, petzold1983LSODA`.
 
 .. code-block:: xml
 
@@ -94,6 +97,11 @@ An additional markup :xml:`<relaxation>` may be used to impose some specific equ
 	<relaxation type="P" speed="finite" rate="1.e-5" solver="Euler"/>
 
 - *PT*: Both pressure and thermal equilibrium are imposed at every location of the flow. It does not require additional attributes.
+
+.. code-block:: xml
+
+	<relaxation type="PT"/>
+
 - *PTMu*: A thermodynamical equilibrium is imposed at every location of the flow. It must be associated with the node :xml:`<dataPTMu>` whose attributes are :xml:`liquid` and :xml:`vapor` to specify the name of the EOS of the liquid and the vapor phase. Hereafter the complete node when *PTMu* is used:
 
 .. code-block:: xml
@@ -101,7 +109,7 @@ An additional markup :xml:`<relaxation>` may be used to impose some specific equ
 	<relaxation type="PTMu">
 	  <dataPTMu liquid="SG_waterLiq.xml" vapor="IG_waterVap.xml"/>
 	</relaxation>
- 
+
 Source terms
 ------------
 
@@ -123,13 +131,37 @@ The additional :xml:`<sourceTerms>` markup can be used to numerically integrate 
 	  <gravity x="0." y="-9.81" z="0."/>
 	</sourceTerms>
 
-- *MRF*: For a simulation in a moving reference frame. Allow to compute solution in a rotating frame. The node :xml:`<omega>` requires the attributes :xml:`x`, :xml:`y` and :xml:`z` giving the coordinates for the rotating vector in real numbers (unit: rad/s (SI)). The node :xml:`<timeToOmega>` is optional and allow to specify a progressing acceleration (linear) to the final rotating velocity (requires the attribute :xml:`tf` for acceleration time).
+- *MRF*: For a simulation in a moving reference frame. Allow to compute solution in a rotating frame :cite:`caze2024modeling`. The node :xml:`<omega>` requires the attributes :xml:`x`, :xml:`y` and :xml:`z` giving the coordinates for the rotating vector in real numbers (unit: rad/s (SI)). The node :xml:`<timeToOmega>` is optional and allow to specify a progressing acceleration (linear) to the final rotating velocity (requires the attribute :xml:`tf` for acceleration time).
 
 .. code-block:: xml
 
 	<sourceTerms type="MRF" order="RK4">
 	  <omega x="0." y="0." z="1."/>
 	  <timeToOmega tf="1.e-3"/>  <!-- Optional: If activated, the angular velocity increase linearly to omega in during tf -->
+	</sourceTerms>
+
+- *Acoustic waves*: Acoustic waves can be modelled with sinusoidal or Gaussian profils. This follows the work of :cite:`maeda2017source` for single-phase flows and has been extended for multiphase system of equations. The node :xml:`typeAcousticWave` requires you to mention either a sinusoidal or a Gaussian type of pulses. For both, nodes :xml:`sourceLocation` and :xml:`pulseDirection` are required and have the attributes :xml:`x`, :xml:`y` and :xml:`z` giving the coordinates of the source and the direction of the pulses in real numbers (unit: m (SI) and none), respectively. For :xml:`pulseDirection`, the sum of the attributes must be equal to 1. Additionally, the :xml:`pressureAmplitude` (unit: Pa (SI)) and :xml:`delayedTime` (unit: s (SI)) of the pulses are required for both. The sinusoidal pulses require the :xml:`numberOfPulse` (can be a real number) and :xml:`frequency` (unit: Hz (SI)), while the Gaussian pulses require the :xml:`pulseWidth` (unit: m (SI)). XML blocks can be written for sinusoidal or Gaussian pulses as:
+
+.. code-block:: xml
+
+	<sourceTerms type="acousticWave" order="EULER">
+	  <typeAcousticWave type="planeSinusoidalPulse">
+	    <dataPlaneSinusoidalPulse pressureAmplitude="10000." delayedTime="5.e-7" numberOfPulse ="4." frequency="3.e5">
+	      <sourceLocation x="10.e-3" y="10.e-3" z="0.5"/>
+	      <pulseDirection x="1." y="0." z="0."/>
+	    </dataPlaneSinusoidalPulse>
+	  </typeAcousticWave>
+	</sourceTerms>
+
+.. code-block:: xml
+
+	<sourceTerms type="acousticWave" order="EULER">
+	  <typeAcousticWave type="planeGaussianPulse">
+	    <dataPlaneGaussianPulse pressureAmplitude="10." delayedTime="20.e-6" pulseWidth="5.e-6">
+	      <sourceLocation x="10.03e-3" y="0." z="0."/> <!-- Must be placed at: cell_center + 1/4 * cell_size_in_wanted_direction -->
+	      <pulseDirection x="1." y="0." z="0."/>
+	    </dataPlaneGaussianPulse>
+	  </typeAcousticWave>
 	</sourceTerms>
 
 Source-term integration can be done up to 4th order. Available integration schemes are:
@@ -209,7 +241,7 @@ Note that the minimum reference Mach number can be chosen if required (default i
 When the local Mach number of the flow is lower than this threshold, it is replaced by the threshold value in order to keep a reasonable computation time.
 
 .. code-block:: xml
-  
+
   <lowMach state="true" machRefMin="5.e-2"/>
 
 For an example of use, see the test case presented in the Section :ref:`Sec:tests:euler:2d:nozzleLowMach`.
