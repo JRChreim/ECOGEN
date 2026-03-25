@@ -4,7 +4,7 @@
  	<EOS name="SG_water_cavitation.xml"/>
 	<EOS name="IG_air.xml"/>
         <relaxation type="P" speed="infinite"/>
-	<symmetryTerm type="spherical">
+	<!-- <symmetryTerm type="spherical">
 		<dataSymSpher radialAxis="X"/>
-	</symmetryTerm>
+	</symmetryTerm> -->
 </model>
